@@ -78,7 +78,30 @@
     </section>
 
     <section class="loading-screen" id="loading-screen" aria-live="polite" aria-hidden="true">
-      <div class="loading-heart" aria-hidden="true"></div>
+      <div class="loading-heart" aria-hidden="true">
+        <svg class="lock-art loading-lock-art" viewBox="0 0 180 190" focusable="false">
+          <ellipse class="lock-ground" cx="90" cy="170" rx="56" ry="11"></ellipse>
+          <g class="lock-graphic" filter="url(#lockDropShadow)">
+            <g class="lock-shackle-group">
+              <path class="lock-shackle-shadow" d="M54 91V63C54 40 70 25 90 25s36 15 36 38v28"></path>
+              <path class="lock-shackle-main" d="M54 91V63C54 40 70 25 90 25s36 15 36 38v28"></path>
+              <path class="lock-shackle-highlight" d="M65 88V64c0-15 10-27 25-27s25 12 25 27v24"></path>
+            </g>
+            <path class="lock-body-rim" d="M90 162C80 153 69 146 58 137C40 123 31 106 31 87C31 64 48 48 69 48C79 48 87 53 90 63C93 53 101 48 111 48C132 48 149 64 149 87C149 106 140 123 122 137C111 146 100 153 90 162Z"></path>
+            <path class="lock-body-face" d="M90 151C81 143 71 137 62 130C47 118 39 103 39 87C39 69 52 57 69 57C80 57 87 63 90 73C93 63 100 57 111 57C128 57 141 69 141 87C141 103 133 118 118 130C109 137 99 143 90 151Z"></path>
+            <path class="lock-side-shadow" d="M126 68C134 73 139 81 139 92C139 108 129 123 114 135C106 141 98 146 90 153C112 146 148 125 149 88C149 78 145 68 137 60C133 58 129 59 126 68Z"></path>
+            <path class="lock-gloss-large" d="M57 78C61 66 73 61 82 67C71 73 66 84 67 98C59 98 53 91 57 78Z"></path>
+            <ellipse class="lock-gloss-dot" cx="61" cy="70" rx="9" ry="6"></ellipse>
+            <circle class="keyhole-top" cx="90" cy="100" r="10"></circle>
+            <path class="keyhole-stem" d="M84 108H96L101 134H79L84 108Z"></path>
+            <g class="lock-sparkles">
+              <path class="lock-sparkle sparkle-one" d="M44 58L48 67L57 71L48 75L44 84L40 75L31 71L40 67Z"></path>
+              <path class="lock-sparkle sparkle-two" d="M139 52L142 59L149 62L142 65L139 72L136 65L129 62L136 59Z"></path>
+              <path class="lock-sparkle sparkle-three" d="M132 132L135 138L141 141L135 144L132 150L129 144L123 141L129 138Z"></path>
+            </g>
+          </g>
+        </svg>
+      </div>
       <p>vibe coded with love...</p>
       <span class="loading-bar"><span></span></span>
     </section>
@@ -115,8 +138,18 @@
             </p>
           </div>
           <button class="letter-card" id="letter-button" type="button" aria-label="Open the anniversary envelope">
+            <span class="letter-paper" aria-hidden="true"></span>
+            <span class="letter-envelope-back" aria-hidden="true"></span>
             <span class="letter-flap" aria-hidden="true"></span>
-            <span class="letter-seal" aria-hidden="true"></span>
+            <span class="letter-fold letter-fold-left" aria-hidden="true"></span>
+            <span class="letter-fold letter-fold-right" aria-hidden="true"></span>
+            <span class="letter-pocket" aria-hidden="true"></span>
+            <span class="letter-seal" aria-hidden="true">
+              <svg viewBox="0 0 100 92" focusable="false">
+                <path class="letter-seal-heart" d="M50 84C40 75 29 68 19 57C8 45 6 29 16 18C25 8 41 10 50 23C59 10 75 8 84 18C94 29 92 45 81 57C71 68 60 75 50 84Z"></path>
+                <path class="letter-seal-gloss" d="M25 30C28 22 37 19 43 24C35 27 31 33 31 41C25 40 22 36 25 30Z"></path>
+              </svg>
+            </span>
           </button>
         </div>
       </section>
