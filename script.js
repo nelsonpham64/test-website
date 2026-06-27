@@ -25,10 +25,13 @@ const storyState = {
 const scrapbookHold = {
   direction: 0,
   timer: null,
+  pageTimer: null,
   releaseTimer: null
 };
 
 const HOLD_TO_FLIP_MS = 660;
+const SCRAPBOOK_FLIP_MS = 1120;
+const SCRAPBOOK_PAGE_SWAP_MS = 640;
 
 const chapterLabels = {
   intro: "Continue",
@@ -37,7 +40,7 @@ const chapterLabels = {
   quiz: "Finish quiz",
   result: "Open jar",
   jar: "Final clue",
-  finale: "See bouquet",
+  finale: "Reveal ending",
   ending: "Start over"
 };
 
@@ -316,9 +319,10 @@ function updateStoryControls() {
   Array.from(dotsWrap.children).forEach((dot, index) => {
     dot.classList.toggle("is-active", index === storyState.current);
   });
+  dotsWrap.classList.toggle("is-hidden", chapterKey === "ending");
 
   backButton.classList.toggle("is-hidden", !storyState.hasReachedEnd);
-  nextButton.classList.toggle("is-hidden", chapterKey === "intro");
+  nextButton.classList.toggle("is-hidden", chapterKey === "intro" || chapterKey === "finale");
   nextButton.textContent = chapterLabels[chapterKey] || "Next";
 
   const onQuiz = chapterKey === "quiz";
@@ -366,7 +370,7 @@ function openLetter(event) {
       document.querySelector("#intro").classList.remove("is-entering");
       storyState.enteringLetter = false;
     }, 220);
-  }, 760);
+  }, 980);
 }
 
 function previousChapter() {
@@ -482,16 +486,30 @@ function finishScrapbookHold(direction) {
   scrapbookHold.timer = null;
   scrapbookHold.direction = 0;
   scrapbookBook.classList.remove("is-holding-next", "is-holding-prev", "is-denied");
+  scrapbookBook.classList.remove("is-flipping-forward", "is-flipping-backward");
   scrapbookBook.classList.add(direction > 0 ? "is-flipping-forward" : "is-flipping-backward");
 
+  window.clearTimeout(scrapbookHold.pageTimer);
   window.clearTimeout(scrapbookHold.releaseTimer);
-  window.setTimeout(() => {
+  scrapbookHold.pageTimer = window.setTimeout(() => {
     setScrapbookPage(storyState.scrapbookPage + direction);
-  }, 440);
+  }, SCRAPBOOK_PAGE_SWAP_MS);
 
   scrapbookHold.releaseTimer = window.setTimeout(() => {
     scrapbookBook.classList.remove("is-flipping-forward", "is-flipping-backward");
-  }, 980);
+  }, SCRAPBOOK_FLIP_MS);
+}
+
+function triggerScrapbookFlip(direction) {
+  if (!canFlipScrapbook(direction)) {
+    scrapbookBook.classList.add("is-denied");
+    window.setTimeout(() => scrapbookBook.classList.remove("is-denied"), 260);
+    return;
+  }
+
+  clearScrapbookHold();
+  scrapbookBook.classList.add(direction > 0 ? "is-holding-next" : "is-holding-prev");
+  scrapbookHold.timer = window.setTimeout(() => finishScrapbookHold(direction), 120);
 }
 
 function getScrapbookDirection(event) {
@@ -621,12 +639,32 @@ heartLock.addEventListener("click", () => {
   dateInput.focus();
 });
 
+letterButton.addEventListener("pointerenter", () => {
+  letterButton.classList.add("is-open");
+});
+
+letterButton.addEventListener("pointerleave", () => {
+  if (!storyState.enteringLetter) {
+    letterButton.classList.remove("is-open");
+  }
+});
+
+letterButton.addEventListener("focus", () => {
+  letterButton.classList.add("is-open");
+});
+
+letterButton.addEventListener("blur", () => {
+  if (!storyState.enteringLetter) {
+    letterButton.classList.remove("is-open");
+  }
+});
+
 document.querySelector("#scrap-prev").addEventListener("click", () => {
-  setScrapbookPage(storyState.scrapbookPage - 1);
+  triggerScrapbookFlip(-1);
 });
 
 document.querySelector("#scrap-next").addEventListener("click", () => {
-  setScrapbookPage(storyState.scrapbookPage + 1);
+  triggerScrapbookFlip(1);
 });
 
 scrapbookBook.addEventListener("pointerdown", startScrapbookHold);
@@ -636,12 +674,12 @@ scrapbookBook.addEventListener("pointerleave", cancelScrapbookHold);
 scrapbookBook.addEventListener("keydown", (event) => {
   if (event.key === "ArrowLeft") {
     event.preventDefault();
-    setScrapbookPage(storyState.scrapbookPage - 1);
+    triggerScrapbookFlip(-1);
   }
 
   if (event.key === "ArrowRight") {
     event.preventDefault();
-    setScrapbookPage(storyState.scrapbookPage + 1);
+    triggerScrapbookFlip(1);
   }
 });
 
@@ -675,9 +713,7 @@ document.querySelector("#jar-stage").addEventListener("mousemove", moveJarNotes)
 document.querySelector("#note-close").addEventListener("click", closeNote);
 document.querySelector("#note-backdrop").addEventListener("click", closeNote);
 document.querySelector("#reveal-button").addEventListener("click", () => {
-  document.querySelector("#final-message").textContent =
-    "Final clue: get ready at the time you choose, wear something that makes you feel beautiful, and let me handle the next part.";
-  window.setTimeout(() => setChapter(getChapterIndex("ending")), 900);
+  setChapter(getChapterIndex("ending"));
 });
 
 window.addEventListener("pointermove", scheduleCursorUpdate, { passive: true });

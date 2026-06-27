@@ -422,13 +422,8 @@
               <span>Memory jar still active</span>
             </div>
           </div>
-          <div class="final-card">
-            <span class="final-kicker">Unlocked</span>
-            <h3>Official anniversary clue</h3>
-            <p id="final-message">
-              The final clue is waiting.
-            </p>
-            <button class="button button-primary" id="reveal-button" type="button">Reveal clue</button>
+          <div class="final-card final-action-card">
+            <button class="button button-primary" id="reveal-button" type="button">Reveal ending</button>
           </div>
         </div>
       </section>
@@ -436,17 +431,130 @@
       <section class="chapter" id="ending" data-chapter="ending" aria-labelledby="ending-title">
         <div class="ending-wrap">
           <div class="bouquet" aria-hidden="true">
-            <span class="stem stem-one"></span>
-            <span class="stem stem-two"></span>
-            <span class="stem stem-three"></span>
-            <span class="stem stem-four"></span>
-            <span class="tulip tulip-one"><span></span></span>
-            <span class="tulip tulip-two"><span></span></span>
-            <span class="tulip tulip-three"><span></span></span>
-            <span class="tulip tulip-four"><span></span></span>
-            <span class="leaf leaf-one"></span>
-            <span class="leaf leaf-two"></span>
-            <span class="leaf leaf-three"></span>
+            <svg class="bouquet-art" viewBox="0 0 560 460" focusable="false">
+              <defs>
+                <linearGradient id="stemGradient" x1="0" y1="80" x2="0" y2="390" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#8ee8a7"></stop>
+                  <stop offset="0.48" stop-color="#35aa70"></stop>
+                  <stop offset="1" stop-color="#116445"></stop>
+                </linearGradient>
+                <linearGradient id="leafGradient" x1="110" y1="150" x2="310" y2="390" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#a8efbd"></stop>
+                  <stop offset="0.5" stop-color="#39a96e"></stop>
+                  <stop offset="1" stop-color="#12623f"></stop>
+                </linearGradient>
+                <linearGradient id="pinkTulip" x1="8" y1="0" x2="78" y2="112" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#fff0f8"></stop>
+                  <stop offset="0.36" stop-color="#ff9bd1"></stop>
+                  <stop offset="0.72" stop-color="#f15aa9"></stop>
+                  <stop offset="1" stop-color="#b92f7b"></stop>
+                </linearGradient>
+                <linearGradient id="blueTulip" x1="4" y1="0" x2="82" y2="112" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#f3fbff"></stop>
+                  <stop offset="0.38" stop-color="#8ee0ff"></stop>
+                  <stop offset="0.72" stop-color="#58bde9"></stop>
+                  <stop offset="1" stop-color="#2b82c6"></stop>
+                </linearGradient>
+                <linearGradient id="blushTulip" x1="4" y1="0" x2="86" y2="116" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#fff7fc"></stop>
+                  <stop offset="0.42" stop-color="#ffc1dc"></stop>
+                  <stop offset="0.72" stop-color="#f37fb8"></stop>
+                  <stop offset="1" stop-color="#78cfff"></stop>
+                </linearGradient>
+                <linearGradient id="wrapPaper" x1="145" y1="255" x2="405" y2="440" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#fff8fb"></stop>
+                  <stop offset="0.52" stop-color="#ffd6e8"></stop>
+                  <stop offset="1" stop-color="#bce9ff"></stop>
+                </linearGradient>
+                <linearGradient id="wrapShadow" x1="190" y1="315" x2="370" y2="430" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#ff7ebb" stop-opacity="0.26"></stop>
+                  <stop offset="1" stop-color="#3f92be" stop-opacity="0.2"></stop>
+                </linearGradient>
+                <filter id="bouquetShadow" x="-20%" y="-20%" width="140%" height="145%">
+                  <feDropShadow dx="0" dy="18" stdDeviation="14" flood-color="#70516a" flood-opacity="0.24"></feDropShadow>
+                </filter>
+                <filter id="petalDepth" x="-30%" y="-30%" width="160%" height="170%">
+                  <feDropShadow dx="0" dy="8" stdDeviation="4" flood-color="#86345f" flood-opacity="0.18"></feDropShadow>
+                </filter>
+              </defs>
+              <ellipse class="bouquet-shadow" cx="280" cy="414" rx="188" ry="25"></ellipse>
+              <g class="bouquet-stems" filter="url(#bouquetShadow)">
+                <path class="bouquet-stem" d="M278 392C252 300 224 216 183 111"></path>
+                <path class="bouquet-stem stem-soft" d="M280 392C268 294 250 203 244 86"></path>
+                <path class="bouquet-stem" d="M282 392C282 295 282 206 286 68"></path>
+                <path class="bouquet-stem stem-soft" d="M284 392C296 300 313 207 342 96"></path>
+                <path class="bouquet-stem" d="M286 392C314 304 350 226 406 134"></path>
+                <path class="bouquet-stem stem-soft" d="M276 392C240 315 205 247 137 167"></path>
+                <path class="bouquet-stem stem-soft" d="M289 392C330 319 377 260 454 174"></path>
+                <path class="bouquet-leaf leaf-left" d="M258 302C194 232 121 229 79 275C145 282 201 315 265 371Z"></path>
+                <path class="bouquet-leaf leaf-right" d="M304 298C370 226 446 232 480 279C412 286 355 319 296 374Z"></path>
+                <path class="bouquet-leaf leaf-mid-left" d="M257 346C207 303 160 314 128 357C181 354 222 374 268 410Z"></path>
+                <path class="bouquet-leaf leaf-mid-right" d="M309 342C360 299 409 313 436 357C386 354 342 374 298 410Z"></path>
+              </g>
+              <g class="bouquet-wrap" filter="url(#bouquetShadow)">
+                <path class="wrap-back" d="M188 282C230 310 255 342 280 392C305 342 331 310 374 282L341 438H221Z"></path>
+                <path class="wrap-left" d="M164 304L280 391L223 438Z"></path>
+                <path class="wrap-right" d="M396 304L280 391L338 438Z"></path>
+                <path class="wrap-front" d="M223 438L280 391L338 438C306 449 255 449 223 438Z"></path>
+                <path class="wrap-ribbon" d="M220 373C255 386 307 386 342 373"></path>
+              </g>
+              <g class="real-tulip tulip-a pink" style="--delay: 0ms" transform="translate(150 78) rotate(-14)">
+                <path class="petal-back" d="M42 106C15 78 12 39 33 12C47 29 54 64 42 106Z"></path>
+                <path class="outer-petal left" d="M42 104C18 82 17 39 37 8C53 40 55 73 42 104Z"></path>
+                <path class="outer-petal right" d="M44 104C72 82 75 40 52 8C38 40 34 73 44 104Z"></path>
+                <path class="center-petal" d="M43 110C28 84 30 34 43 0C60 34 59 84 43 110Z"></path>
+                <path class="inner-petal" d="M44 102C36 80 37 43 44 18C53 43 52 80 44 102Z"></path>
+                <path class="petal-vein" d="M33 30C28 50 33 72 41 92M55 30C60 52 55 74 47 92"></path>
+              </g>
+              <g class="real-tulip tulip-b blue" style="--delay: 110ms" transform="translate(245 42) rotate(-3) scale(1.08)">
+                <path class="petal-back" d="M42 106C15 78 12 39 33 12C47 29 54 64 42 106Z"></path>
+                <path class="outer-petal left" d="M42 104C18 82 17 39 37 8C53 40 55 73 42 104Z"></path>
+                <path class="outer-petal right" d="M44 104C72 82 75 40 52 8C38 40 34 73 44 104Z"></path>
+                <path class="center-petal" d="M43 110C28 84 30 34 43 0C60 34 59 84 43 110Z"></path>
+                <path class="inner-petal" d="M44 102C36 80 37 43 44 18C53 43 52 80 44 102Z"></path>
+                <path class="petal-vein" d="M33 30C28 50 33 72 41 92M55 30C60 52 55 74 47 92"></path>
+              </g>
+              <g class="real-tulip tulip-c blush" style="--delay: 210ms" transform="translate(326 70) rotate(11)">
+                <path class="petal-back" d="M42 106C15 78 12 39 33 12C47 29 54 64 42 106Z"></path>
+                <path class="outer-petal left" d="M42 104C18 82 17 39 37 8C53 40 55 73 42 104Z"></path>
+                <path class="outer-petal right" d="M44 104C72 82 75 40 52 8C38 40 34 73 44 104Z"></path>
+                <path class="center-petal" d="M43 110C28 84 30 34 43 0C60 34 59 84 43 110Z"></path>
+                <path class="inner-petal" d="M44 102C36 80 37 43 44 18C53 43 52 80 44 102Z"></path>
+                <path class="petal-vein" d="M33 30C28 50 33 72 41 92M55 30C60 52 55 74 47 92"></path>
+              </g>
+              <g class="real-tulip tulip-d blush" style="--delay: 310ms" transform="translate(204 98) rotate(-7) scale(0.94)">
+                <path class="petal-back" d="M42 106C15 78 12 39 33 12C47 29 54 64 42 106Z"></path>
+                <path class="outer-petal left" d="M42 104C18 82 17 39 37 8C53 40 55 73 42 104Z"></path>
+                <path class="outer-petal right" d="M44 104C72 82 75 40 52 8C38 40 34 73 44 104Z"></path>
+                <path class="center-petal" d="M43 110C28 84 30 34 43 0C60 34 59 84 43 110Z"></path>
+                <path class="inner-petal" d="M44 102C36 80 37 43 44 18C53 43 52 80 44 102Z"></path>
+                <path class="petal-vein" d="M33 30C28 50 33 72 41 92M55 30C60 52 55 74 47 92"></path>
+              </g>
+              <g class="real-tulip tulip-e pink" style="--delay: 410ms" transform="translate(378 118) rotate(17) scale(0.94)">
+                <path class="petal-back" d="M42 106C15 78 12 39 33 12C47 29 54 64 42 106Z"></path>
+                <path class="outer-petal left" d="M42 104C18 82 17 39 37 8C53 40 55 73 42 104Z"></path>
+                <path class="outer-petal right" d="M44 104C72 82 75 40 52 8C38 40 34 73 44 104Z"></path>
+                <path class="center-petal" d="M43 110C28 84 30 34 43 0C60 34 59 84 43 110Z"></path>
+                <path class="inner-petal" d="M44 102C36 80 37 43 44 18C53 43 52 80 44 102Z"></path>
+                <path class="petal-vein" d="M33 30C28 50 33 72 41 92M55 30C60 52 55 74 47 92"></path>
+              </g>
+              <g class="real-tulip tulip-f blue" style="--delay: 510ms" transform="translate(96 143) rotate(-24) scale(0.9)">
+                <path class="petal-back" d="M42 106C15 78 12 39 33 12C47 29 54 64 42 106Z"></path>
+                <path class="outer-petal left" d="M42 104C18 82 17 39 37 8C53 40 55 73 42 104Z"></path>
+                <path class="outer-petal right" d="M44 104C72 82 75 40 52 8C38 40 34 73 44 104Z"></path>
+                <path class="center-petal" d="M43 110C28 84 30 34 43 0C60 34 59 84 43 110Z"></path>
+                <path class="inner-petal" d="M44 102C36 80 37 43 44 18C53 43 52 80 44 102Z"></path>
+                <path class="petal-vein" d="M33 30C28 50 33 72 41 92M55 30C60 52 55 74 47 92"></path>
+              </g>
+              <g class="real-tulip tulip-g blush" style="--delay: 610ms" transform="translate(430 154) rotate(25) scale(0.88)">
+                <path class="petal-back" d="M42 106C15 78 12 39 33 12C47 29 54 64 42 106Z"></path>
+                <path class="outer-petal left" d="M42 104C18 82 17 39 37 8C53 40 55 73 42 104Z"></path>
+                <path class="outer-petal right" d="M44 104C72 82 75 40 52 8C38 40 34 73 44 104Z"></path>
+                <path class="center-petal" d="M43 110C28 84 30 34 43 0C60 34 59 84 43 110Z"></path>
+                <path class="inner-petal" d="M44 102C36 80 37 43 44 18C53 43 52 80 44 102Z"></path>
+                <path class="petal-vein" d="M33 30C28 50 33 72 41 92M55 30C60 52 55 74 47 92"></path>
+              </g>
+            </svg>
           </div>
           <p class="eyebrow">One year together</p>
           <h2 id="ending-title">I love you so much, I can't wait to celebrate 1 year together!</h2>
