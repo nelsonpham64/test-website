@@ -5163,3 +5163,104 @@ body::after {
     height: 2.35rem;
   }
 }
+
+/* Pink Story has tall rounded letters, so the display titles need extra air. */
+h1,
+h2 {
+  max-width: min(100%, 15ch);
+  line-height: 1;
+  overflow-wrap: normal;
+  text-wrap: balance;
+  word-break: normal;
+  text-shadow:
+    0.04em 0.048em 0 rgba(218, 77, 158, 0.68),
+    0 0 24px rgba(105, 199, 255, 0.28);
+}
+
+h1 {
+  max-width: min(100%, 13.5ch);
+  font-size: 6.4rem;
+}
+
+h2 {
+  max-width: min(100%, 16.5ch);
+  font-size: 5.45rem;
+}
+
+.chapter-copy h1,
+.chapter-copy h2 {
+  margin-bottom: 0.2rem;
+}
+
+.lock-card h1 {
+  max-width: min(100%, 13ch);
+  margin-inline: auto;
+  font-size: 3.5rem;
+  line-height: 1;
+}
+
+.wrapped-copy h2 {
+  font-size: 4.45rem;
+  line-height: 1;
+}
+
+.wrapped-hero-card > strong {
+  font-size: 5.9rem;
+  line-height: 0.95;
+}
+
+@media (max-width: 1100px) {
+  h1 {
+    font-size: 5.2rem;
+  }
+
+  h2 {
+    font-size: 4.65rem;
+  }
+
+  .wrapped-copy h2 {
+    font-size: 4rem;
+  }
+}
+
+@media (max-width: 760px) {
+  h1,
+  h2 {
+    line-height: 1.03;
+    max-width: 100%;
+  }
+
+  h1 {
+    font-size: 3.65rem;
+  }
+
+  h2 {
+    font-size: 3.2rem;
+  }
+
+  .lock-card h1 {
+    font-size: 2.9rem;
+  }
+
+  .wrapped-copy h2 {
+    font-size: 3rem;
+  }
+
+  .wrapped-hero-card > strong {
+    font-size: 4.1rem;
+  }
+}
+
+@media (max-width: 430px) {
+  h1 {
+    font-size: 3.05rem;
+  }
+
+  h2 {
+    font-size: 2.65rem;
+  }
+
+  .lock-card h1 {
+    font-size: 2.45rem;
+  }
+}
