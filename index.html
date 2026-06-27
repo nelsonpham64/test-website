@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="A pink and blue interactive 1-year anniversary story with a heart lock, scrapbook, date quiz, memory jar, and blooming tulip ending."
+    >
+    <title>test Website</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="is-locked">
+    <section class="lock-screen" id="lock-screen" aria-labelledby="lock-title">
+      <div class="lock-card">
+        <button class="heart-lock" id="heart-lock" type="button" aria-label="Heart lock">
+          <span class="heart-shape" aria-hidden="true"></span>
+          <span class="lock-shackle" aria-hidden="true"></span>
+        </button>
+        <p class="eyebrow">Anniversary lock</p>
+        <h1 id="lock-title">Enter our date to open this.</h1>
+        <form class="date-form" id="date-form">
+          <label for="anniversary-date">Anniversary date</label>
+          <div class="date-entry">
+            <input
+              id="anniversary-date"
+              type="password"
+              inputmode="numeric"
+              autocomplete="off"
+              maxlength="10"
+              placeholder="MM/DD/YYYY"
+            >
+            <button class="button button-primary" type="submit">Unlock</button>
+          </div>
+          <p class="lock-hint" id="lock-hint">Hint: the day this chapter started.</p>
+        </form>
+      </div>
+    </section>
+
+    <section class="loading-screen" id="loading-screen" aria-live="polite" aria-hidden="true">
+      <div class="loading-heart" aria-hidden="true"></div>
+      <p>vibe coded with love...</p>
+      <span class="loading-bar"><span></span></span>
+    </section>
+
+    <div class="ambient" aria-hidden="true">
+      <span class="light-band band-one"></span>
+      <span class="light-band band-two"></span>
+      <span class="light-band band-three"></span>
+      <span class="spark-field"></span>
+    </div>
+    <div class="cursor-aura" aria-hidden="true"></div>
+    <div class="cursor-dot" aria-hidden="true"></div>
+
+    <header class="story-header">
+      <a class="brand" href="#intro" aria-label="test Website home">
+        <span class="brand-mark">1</span>
+        <span>test Website</span>
+      </a>
+      <div class="story-progress" aria-label="Story progress">
+        <span id="chapter-counter">Chapter 1 of 7</span>
+        <span class="progress-track"><span id="story-progress-bar"></span></span>
+      </div>
+    </header>
+
+    <main class="story" id="story">
+      <section class="chapter is-active" id="intro" data-chapter="intro" aria-labelledby="intro-title">
+        <div class="chapter-grid intro-grid letter-grid">
+          <div class="chapter-copy">
+            <p class="eyebrow">A letter appeared</p>
+            <h1 id="intro-title">Open this when you are ready.</h1>
+            <p class="lead">
+              The whole date machine is sealed inside. Click the letter to start
+              the story, then follow the glow until the final clue unlocks.
+            </p>
+          </div>
+          <button class="letter-card" id="letter-button" type="button" aria-label="Open the anniversary envelope">
+            <span class="letter-flap" aria-hidden="true"></span>
+            <span class="letter-seal" aria-hidden="true"></span>
+          </button>
+        </div>
+      </section>
+
+      <section class="chapter" id="scrapbook" data-chapter="scrapbook" aria-labelledby="scrapbook-title">
+        <div class="chapter-grid scrapbook-feature">
+          <div class="chapter-copy">
+            <p class="eyebrow">Scrapbook chapter</p>
+            <h2 id="scrapbook-title">Flip through a few pages of us.</h2>
+            <p class="lead">
+              A softer way to hold the photo cards: one spread at a time,
+              with little captions and room for the real pictures later.
+            </p>
+            <div class="mini-hint">A page at a time, like a little keepsake.</div>
+          </div>
+
+          <div class="scrapbook" aria-label="Interactive scrapbook">
+            <div
+              class="scrapbook-book"
+              id="scrapbook-book"
+              tabindex="0"
+              aria-label="Press and hold the left or right page to flip the scrapbook"
+            >
+              <article class="scrapbook-spread is-current" data-page="0">
+                <div class="scrap-page left-page">
+                  <span class="tape tape-one"></span>
+                  <div class="scrap-photo photo-fill-one"></div>
+                  <h3>First favorite photo</h3>
+                  <p>The picture that starts the movie.</p>
+                </div>
+                <div class="scrap-page right-page">
+                  <span class="tape tape-two"></span>
+                  <div class="scrap-photo photo-fill-two"></div>
+                  <h3>Dinner glow</h3>
+                  <p>The date-night card.</p>
+                </div>
+              </article>
+              <article class="scrapbook-spread" data-page="1">
+                <div class="scrap-page left-page">
+                  <span class="tape tape-three"></span>
+                  <div class="scrap-photo photo-fill-three"></div>
+                  <h3>Small adventure</h3>
+                  <p>A trip, walk, or random detour.</p>
+                </div>
+                <div class="scrap-page right-page">
+                  <span class="tape tape-one"></span>
+                  <div class="scrap-photo photo-fill-four"></div>
+                  <h3>Us being us</h3>
+                  <p>The one that makes both of you laugh.</p>
+                </div>
+              </article>
+              <article class="scrapbook-spread" data-page="2">
+                <div class="scrap-page left-page">
+                  <span class="tape tape-two"></span>
+                  <div class="scrap-photo photo-fill-five"></div>
+                  <h3>Blue hour</h3>
+                  <p>A night that felt soft around the edges.</p>
+                </div>
+                <div class="scrap-page right-page">
+                  <span class="tape tape-three"></span>
+                  <div class="scrap-photo photo-fill-six"></div>
+                  <h3>Pink sky proof</h3>
+                  <p>A sunset, a selfie, or a quiet walk.</p>
+                </div>
+              </article>
+              <article class="scrapbook-spread" data-page="3">
+                <div class="scrap-page left-page">
+                  <span class="tape tape-one"></span>
+                  <div class="scrap-photo photo-fill-seven"></div>
+                  <h3>Favorite ordinary day</h3>
+                  <p>The kind of memory that sneaks up on you.</p>
+                </div>
+                <div class="scrap-page right-page">
+                  <span class="tape tape-two"></span>
+                  <div class="scrap-photo photo-fill-eight"></div>
+                  <h3>The next one</h3>
+                  <p>A blank space for what comes after this.</p>
+                </div>
+              </article>
+              <div class="page-turner" id="page-turner" aria-hidden="true">
+                <span class="page-turner-face page-turner-front"></span>
+                <span class="page-turner-face page-turner-back"></span>
+              </div>
+              <div class="page-turn-shadow" aria-hidden="true"></div>
+            </div>
+            <div class="scrapbook-controls">
+              <button class="small-button" id="scrap-prev" type="button">Previous page</button>
+              <span id="scrap-count">Page 1 of 4</span>
+              <button class="small-button" id="scrap-next" type="button">Next page</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="wrapped" data-chapter="wrapped" aria-labelledby="wrapped-title">
+        <div class="wrapped-experience">
+          <div class="wrapped-copy">
+            <p class="eyebrow">Year one wrapped</p>
+            <h2 id="wrapped-title">Year One Wrapped.</h2>
+            <p class="lead">
+              A tiny recap of the first era: favorite moments, top moods,
+              date-night energy, and one very obvious favorite person.
+            </p>
+          </div>
+
+          <div class="wrapped-stage" aria-label="Year one wrapped recap">
+            <article class="wrapped-hero-card">
+              <span class="wrapped-pill">Nelson + her</span>
+              <strong data-wrapped-count data-target="365">0</strong>
+              <p>days in the first era</p>
+              <div class="wrapped-aura" aria-label="Relationship aura">
+                <span style="--aura: 62%"><em>62% sweet</em></span>
+                <span style="--aura: 28%"><em>28% silly</em></span>
+                <span style="--aura: 10%"><em>10% dramatic cute</em></span>
+              </div>
+            </article>
+
+            <article class="wrapped-card wrapped-card-memory" style="--wrapped-delay: 80ms">
+              <span>Most replayed memory</span>
+              <strong>The one that still makes us smile</strong>
+              <p>Photo slot ready for the memory that deserves infinite replays.</p>
+            </article>
+
+            <article class="wrapped-card" style="--wrapped-delay: 170ms">
+              <span>Top date genre</span>
+              <strong>Dessert-first romance</strong>
+              <p>Soft plans, sweet cravings, and probably one more bite.</p>
+            </article>
+
+            <article class="wrapped-card" style="--wrapped-delay: 260ms">
+              <span>Minutes spent laughing</span>
+              <strong><span data-wrapped-count data-target="1247">0</span></strong>
+              <p>A very official estimate, calculated by the heart.</p>
+            </article>
+
+            <article class="wrapped-card" style="--wrapped-delay: 350ms">
+              <span>Couple genre</span>
+              <strong>Chaotic cozy</strong>
+              <p>Pink and blue, soft and funny, main-character side quest energy.</p>
+            </article>
+          </div>
+
+          <div class="wrapped-bottom">
+            <article class="wrapped-ranking">
+              <span class="wrapped-mini-label">Top 5 moments</span>
+              <ol>
+                <li><span>1</span><strong>First favorite photo</strong><em>Replay value: infinite</em></li>
+                <li><span>2</span><strong>Dinner glow</strong><em>Most likely to become tradition</em></li>
+                <li><span>3</span><strong>Small adventure</strong><em>Best unexpected side quest</em></li>
+                <li><span>4</span><strong>Blue hour</strong><em>Softest visual era</em></li>
+                <li><span>5</span><strong>The next one</strong><em>Coming soon</em></li>
+              </ol>
+            </article>
+
+            <article class="wrapped-share-card">
+              <span>Share card</span>
+              <strong>Year One Wrapped</strong>
+              <p>08/09/2025 - 08/09/2026</p>
+              <div class="wrapped-share-bars" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="quiz" data-chapter="quiz" aria-labelledby="quiz-title">
+        <div class="chapter-grid quiz-grid">
+          <div class="chapter-copy">
+            <p class="eyebrow">Date mood quiz</p>
+            <h2 id="quiz-title">Choose the anniversary signal.</h2>
+            <p class="lead">
+              The answers pick the restaurant lane, outfit mood, dessert rule,
+              and final anniversary theme.
+            </p>
+            <p class="quiz-lock-note" id="quiz-lock-note">Finish the quiz to unlock the next chapter.</p>
+          </div>
+
+          <div class="quiz-panel" aria-live="polite">
+            <div class="quiz-topline">
+              <span id="quiz-progress">Question 1 of 6</span>
+              <button class="small-button" id="restart-quiz" type="button">Reset</button>
+            </div>
+            <span class="question-progress"><span id="question-progress-bar"></span></span>
+            <h3 id="question-title"></h3>
+            <div class="answer-grid" id="answer-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="result" data-chapter="result" aria-labelledby="result-title">
+        <div class="chapter-copy wide-copy">
+          <p class="eyebrow">Date machine result</p>
+          <h2 id="result-title">Your result is waiting.</h2>
+          <p class="lead" id="result-tagline">Finish the quiz to reveal it.</p>
+          <div class="result-grid">
+            <article class="result-card">
+              <span>Restaurant lane</span>
+              <strong id="result-restaurant">Locked</strong>
+            </article>
+            <article class="result-card">
+              <span>Theme</span>
+              <strong id="result-theme">Locked</strong>
+            </article>
+            <article class="result-card">
+              <span>Outfit vibe</span>
+              <strong id="result-outfit">Locked</strong>
+            </article>
+            <article class="result-card">
+              <span>Dessert rule</span>
+              <strong id="result-dessert">Locked</strong>
+            </article>
+          </div>
+          <ol class="plan-list" id="result-plan"></ol>
+        </div>
+      </section>
+
+      <section class="chapter" id="jar" data-chapter="jar" aria-labelledby="jar-title">
+        <div class="chapter-grid jar-grid-wrap">
+          <div class="chapter-copy">
+            <p class="eyebrow">Memory jar</p>
+            <h2 id="jar-title">Shake loose a tiny memory.</h2>
+            <p class="lead">
+              The crumpled notes drift around the jar when the mouse moves.
+              Click one and it opens on screen like a little post-it memory.
+            </p>
+            <div class="jar-message" id="jar-message" role="status" aria-live="polite">
+              Pick a note from the jar.
+            </div>
+          </div>
+          <div class="jar-stage" id="jar-stage" aria-label="Jar of crumpled memory notes">
+            <div class="jar-lid" aria-hidden="true"></div>
+            <div class="glass-jar">
+              <button class="paper-note note-one" type="button" data-note="first">
+                <span></span>
+              </button>
+              <button class="paper-note note-two" type="button" data-note="laugh">
+                <span></span>
+              </button>
+              <button class="paper-note note-three" type="button" data-note="dinner">
+                <span></span>
+              </button>
+              <button class="paper-note note-four" type="button" data-note="drive">
+                <span></span>
+              </button>
+              <button class="paper-note note-five" type="button" data-note="future">
+                <span></span>
+              </button>
+              <div class="jar-shine" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="finale" data-chapter="finale" aria-labelledby="final-title">
+        <div class="chapter-grid final-grid">
+          <div class="chapter-copy">
+            <p class="eyebrow">Final reveal</p>
+            <h2 id="final-title">You made it to the end.</h2>
+            <p class="lead">
+              Rewind is unlocked now. Go back through the cards, replay the jar,
+              or start over and choose a different date mood.
+            </p>
+            <div class="rewind-details" aria-label="Rewind unlocked details">
+              <span>Back button unlocked</span>
+              <span>Scrapbook replayable</span>
+              <span>Memory jar still active</span>
+            </div>
+          </div>
+          <div class="final-card">
+            <span class="final-kicker">Unlocked</span>
+            <h3>Official anniversary clue</h3>
+            <p id="final-message">
+              The final clue is waiting.
+            </p>
+            <button class="button button-primary" id="reveal-button" type="button">Reveal clue</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="ending" data-chapter="ending" aria-labelledby="ending-title">
+        <div class="ending-wrap">
+          <div class="bouquet" aria-hidden="true">
+            <span class="stem stem-one"></span>
+            <span class="stem stem-two"></span>
+            <span class="stem stem-three"></span>
+            <span class="stem stem-four"></span>
+            <span class="tulip tulip-one"><span></span></span>
+            <span class="tulip tulip-two"><span></span></span>
+            <span class="tulip tulip-three"><span></span></span>
+            <span class="tulip tulip-four"><span></span></span>
+            <span class="leaf leaf-one"></span>
+            <span class="leaf leaf-two"></span>
+            <span class="leaf leaf-three"></span>
+          </div>
+          <p class="eyebrow">One year together</p>
+          <h2 id="ending-title">I love you so much, I can't wait to celebrate 1 year together!</h2>
+        </div>
+      </section>
+    </main>
+
+    <div class="note-modal" id="note-modal" aria-hidden="true" role="dialog" aria-labelledby="note-modal-title">
+      <button class="note-backdrop" id="note-backdrop" type="button" aria-label="Close memory note"></button>
+      <article class="open-note">
+        <button class="note-close" id="note-close" type="button" aria-label="Close memory note">Close</button>
+        <span id="note-modal-kicker">Memory note</span>
+        <h3 id="note-modal-title">A tiny memory</h3>
+        <p id="note-modal-body"></p>
+      </article>
+    </div>
+
+    <footer class="story-controls" aria-label="Story controls">
+      <button class="button button-secondary is-hidden" id="back-button" type="button">Back</button>
+      <div class="chapter-dots" id="chapter-dots" aria-hidden="true"></div>
+      <button class="button button-primary" id="next-button" type="button">Continue</button>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
