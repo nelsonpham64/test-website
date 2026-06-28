@@ -462,6 +462,11 @@ function setScrapbookPage(pageIndex) {
   document.querySelector("#scrap-prev").disabled = storyState.scrapbookPage === 0;
   document.querySelector("#scrap-next").disabled = storyState.scrapbookPage === spreads.length - 1;
   scrapbookBook.dataset.page = storyState.scrapbookPage;
+
+  const currentEra = spreads[storyState.scrapbookPage]?.dataset.eraIndex ?? "0";
+  document.querySelectorAll(".era-index-item").forEach((item) => {
+    item.classList.toggle("is-active", item.dataset.eraIndex === currentEra);
+  });
 }
 
 function findScrapbookPhoto(number) {

@@ -5651,3 +5651,154 @@ h2 {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* Scrapbook era chapters */
+.era-index {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.6rem, 1fr));
+  gap: 0.62rem;
+  margin-top: 1rem;
+}
+
+.era-index-item {
+  position: relative;
+  display: grid;
+  gap: 0.12rem;
+  min-height: 4.2rem;
+  padding: 0.72rem 0.8rem 0.72rem 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 117, 185, 0.2);
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.78), rgba(216, 238, 255, 0.42)),
+    rgba(255, 255, 255, 0.45);
+  box-shadow:
+    0 12px 26px rgba(197, 91, 138, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  color: rgba(34, 40, 62, 0.78);
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease, background 220ms ease;
+}
+
+.era-index-item::before {
+  content: "";
+  position: absolute;
+  right: -1.2rem;
+  top: -1.4rem;
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255, 113, 185, 0.2), transparent 66%);
+}
+
+.era-index-item strong {
+  position: relative;
+  z-index: 1;
+  color: rgba(35, 42, 66, 0.64);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.era-index-item em {
+  position: relative;
+  z-index: 1;
+  color: rgba(35, 42, 66, 0.92);
+  font-family: var(--font-bubbly);
+  font-size: clamp(0.95rem, 1.4vw, 1.08rem);
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1.08;
+}
+
+.era-index-item span {
+  position: relative;
+  z-index: 1;
+  color: rgba(73, 80, 108, 0.66);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.era-index-item.is-active {
+  transform: translateY(-2px);
+  border-color: rgba(255, 105, 184, 0.42);
+  background:
+    linear-gradient(135deg, rgba(255, 123, 193, 0.24), rgba(129, 208, 255, 0.28)),
+    rgba(255, 255, 255, 0.7);
+  box-shadow:
+    0 16px 34px rgba(197, 91, 138, 0.17),
+    0 0 0 3px rgba(255, 255, 255, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+.era-index-item.is-active em {
+  color: #f45fae;
+}
+
+.scrap-page {
+  padding-top: clamp(1.85rem, 2.6vw, 2.45rem);
+}
+
+.scrap-era-label {
+  position: absolute;
+  left: 50%;
+  top: clamp(0.42rem, 0.9vw, 0.72rem);
+  z-index: 28;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  max-width: calc(100% - 3rem);
+  padding: 0.34rem 0.62rem;
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  border-radius: 999px;
+  background:
+    linear-gradient(135deg, rgba(255, 246, 251, 0.88), rgba(230, 244, 255, 0.8)),
+    rgba(255, 255, 255, 0.76);
+  box-shadow:
+    0 10px 22px rgba(60, 66, 93, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  color: #25304c;
+  pointer-events: none;
+  transform: translateX(-50%) translateZ(34px);
+  white-space: nowrap;
+}
+
+.scrap-era-label span {
+  color: rgba(37, 48, 76, 0.58);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.07em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.scrap-era-label strong {
+  color: #f45fae;
+  font-family: var(--font-bubbly);
+  font-size: clamp(0.8rem, 1.2vw, 0.96rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+@media (max-width: 760px) {
+  .era-index {
+    grid-template-columns: 1fr;
+  }
+
+  .scrap-page {
+    padding-top: 2.2rem;
+  }
+
+  .scrap-era-label {
+    top: 0.48rem;
+    max-width: calc(100% - 1.5rem);
+    padding: 0.3rem 0.48rem;
+  }
+
+  .scrap-era-label span {
+    font-size: 0.58rem;
+  }
+}

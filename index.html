@@ -167,6 +167,33 @@
               with little captions and room for the real pictures later.
             </p>
             <div class="mini-hint">A page at a time, like a little keepsake.</div>
+            <div class="era-index" aria-label="Scrapbook era list">
+              <span class="era-index-item is-active" data-era-index="0">
+                <strong>Chapter 0</strong>
+                <em>Prologue</em>
+                <span>Photos 1-4</span>
+              </span>
+              <span class="era-index-item" data-era-index="1">
+                <strong>Chapter 1</strong>
+                <em>TBD name</em>
+                <span>Photos 5-6</span>
+              </span>
+              <span class="era-index-item" data-era-index="2">
+                <strong>Chapter 2</strong>
+                <em>TBD name</em>
+                <span>Photos 7-8</span>
+              </span>
+              <span class="era-index-item" data-era-index="3">
+                <strong>Chapter 3</strong>
+                <em>TBD name</em>
+                <span>Photos 9-10</span>
+              </span>
+              <span class="era-index-item" data-era-index="4">
+                <strong>Chapter 4</strong>
+                <em>TBD name</em>
+                <span>Photos 11-12</span>
+              </span>
+            </div>
           </div>
 
           <div class="scrapbook" aria-label="Interactive scrapbook">
@@ -176,7 +203,11 @@
               tabindex="0"
               aria-label="Press and hold the left or right page to flip the scrapbook"
             >
-              <article class="scrapbook-spread is-current" data-page="0">
+              <article class="scrapbook-spread is-current" data-page="0" data-era-index="0">
+                <div class="scrap-era-label" aria-hidden="true">
+                  <span>Chapter 0</span>
+                  <strong>Prologue</strong>
+                </div>
                 <div class="scrap-page left-page">
                   <span class="tape tape-one"></span>
                   <div class="scrap-photo photo-fill-one" data-photo-number="1"></div>
@@ -190,7 +221,11 @@
                   <p>The date-night card.</p>
                 </div>
               </article>
-              <article class="scrapbook-spread" data-page="1">
+              <article class="scrapbook-spread" data-page="1" data-era-index="0">
+                <div class="scrap-era-label" aria-hidden="true">
+                  <span>Chapter 0</span>
+                  <strong>Prologue</strong>
+                </div>
                 <div class="scrap-page left-page">
                   <span class="tape tape-three"></span>
                   <div class="scrap-photo photo-fill-three" data-photo-number="3"></div>
@@ -204,7 +239,11 @@
                   <p>The one that makes both of you laugh.</p>
                 </div>
               </article>
-              <article class="scrapbook-spread" data-page="2">
+              <article class="scrapbook-spread" data-page="2" data-era-index="1">
+                <div class="scrap-era-label" aria-hidden="true">
+                  <span>Chapter 1</span>
+                  <strong>TBD name</strong>
+                </div>
                 <div class="scrap-page left-page">
                   <span class="tape tape-two"></span>
                   <div class="scrap-photo photo-fill-five" data-photo-number="5"></div>
@@ -218,7 +257,11 @@
                   <p>A sunset, a selfie, or a quiet walk.</p>
                 </div>
               </article>
-              <article class="scrapbook-spread" data-page="3">
+              <article class="scrapbook-spread" data-page="3" data-era-index="2">
+                <div class="scrap-era-label" aria-hidden="true">
+                  <span>Chapter 2</span>
+                  <strong>TBD name</strong>
+                </div>
                 <div class="scrap-page left-page">
                   <span class="tape tape-one"></span>
                   <div class="scrap-photo photo-fill-seven" data-photo-number="7"></div>
@@ -232,6 +275,42 @@
                   <p>A blank space for what comes after this.</p>
                 </div>
               </article>
+              <article class="scrapbook-spread" data-page="4" data-era-index="3">
+                <div class="scrap-era-label" aria-hidden="true">
+                  <span>Chapter 3</span>
+                  <strong>TBD name</strong>
+                </div>
+                <div class="scrap-page left-page">
+                  <span class="tape tape-three"></span>
+                  <div class="scrap-photo photo-fill-one" data-photo-number="9"></div>
+                  <h3>Era highlight</h3>
+                  <p>A new favorite can live here soon.</p>
+                </div>
+                <div class="scrap-page right-page">
+                  <span class="tape tape-two"></span>
+                  <div class="scrap-photo photo-fill-two" data-photo-number="10"></div>
+                  <h3>Tiny movie scene</h3>
+                  <p>Another numbered slot for this chapter.</p>
+                </div>
+              </article>
+              <article class="scrapbook-spread" data-page="5" data-era-index="4">
+                <div class="scrap-era-label" aria-hidden="true">
+                  <span>Chapter 4</span>
+                  <strong>TBD name</strong>
+                </div>
+                <div class="scrap-page left-page">
+                  <span class="tape tape-one"></span>
+                  <div class="scrap-photo photo-fill-three" data-photo-number="11"></div>
+                  <h3>Almost one year</h3>
+                  <p>A place for the build-up to the big day.</p>
+                </div>
+                <div class="scrap-page right-page">
+                  <span class="tape tape-three"></span>
+                  <div class="scrap-photo photo-fill-four" data-photo-number="12"></div>
+                  <h3>The page after</h3>
+                  <p>Room for the memory you have not picked yet.</p>
+                </div>
+              </article>
               <div class="page-turner" id="page-turner" aria-hidden="true">
                 <span class="page-turner-face page-turner-front"></span>
                 <span class="page-turner-face page-turner-back"></span>
@@ -240,7 +319,7 @@
             </div>
             <div class="scrapbook-controls">
               <button class="small-button" id="scrap-prev" type="button">Previous page</button>
-              <span id="scrap-count">Page 1 of 4</span>
+              <span id="scrap-count">Page 1 of 6</span>
               <button class="small-button" id="scrap-next" type="button">Next page</button>
             </div>
           </div>
