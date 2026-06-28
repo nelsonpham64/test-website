@@ -370,7 +370,7 @@ function openLetter(event) {
       document.querySelector("#intro").classList.remove("is-entering");
       storyState.enteringLetter = false;
     }, 220);
-  }, 980);
+  }, 1380);
 }
 
 function previousChapter() {
@@ -689,26 +689,6 @@ document.querySelectorAll(".paper-note").forEach((note) => {
 
 letterButton.addEventListener("pointerdown", openLetter);
 letterButton.addEventListener("click", openLetter);
-document.querySelector("#intro").addEventListener("pointerdown", openLetter);
-document.addEventListener(
-  "click",
-  (event) => {
-    if (document.body.classList.contains("is-locked")) {
-      return;
-    }
-    if (chapters[storyState.current].dataset.chapter !== "intro") {
-      return;
-    }
-    if (lockScreen.contains(event.target) || loadingScreen.contains(event.target)) {
-      return;
-    }
-    if (!document.querySelector("#intro").contains(event.target)) {
-      return;
-    }
-    openLetter();
-  },
-  true
-);
 document.querySelector("#jar-stage").addEventListener("mousemove", moveJarNotes);
 document.querySelector("#note-close").addEventListener("click", closeNote);
 document.querySelector("#note-backdrop").addEventListener("click", closeNote);
