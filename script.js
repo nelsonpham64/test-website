@@ -32,6 +32,8 @@ const scrapbookHold = {
 const HOLD_TO_FLIP_MS = 660;
 const SCRAPBOOK_FLIP_MS = 1120;
 const SCRAPBOOK_PAGE_SWAP_MS = 640;
+const SCRAPBOOK_PHOTO_PATH = "assets/photos/scrapbook";
+const SCRAPBOOK_PHOTO_EXTENSIONS = ["jpg", "jpeg", "png", "webp"];
 
 const chapterLabels = {
   intro: "Continue",
@@ -462,6 +464,47 @@ function setScrapbookPage(pageIndex) {
   scrapbookBook.dataset.page = storyState.scrapbookPage;
 }
 
+function findScrapbookPhoto(number) {
+  const candidates = SCRAPBOOK_PHOTO_EXTENSIONS.map(
+    (extension) => `${SCRAPBOOK_PHOTO_PATH}/${number}.${extension}`
+  );
+
+  return new Promise((resolve) => {
+    let index = 0;
+
+    function tryNext() {
+      if (index >= candidates.length) {
+        resolve(null);
+        return;
+      }
+
+      const url = candidates[index];
+      index += 1;
+      const image = new Image();
+      image.onload = () => resolve(url);
+      image.onerror = tryNext;
+      image.src = `${url}?v=${Date.now()}`;
+    }
+
+    tryNext();
+  });
+}
+
+function loadScrapbookPhotos() {
+  document.querySelectorAll(".scrap-photo[data-photo-number]").forEach(async (slot) => {
+    const number = slot.dataset.photoNumber;
+    const photoUrl = await findScrapbookPhoto(number);
+
+    if (!photoUrl) {
+      return;
+    }
+
+    slot.classList.add("has-real-photo");
+    slot.dataset.photoFile = photoUrl.split("/").pop();
+    slot.style.backgroundImage = `url("${photoUrl}")`;
+  });
+}
+
 function canFlipScrapbook(direction) {
   const spreads = document.querySelectorAll(".scrapbook-spread");
   return (
@@ -702,5 +745,6 @@ backButton.addEventListener("click", previousChapter);
 restartButton.addEventListener("click", restartQuiz);
 
 renderQuestion();
+loadScrapbookPhotos();
 setScrapbookPage(0);
 setChapter(0);
