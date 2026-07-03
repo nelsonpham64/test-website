@@ -33,7 +33,7 @@ const HOLD_TO_FLIP_MS = 660;
 const SCRAPBOOK_FLIP_MS = 1120;
 const SCRAPBOOK_PAGE_SWAP_MS = 640;
 const SCRAPBOOK_PHOTO_PATH = "assets/photos/scrapbook";
-const SCRAPBOOK_PHOTO_EXTENSIONS = ["jpg", "jpeg", "png", "webp"];
+const SCRAPBOOK_PHOTO_EXTENSIONS = ["jpg", "JPG", "jpeg", "JPEG", "png", "PNG", "webp", "WEBP"];
 
 const chapterLabels = {
   intro: "Continue",
