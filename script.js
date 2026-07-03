@@ -33,9 +33,14 @@ const HOLD_TO_FLIP_MS = 660;
 const SCRAPBOOK_FLIP_MS = 1120;
 const SCRAPBOOK_PAGE_SWAP_MS = 640;
 const SCRAPBOOK_PHOTO_PATH = "assets/photos/scrapbook";
+const SCRAPBOOK_OPTIMIZED_PHOTO_PATH = "assets/photos/scrapbook-optimized";
+const SCRAPBOOK_OPTIMIZED_IMAGE_EXTENSIONS = ["webp"];
 const SCRAPBOOK_IMAGE_EXTENSIONS = ["jpg", "JPG", "jpeg", "JPEG", "png", "PNG", "webp", "WEBP"];
 const SCRAPBOOK_VIDEO_EXTENSIONS = ["mp4", "MP4", "webm", "WEBM", "mov", "MOV"];
 const scrapbookMediaCache = new Map();
+const canUsePointerEffects =
+  window.matchMedia("(pointer: fine)").matches &&
+  !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const chapterLabels = {
   intro: "Continue",
@@ -486,7 +491,6 @@ function probeImage(url) {
 async function probeFile(url) {
   try {
     const response = await fetch(url, {
-      cache: "no-store",
       method: "HEAD"
     });
     return response.ok;
@@ -495,9 +499,12 @@ async function probeFile(url) {
   }
 }
 
-async function findFirstMediaUrl(number, extensions, probe) {
-  for (const extension of extensions) {
-    const url = `${SCRAPBOOK_PHOTO_PATH}/${number}.${extension}`;
+function buildMediaUrls(number, path, extensions) {
+  return extensions.map((extension) => `${path}/${number}.${extension}`);
+}
+
+async function findFirstMediaUrl(urls, probe) {
+  for (const url of urls) {
     if (await probe(url)) {
       return url;
     }
@@ -511,9 +518,15 @@ function findScrapbookMedia(number) {
     return scrapbookMediaCache.get(number);
   }
 
+  const imageUrls = [
+    ...buildMediaUrls(number, SCRAPBOOK_OPTIMIZED_PHOTO_PATH, SCRAPBOOK_OPTIMIZED_IMAGE_EXTENSIONS),
+    ...buildMediaUrls(number, SCRAPBOOK_PHOTO_PATH, SCRAPBOOK_IMAGE_EXTENSIONS)
+  ];
+  const videoUrls = buildMediaUrls(number, SCRAPBOOK_PHOTO_PATH, SCRAPBOOK_VIDEO_EXTENSIONS);
+
   const mediaPromise = Promise.all([
-    findFirstMediaUrl(number, SCRAPBOOK_IMAGE_EXTENSIONS, probeImage),
-    findFirstMediaUrl(number, SCRAPBOOK_VIDEO_EXTENSIONS, probeFile)
+    findFirstMediaUrl(imageUrls, probeImage),
+    findFirstMediaUrl(videoUrls, probeFile)
   ]).then(([imageUrl, videoUrl]) => {
     if (videoUrl) {
       return {
@@ -739,6 +752,10 @@ function closeNote() {
 let cursorRaf = 0;
 let latestPointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 function scheduleCursorUpdate(event) {
+  if (!canUsePointerEffects) {
+    return;
+  }
+
   latestPointer = { x: event.clientX, y: event.clientY };
 
   if (cursorRaf) {
@@ -849,19 +866,22 @@ document.querySelectorAll(".paper-note").forEach((note) => {
 
 letterButton.addEventListener("pointerdown", openLetter);
 letterButton.addEventListener("click", openLetter);
-document.querySelector("#jar-stage").addEventListener("mousemove", moveJarNotes);
+if (canUsePointerEffects) {
+  document.querySelector("#jar-stage").addEventListener("mousemove", moveJarNotes, { passive: true });
+  window.addEventListener("pointermove", scheduleCursorUpdate, { passive: true });
+} else if (cursorDot) {
+  cursorDot.hidden = true;
+}
 document.querySelector("#note-close").addEventListener("click", closeNote);
 document.querySelector("#note-backdrop").addEventListener("click", closeNote);
 document.querySelector("#reveal-button").addEventListener("click", () => {
   setChapter(getChapterIndex("ending"));
 });
 
-window.addEventListener("pointermove", scheduleCursorUpdate, { passive: true });
 nextButton.addEventListener("click", nextChapter);
 backButton.addEventListener("click", previousChapter);
 restartButton.addEventListener("click", restartQuiz);
 
 renderQuestion();
-loadScrapbookPhotos();
 setScrapbookPage(0);
 setChapter(0);

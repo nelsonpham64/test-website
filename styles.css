@@ -284,6 +284,7 @@ img {
   pointer-events: none;
   transform: translate3d(8vw, 0, 0) scale(0.97);
   transition: opacity 520ms ease, transform 640ms cubic-bezier(0.2, 0.82, 0.2, 1);
+  contain: layout paint;
 }
 
 .chapter.is-active {
@@ -5592,6 +5593,8 @@ h2 {
   overflow: hidden;
   background-size: cover;
   background-position: center;
+  contain: paint;
+  transform: translateZ(0);
 }
 
 .scrap-photo::before {
@@ -5660,6 +5663,7 @@ h2 {
   height: 100%;
   object-fit: cover;
   pointer-events: none;
+  transform: translateZ(0);
 }
 
 .scrap-photo.has-video::before,
