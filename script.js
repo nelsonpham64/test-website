@@ -33,7 +33,9 @@ const HOLD_TO_FLIP_MS = 660;
 const SCRAPBOOK_FLIP_MS = 1120;
 const SCRAPBOOK_PAGE_SWAP_MS = 640;
 const SCRAPBOOK_PHOTO_PATH = "assets/photos/scrapbook";
-const SCRAPBOOK_PHOTO_EXTENSIONS = ["jpg", "JPG", "jpeg", "JPEG", "png", "PNG", "webp", "WEBP"];
+const SCRAPBOOK_IMAGE_EXTENSIONS = ["jpg", "JPG", "jpeg", "JPEG", "png", "PNG", "webp", "WEBP"];
+const SCRAPBOOK_VIDEO_EXTENSIONS = ["mp4", "MP4", "webm", "WEBM", "mov", "MOV"];
+const scrapbookMediaCache = new Map();
 
 const chapterLabels = {
   intro: "Continue",
@@ -467,47 +469,157 @@ function setScrapbookPage(pageIndex) {
   document.querySelectorAll(".era-index-item").forEach((item) => {
     item.classList.toggle("is-active", item.dataset.eraIndex === currentEra);
   });
+
+  loadVisibleScrapbookMedia();
+  syncScrapbookVideoPlayback();
 }
 
-function findScrapbookPhoto(number) {
-  const candidates = SCRAPBOOK_PHOTO_EXTENSIONS.map(
-    (extension) => `${SCRAPBOOK_PHOTO_PATH}/${number}.${extension}`
-  );
-
+function probeImage(url) {
   return new Promise((resolve) => {
-    let index = 0;
+    const image = new Image();
+    image.onload = () => resolve(true);
+    image.onerror = () => resolve(false);
+    image.src = url;
+  });
+}
 
-    function tryNext() {
-      if (index >= candidates.length) {
-        resolve(null);
-        return;
-      }
+async function probeFile(url) {
+  try {
+    const response = await fetch(url, {
+      cache: "no-store",
+      method: "HEAD"
+    });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
 
-      const url = candidates[index];
-      index += 1;
-      const image = new Image();
-      image.onload = () => resolve(url);
-      image.onerror = tryNext;
-      image.src = `${url}?v=${Date.now()}`;
+async function findFirstMediaUrl(number, extensions, probe) {
+  for (const extension of extensions) {
+    const url = `${SCRAPBOOK_PHOTO_PATH}/${number}.${extension}`;
+    if (await probe(url)) {
+      return url;
+    }
+  }
+
+  return null;
+}
+
+function findScrapbookMedia(number) {
+  if (scrapbookMediaCache.has(number)) {
+    return scrapbookMediaCache.get(number);
+  }
+
+  const mediaPromise = Promise.all([
+    findFirstMediaUrl(number, SCRAPBOOK_IMAGE_EXTENSIONS, probeImage),
+    findFirstMediaUrl(number, SCRAPBOOK_VIDEO_EXTENSIONS, probeFile)
+  ]).then(([imageUrl, videoUrl]) => {
+    if (videoUrl) {
+      return {
+        posterUrl: imageUrl,
+        type: "video",
+        url: videoUrl
+      };
     }
 
-    tryNext();
+    if (imageUrl) {
+      return {
+        type: "image",
+        url: imageUrl
+      };
+    }
+
+    return null;
+  });
+
+  scrapbookMediaCache.set(number, mediaPromise);
+  return mediaPromise;
+}
+
+function buildScrapbookVideo(media, number) {
+  const video = document.createElement("video");
+  video.autoplay = true;
+  video.loop = true;
+  video.muted = true;
+  video.playsInline = true;
+  video.preload = "metadata";
+  video.src = media.url;
+  video.setAttribute("aria-label", `Live photo ${number}`);
+  video.setAttribute("disablepictureinpicture", "");
+
+  if (media.posterUrl) {
+    video.poster = media.posterUrl;
+  }
+
+  video.addEventListener("loadedmetadata", syncScrapbookVideoPlayback);
+  return video;
+}
+
+async function loadScrapbookSlot(slot) {
+  if (slot.dataset.mediaLoaded === "true" || slot.dataset.mediaLoading === "true") {
+    return;
+  }
+
+  slot.dataset.mediaLoading = "true";
+  const number = slot.dataset.photoNumber;
+  const media = await findScrapbookMedia(number);
+  slot.dataset.mediaLoading = "false";
+
+  if (!media) {
+    return;
+  }
+
+  slot.classList.add("has-real-photo");
+  slot.dataset.mediaLoaded = "true";
+  slot.dataset.photoFile = media.url.split("/").pop();
+
+  if (media.type === "video") {
+    slot.classList.add("has-video");
+    if (media.posterUrl) {
+      slot.style.backgroundImage = `url("${media.posterUrl}")`;
+    }
+    slot.appendChild(buildScrapbookVideo(media, number));
+    syncScrapbookVideoPlayback();
+    return;
+  }
+
+  slot.style.backgroundImage = `url("${media.url}")`;
+}
+
+function loadVisibleScrapbookMedia() {
+  const spreads = Array.from(document.querySelectorAll(".scrapbook-spread"));
+  const pagesToLoad = new Set([
+    storyState.scrapbookPage - 1,
+    storyState.scrapbookPage,
+    storyState.scrapbookPage + 1
+  ]);
+
+  spreads.forEach((spread, index) => {
+    if (!pagesToLoad.has(index)) {
+      return;
+    }
+
+    spread.querySelectorAll(".scrap-photo[data-photo-number]").forEach(loadScrapbookSlot);
+  });
+}
+
+function syncScrapbookVideoPlayback() {
+  document.querySelectorAll(".scrap-photo video").forEach((video) => {
+    const isCurrent = video.closest(".scrapbook-spread")?.classList.contains("is-current");
+
+    if (isCurrent) {
+      const playAttempt = video.play();
+      playAttempt?.catch?.(() => {});
+      return;
+    }
+
+    video.pause();
   });
 }
 
 function loadScrapbookPhotos() {
-  document.querySelectorAll(".scrap-photo[data-photo-number]").forEach(async (slot) => {
-    const number = slot.dataset.photoNumber;
-    const photoUrl = await findScrapbookPhoto(number);
-
-    if (!photoUrl) {
-      return;
-    }
-
-    slot.classList.add("has-real-photo");
-    slot.dataset.photoFile = photoUrl.split("/").pop();
-    slot.style.backgroundImage = `url("${photoUrl}")`;
-  });
+  loadVisibleScrapbookMedia();
 }
 
 function canFlipScrapbook(direction) {
