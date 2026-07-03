@@ -109,6 +109,15 @@
       <span class="loading-bar"><span></span></span>
     </section>
 
+    <section class="letter-announcement" id="letter-announcement" aria-live="polite" aria-hidden="true">
+      <div class="letter-announcement-card">
+        <span class="announcement-spark spark-a" aria-hidden="true"></span>
+        <span class="announcement-spark spark-b" aria-hidden="true"></span>
+        <span class="announcement-sticker" aria-hidden="true">1</span>
+        <p>letter has appeared...</p>
+      </div>
+    </section>
+
     <div class="ambient" aria-hidden="true">
       <span class="light-band band-one"></span>
       <span class="light-band band-two"></span>
@@ -141,7 +150,9 @@
             </p>
           </div>
           <button class="letter-card" id="letter-button" type="button" aria-label="Open the anniversary envelope">
-            <span class="letter-paper" aria-hidden="true"></span>
+            <span class="letter-paper" aria-hidden="true">
+              <span class="letter-paper-message">Open this when you're ready</span>
+            </span>
             <span class="letter-envelope-back" aria-hidden="true"></span>
             <span class="letter-flap" aria-hidden="true"></span>
             <span class="letter-fold letter-fold-left" aria-hidden="true"></span>

@@ -10,6 +10,7 @@ const scrapbookBook = document.querySelector("#scrapbook-book");
 const lockScreen = document.querySelector("#lock-screen");
 const heartLock = document.querySelector("#heart-lock");
 const loadingScreen = document.querySelector("#loading-screen");
+const letterAnnouncement = document.querySelector("#letter-announcement");
 const dateForm = document.querySelector("#date-form");
 const dateInput = document.querySelector("#anniversary-date");
 const lockHint = document.querySelector("#lock-hint");
@@ -245,10 +246,22 @@ function unlockSite() {
   }, 650);
 
   window.setTimeout(() => {
-    document.body.classList.remove("is-locked");
     loadingScreen.classList.remove("is-visible");
     loadingScreen.setAttribute("aria-hidden", "true");
+    letterAnnouncement.classList.add("is-visible");
+    letterAnnouncement.setAttribute("aria-hidden", "false");
   }, 2350);
+
+  window.setTimeout(() => {
+    document.body.classList.remove("is-locked");
+    document.body.classList.add("is-letter-scene", "is-letter-arriving");
+    letterAnnouncement.classList.remove("is-visible");
+    letterAnnouncement.setAttribute("aria-hidden", "true");
+  }, 3500);
+
+  window.setTimeout(() => {
+    document.body.classList.remove("is-letter-arriving");
+  }, 4450);
 }
 
 function animateWrappedCounters() {
@@ -299,12 +312,18 @@ function triggerWrappedReveal() {
 function setChapter(index) {
   const boundedIndex = Math.max(0, Math.min(index, chapters.length - 1));
   storyState.current = boundedIndex;
+  const activeChapterKey = chapters[boundedIndex].dataset.chapter;
 
   chapters.forEach((chapter, chapterIndex) => {
     chapter.classList.toggle("is-active", chapterIndex === boundedIndex);
     chapter.classList.toggle("is-past", chapterIndex < boundedIndex);
     chapter.setAttribute("aria-hidden", chapterIndex === boundedIndex ? "false" : "true");
   });
+
+  document.body.classList.toggle(
+    "is-letter-scene",
+    activeChapterKey === "intro" && !document.body.classList.contains("is-locked")
+  );
 
   if (boundedIndex === chapters.length - 1) {
     storyState.hasReachedEnd = true;
@@ -368,6 +387,7 @@ function openLetter(event) {
   }
 
   storyState.enteringLetter = true;
+  document.body.classList.remove("is-letter-arriving");
   letterButton.classList.add("is-entering");
   document.querySelector("#intro").classList.add("is-entering");
 
