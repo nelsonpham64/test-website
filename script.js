@@ -45,11 +45,11 @@ const canUsePointerEffects =
 
 const chapterLabels = {
   intro: "Continue",
-  scrapbook: "Next",
+  scrapbook: "Open jar",
+  jar: "Year wrapped",
   wrapped: "Start quiz",
   quiz: "Finish quiz",
-  result: "Open jar",
-  jar: "Final clue",
+  result: "Final clue",
   finale: "Reveal ending",
   ending: "Start over"
 };
@@ -492,11 +492,54 @@ function setScrapbookPage(pageIndex) {
 
   const currentEra = spreads[storyState.scrapbookPage]?.dataset.eraIndex ?? "0";
   document.querySelectorAll(".era-index-item").forEach((item) => {
-    item.classList.toggle("is-active", item.dataset.eraIndex === currentEra);
+    const isActiveEra = item.dataset.eraIndex === currentEra;
+    item.classList.toggle("is-active", isActiveEra);
+    item.setAttribute("aria-pressed", isActiveEra ? "true" : "false");
   });
 
   loadVisibleScrapbookMedia();
   syncScrapbookVideoPlayback();
+}
+
+function getScrapbookPageForEra(eraIndex) {
+  const spreads = Array.from(document.querySelectorAll(".scrapbook-spread"));
+  return spreads.findIndex((spread) => spread.dataset.eraIndex === eraIndex);
+}
+
+function jumpToScrapbookPage(pageIndex) {
+  const spreads = Array.from(document.querySelectorAll(".scrapbook-spread"));
+  const targetPage = Math.max(0, Math.min(pageIndex, spreads.length - 1));
+
+  if (targetPage === storyState.scrapbookPage) {
+    setScrapbookPage(targetPage);
+    return;
+  }
+
+  const direction = targetPage > storyState.scrapbookPage ? 1 : -1;
+  clearScrapbookHold();
+  window.clearTimeout(scrapbookHold.pageTimer);
+  window.clearTimeout(scrapbookHold.releaseTimer);
+  scrapbookBook.classList.remove("is-flipping-forward", "is-flipping-backward");
+  void scrapbookBook.offsetWidth;
+  scrapbookBook.classList.add(direction > 0 ? "is-flipping-forward" : "is-flipping-backward");
+
+  scrapbookHold.pageTimer = window.setTimeout(() => {
+    setScrapbookPage(targetPage);
+  }, SCRAPBOOK_PAGE_SWAP_MS);
+
+  scrapbookHold.releaseTimer = window.setTimeout(() => {
+    scrapbookBook.classList.remove("is-flipping-forward", "is-flipping-backward");
+  }, SCRAPBOOK_FLIP_MS);
+}
+
+function jumpToScrapbookEra(eraIndex) {
+  const targetPage = getScrapbookPageForEra(eraIndex);
+
+  if (targetPage < 0) {
+    return;
+  }
+
+  jumpToScrapbookPage(targetPage);
 }
 
 function probeImage(url) {
@@ -862,6 +905,10 @@ document.querySelector("#scrap-prev").addEventListener("click", () => {
 
 document.querySelector("#scrap-next").addEventListener("click", () => {
   triggerScrapbookFlip(1);
+});
+
+document.querySelectorAll(".era-index-item").forEach((item) => {
+  item.addEventListener("click", () => jumpToScrapbookEra(item.dataset.eraIndex));
 });
 
 scrapbookBook.addEventListener("pointerdown", startScrapbookHold);

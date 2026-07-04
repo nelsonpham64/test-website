@@ -133,7 +133,7 @@
         <span>test Website</span>
       </a>
       <div class="story-progress" aria-label="Story progress">
-        <span id="chapter-counter">Chapter 1 of 7</span>
+        <span id="chapter-counter">Chapter 1 of 8</span>
         <span class="progress-track"><span id="story-progress-bar"></span></span>
       </div>
     </header>
@@ -172,38 +172,73 @@
         <div class="chapter-grid scrapbook-feature">
           <div class="chapter-copy">
             <p class="eyebrow">Scrapbook chapter</p>
-            <h2 id="scrapbook-title">Flip through a few pages of us.</h2>
+            <h2 id="scrapbook-title">Flip through our chaptered scrapbook.</h2>
             <p class="lead">
-              A softer way to hold the photo cards: one spread at a time,
-              with little captions and room for the real pictures later.
+              Jump to an era, or hold the page and flip through every little
+              chapter in order.
             </p>
             <div class="mini-hint">A page at a time, like a little keepsake.</div>
             <div class="era-index" aria-label="Scrapbook era list">
-              <span class="era-index-item is-active" data-era-index="0">
+              <button class="era-index-item is-active" type="button" data-era-index="0" aria-pressed="true">
                 <strong>Chapter 0</strong>
                 <em>Prologue</em>
                 <span>Photos 1-4</span>
-              </span>
-              <span class="era-index-item" data-era-index="1">
-                <strong>Chapter 1</strong>
-                <em>TBD name</em>
+              </button>
+              <button class="era-index-item" type="button" data-era-index="0.5" aria-pressed="false">
+                <strong>Chapter 0.5</strong>
+                <em>Getting Closer..</em>
                 <span>Photos 5-6</span>
-              </span>
-              <span class="era-index-item" data-era-index="2">
-                <strong>Chapter 2</strong>
-                <em>TBD name</em>
+              </button>
+              <button class="era-index-item" type="button" data-era-index="1" aria-pressed="false">
+                <strong>Chapter 1</strong>
+                <em>First Date</em>
                 <span>Photos 7-8</span>
-              </span>
-              <span class="era-index-item" data-era-index="3">
-                <strong>Chapter 3</strong>
-                <em>TBD name</em>
+              </button>
+              <button class="era-index-item" type="button" data-era-index="2" aria-pressed="false">
+                <strong>Chapter 2</strong>
+                <em>Talking Stage</em>
                 <span>Photos 9-10</span>
-              </span>
-              <span class="era-index-item" data-era-index="4">
+              </button>
+              <button class="era-index-item" type="button" data-era-index="3" aria-pressed="false">
+                <strong>Chapter 3</strong>
+                <em>Rave Bae!</em>
+                <span>Photos 11-12</span>
+              </button>
+              <button class="era-index-item" type="button" data-era-index="4" aria-pressed="false">
                 <strong>Chapter 4</strong>
-                <em>TBD name</em>
-                <span>Photos 11-32</span>
-              </span>
+                <em>Photobooth Maxxing</em>
+                <span>Photos 13-14</span>
+              </button>
+              <button class="era-index-item" type="button" data-era-index="5" aria-pressed="false">
+                <strong>Chapter 5</strong>
+                <em>Happy 22!!</em>
+                <span>Photos 15-16</span>
+              </button>
+              <button class="era-index-item is-long-title" type="button" data-era-index="6" aria-pressed="false">
+                <strong>Chapter 6</strong>
+                <em>My Valentines & Also 6 Months</em>
+                <span>Photos 17-18</span>
+              </button>
+              <button class="era-index-item" type="button" data-era-index="7" aria-pressed="false">
+                <strong>Chapter 7</strong>
+                <em>Viet Baddie</em>
+                <span>Photos 19-20</span>
+              </button>
+              <button class="era-index-item" type="button" data-era-index="8" aria-pressed="false">
+                <strong>Chapter 8</strong>
+                <em>DSP Couple</em>
+                <span>Photos 21-22</span>
+              </button>
+              <button class="era-index-item" type="button" data-era-index="9" aria-pressed="false">
+                <strong>Chapter 9</strong>
+                <em>My Favorite Grad</em>
+                <span>Photos 23-24</span>
+              </button>
+              <button class="era-index-item" type="button" data-era-index="10" aria-pressed="false">
+                <strong>Chapter 10</strong>
+                <em>Nashville Sidequest</em>
+                <span>Photos 25-26</span>
+              </button>
             </div>
           </div>
 
@@ -250,256 +285,220 @@
                   <p>The one that makes both of you laugh.</p>
                 </div>
               </article>
-              <article class="scrapbook-spread" data-page="2" data-era-index="1">
+              <article class="scrapbook-spread" data-page="2" data-era-index="0.5">
                 <div class="scrap-era-label" aria-hidden="true">
-                  <span>Chapter 1</span>
-                  <strong>TBD name</strong>
+                  <span>Chapter 0.5</span>
+                  <strong>Getting Closer..</strong>
                 </div>
                 <div class="scrap-page left-page">
                   <span class="tape tape-two"></span>
                   <div class="scrap-photo photo-fill-five" data-photo-number="5"></div>
-                  <h3>Blue hour</h3>
-                  <p>A night that felt soft around the edges.</p>
+                  <h3>Getting Closer I</h3>
+                  <p>The little stretch where everything started feeling easier.</p>
                 </div>
                 <div class="scrap-page right-page">
                   <span class="tape tape-three"></span>
                   <div class="scrap-photo photo-fill-six" data-photo-number="6"></div>
-                  <h3>Pink sky proof</h3>
-                  <p>A sunset, a selfie, or a quiet walk.</p>
+                  <h3>Getting Closer II</h3>
+                  <p>A tiny proof that the chapter was starting to matter.</p>
                 </div>
               </article>
-              <article class="scrapbook-spread" data-page="3" data-era-index="2">
+              <article class="scrapbook-spread" data-page="3" data-era-index="1">
                 <div class="scrap-era-label" aria-hidden="true">
-                  <span>Chapter 2</span>
-                  <strong>TBD name</strong>
+                  <span>Chapter 1</span>
+                  <strong>First Date</strong>
                 </div>
                 <div class="scrap-page left-page">
                   <span class="tape tape-one"></span>
                   <div class="scrap-photo photo-fill-seven" data-photo-number="7"></div>
-                  <h3>Favorite ordinary day</h3>
-                  <p>The kind of memory that sneaks up on you.</p>
+                  <h3>First Date I</h3>
+                  <p>The first official page of something real.</p>
                 </div>
                 <div class="scrap-page right-page">
                   <span class="tape tape-two"></span>
                   <div class="scrap-photo photo-fill-eight" data-photo-number="8"></div>
-                  <h3>The next one</h3>
-                  <p>A blank space for what comes after this.</p>
+                  <h3>First Date II</h3>
+                  <p>The kind of memory that gets replayed for a reason.</p>
                 </div>
               </article>
-              <article class="scrapbook-spread" data-page="4" data-era-index="3">
+              <article class="scrapbook-spread" data-page="4" data-era-index="2">
                 <div class="scrap-era-label" aria-hidden="true">
-                  <span>Chapter 3</span>
-                  <strong>TBD name</strong>
+                  <span>Chapter 2</span>
+                  <strong>Talking Stage</strong>
                 </div>
                 <div class="scrap-page left-page">
                   <span class="tape tape-three"></span>
                   <div class="scrap-photo photo-fill-one" data-photo-number="9"></div>
-                  <h3>Era highlight</h3>
-                  <p>A new favorite can live here soon.</p>
+                  <h3>Talking Stage I</h3>
+                  <p>The messages, the hints, the wait-and-see spark.</p>
                 </div>
                 <div class="scrap-page right-page">
                   <span class="tape tape-two"></span>
                   <div class="scrap-photo photo-fill-two" data-photo-number="10"></div>
-                  <h3>Tiny movie scene</h3>
-                  <p>Another numbered slot for this chapter.</p>
+                  <h3>Talking Stage II</h3>
+                  <p>When the little things started feeling less little.</p>
                 </div>
               </article>
-              <article class="scrapbook-spread" data-page="5" data-era-index="4">
+              <article class="scrapbook-spread" data-page="5" data-era-index="3">
                 <div class="scrap-era-label" aria-hidden="true">
-                  <span>Chapter 4</span>
-                  <strong>TBD name</strong>
+                  <span>Chapter 3</span>
+                  <strong>Rave Bae!</strong>
                 </div>
                 <div class="scrap-page left-page">
                   <span class="tape tape-one"></span>
                   <div class="scrap-photo photo-fill-three" data-photo-number="11"></div>
-                  <h3>Almost one year</h3>
-                  <p>A place for the build-up to the big day.</p>
+                  <h3>Rave Bae! I</h3>
+                  <p>The lights, the music, and the perfect person beside you.</p>
                 </div>
                 <div class="scrap-page right-page">
                   <span class="tape tape-three"></span>
                   <div class="scrap-photo photo-fill-four" data-photo-number="12"></div>
-                  <h3>The page after</h3>
-                  <p>Room for the memory you have not picked yet.</p>
+                  <h3>Rave Bae! II</h3>
+                  <p>A loud little chapter with a soft center.</p>
                 </div>
               </article>
               <article class="scrapbook-spread" data-page="6" data-era-index="4">
                 <div class="scrap-era-label" aria-hidden="true">
                   <span>Chapter 4</span>
-                  <strong>TBD name</strong>
+                  <strong>Photobooth Maxxing</strong>
                 </div>
                 <div class="scrap-page left-page">
                   <span class="tape tape-two"></span>
                   <div class="scrap-photo photo-fill-five" data-photo-number="13"></div>
-                  <h3>Saved little spark</h3>
-                  <p>A slot for the next photo or tiny live moment.</p>
+                  <h3>Photobooth I</h3>
+                  <p>The tiny square evidence that you two are too cute.</p>
                 </div>
                 <div class="scrap-page right-page">
                   <span class="tape tape-one"></span>
                   <div class="scrap-photo photo-fill-six" data-photo-number="14"></div>
-                  <h3>Another page for us</h3>
-                  <p>Drop in a picture, loop, or quick memory.</p>
+                  <h3>Photobooth II</h3>
+                  <p>Silly, sweet, and very much worth saving.</p>
                 </div>
               </article>
-              <article class="scrapbook-spread" data-page="7" data-era-index="4">
+              <article class="scrapbook-spread" data-page="7" data-era-index="5">
                 <div class="scrap-era-label" aria-hidden="true">
-                  <span>Chapter 4</span>
-                  <strong>TBD name</strong>
+                  <span>Chapter 5</span>
+                  <strong>Happy 22!!</strong>
                 </div>
                 <div class="scrap-page left-page">
                   <span class="tape tape-three"></span>
                   <div class="scrap-photo photo-fill-seven" data-photo-number="15"></div>
-                  <h3>Soft proof</h3>
-                  <p>A place for something sweet and slightly cinematic.</p>
+                  <h3>Happy 22!! I</h3>
+                  <p>A birthday chapter with extra pink-and-blue sparkle.</p>
                 </div>
                 <div class="scrap-page right-page">
                   <span class="tape tape-two"></span>
                   <div class="scrap-photo photo-fill-eight" data-photo-number="16"></div>
-                  <h3>One more favorite</h3>
-                  <p>Because the scrapbook deserves extra room.</p>
+                  <h3>Happy 22!! II</h3>
+                  <p>One more year older, one more favorite memory.</p>
                 </div>
               </article>
-              <article class="scrapbook-spread" data-page="8" data-era-index="4">
+              <article class="scrapbook-spread" data-page="8" data-era-index="6">
                 <div class="scrap-era-label" aria-hidden="true">
-                  <span>Chapter 4</span>
-                  <strong>TBD name</strong>
+                  <span>Chapter 6</span>
+                  <strong>My Valentines & Also 6 Months</strong>
                 </div>
                 <div class="scrap-page left-page">
                   <span class="tape tape-one"></span>
                   <div class="scrap-photo photo-fill-one" data-photo-number="17"></div>
-                  <h3>Almost movie magic</h3>
-                  <p>A future slot for a blink-and-smile moment.</p>
+                  <h3>Valentines I</h3>
+                  <p>The love-day page, with six-month energy tucked inside.</p>
                 </div>
                 <div class="scrap-page right-page">
                   <span class="tape tape-three"></span>
                   <div class="scrap-photo photo-fill-two" data-photo-number="18"></div>
-                  <h3>Still us</h3>
-                  <p>Another little piece of the year.</p>
+                  <h3>Six Months</h3>
+                  <p>Half a year together, already feeling like a classic.</p>
                 </div>
               </article>
-              <article class="scrapbook-spread" data-page="9" data-era-index="4">
+              <article class="scrapbook-spread" data-page="9" data-era-index="7">
                 <div class="scrap-era-label" aria-hidden="true">
-                  <span>Chapter 4</span>
-                  <strong>TBD name</strong>
+                  <span>Chapter 7</span>
+                  <strong>Viet Baddie</strong>
                 </div>
                 <div class="scrap-page left-page">
                   <span class="tape tape-two"></span>
                   <div class="scrap-photo photo-fill-three" data-photo-number="19"></div>
-                  <h3>For the last few</h3>
-                  <p>A slot for whatever feels too cute to leave out.</p>
+                  <h3>Viet Baddie I</h3>
+                  <p>A whole era, a whole look, a whole reason to smile.</p>
                 </div>
                 <div class="scrap-page right-page">
                   <span class="tape tape-one"></span>
                   <div class="scrap-photo photo-fill-four" data-photo-number="20"></div>
-                  <h3>Chapter close</h3>
-                  <p>The page that waits for the perfect final pick.</p>
+                  <h3>Viet Baddie II</h3>
+                  <p>Saved because this page knows what it is doing.</p>
                 </div>
               </article>
-              <article class="scrapbook-spread" data-page="10" data-era-index="4">
+              <article class="scrapbook-spread" data-page="10" data-era-index="8">
                 <div class="scrap-era-label" aria-hidden="true">
-                  <span>Chapter 4</span>
-                  <strong>TBD name</strong>
+                  <span>Chapter 8</span>
+                  <strong>DSP Couple</strong>
                 </div>
                 <div class="scrap-page left-page">
                   <span class="tape tape-three"></span>
                   <div class="scrap-photo photo-fill-five" data-photo-number="21"></div>
-                  <h3>New page glow</h3>
-                  <p>A fresh spot for the next photo you upload.</p>
+                  <h3>DSP Couple I</h3>
+                  <p>Certified duo energy, filed under things worth replaying.</p>
                 </div>
                 <div class="scrap-page right-page">
                   <span class="tape tape-two"></span>
                   <div class="scrap-photo photo-fill-six" data-photo-number="22"></div>
-                  <h3>Memory pending</h3>
-                  <p>Ready for another little live-photo moment.</p>
+                  <h3>DSP Couple II</h3>
+                  <p>Another frame for the two-person highlight reel.</p>
                 </div>
               </article>
-              <article class="scrapbook-spread" data-page="11" data-era-index="4">
+              <article class="scrapbook-spread" data-page="11" data-era-index="9">
                 <div class="scrap-era-label" aria-hidden="true">
-                  <span>Chapter 4</span>
-                  <strong>TBD name</strong>
+                  <span>Chapter 9</span>
+                  <strong>My Favorite Grad</strong>
                 </div>
                 <div class="scrap-page left-page">
                   <span class="tape tape-one"></span>
                   <div class="scrap-photo photo-fill-seven" data-photo-number="23"></div>
-                  <h3>Extra soft frame</h3>
-                  <p>One more page for something sweet.</p>
+                  <h3>Favorite Grad I</h3>
+                  <p>The proudest page, and probably the prettiest too.</p>
                 </div>
                 <div class="scrap-page right-page">
                   <span class="tape tape-three"></span>
                   <div class="scrap-photo photo-fill-eight" data-photo-number="24"></div>
-                  <h3>Another favorite</h3>
-                  <p>A numbered slot waiting for its picture.</p>
+                  <h3>Favorite Grad II</h3>
+                  <p>A little applause, a little love, a lot of deserved hype.</p>
                 </div>
               </article>
-              <article class="scrapbook-spread" data-page="12" data-era-index="4">
+              <article class="scrapbook-spread" data-page="12" data-era-index="10">
                 <div class="scrap-era-label" aria-hidden="true">
-                  <span>Chapter 4</span>
-                  <strong>TBD name</strong>
+                  <span>Chapter 10</span>
+                  <strong>Nashville Sidequest</strong>
                 </div>
                 <div class="scrap-page left-page">
                   <span class="tape tape-two"></span>
                   <div class="scrap-photo photo-fill-one" data-photo-number="25"></div>
-                  <h3>Saved for later</h3>
-                  <p>A blank keepsake page with room to breathe.</p>
+                  <h3>Nashville I</h3>
+                  <p>The sidequest chapter, obviously important to the lore.</p>
                 </div>
                 <div class="scrap-page right-page">
                   <span class="tape tape-one"></span>
                   <div class="scrap-photo photo-fill-two" data-photo-number="26"></div>
-                  <h3>Little time capsule</h3>
-                  <p>Drop in a still, loop, or tiny clip.</p>
+                  <h3>Nashville II</h3>
+                  <p>A perfect last stop before the next adventure begins.</p>
                 </div>
               </article>
-              <article class="scrapbook-spread" data-page="13" data-era-index="4">
+              <article class="scrapbook-spread" data-page="13" data-era-index="10">
                 <div class="scrap-era-label" aria-hidden="true">
-                  <span>Chapter 4</span>
-                  <strong>TBD name</strong>
+                  <span>To be continued</span>
+                  <strong>Year two loading</strong>
                 </div>
-                <div class="scrap-page left-page">
+                <div class="scrap-page left-page coming-soon-page">
                   <span class="tape tape-three"></span>
-                  <div class="scrap-photo photo-fill-three" data-photo-number="27"></div>
-                  <h3>Bonus page</h3>
-                  <p>For a moment that deserves its own spot.</p>
+                  <span class="coming-soon-mark" aria-hidden="true">...</span>
+                  <h3>More Adventures</h3>
+                  <p>The next pages are saving room for every new favorite.</p>
                 </div>
-                <div class="scrap-page right-page">
-                  <span class="tape tape-two"></span>
-                  <div class="scrap-photo photo-fill-four" data-photo-number="28"></div>
-                  <h3>Almost the end</h3>
-                  <p>Another page before the final turn.</p>
-                </div>
-              </article>
-              <article class="scrapbook-spread" data-page="14" data-era-index="4">
-                <div class="scrap-era-label" aria-hidden="true">
-                  <span>Chapter 4</span>
-                  <strong>TBD name</strong>
-                </div>
-                <div class="scrap-page left-page">
+                <div class="scrap-page right-page coming-soon-page">
                   <span class="tape tape-one"></span>
-                  <div class="scrap-photo photo-fill-five" data-photo-number="29"></div>
-                  <h3>Year-one sparkle</h3>
-                  <p>A place for something bright and happy.</p>
-                </div>
-                <div class="scrap-page right-page">
-                  <span class="tape tape-three"></span>
-                  <div class="scrap-photo photo-fill-six" data-photo-number="30"></div>
-                  <h3>One more scene</h3>
-                  <p>The scrapbook can hold a little more.</p>
-                </div>
-              </article>
-              <article class="scrapbook-spread" data-page="15" data-era-index="4">
-                <div class="scrap-era-label" aria-hidden="true">
-                  <span>Chapter 4</span>
-                  <strong>TBD name</strong>
-                </div>
-                <div class="scrap-page left-page">
-                  <span class="tape tape-two"></span>
-                  <div class="scrap-photo photo-fill-seven" data-photo-number="31"></div>
-                  <h3>Final extra slot</h3>
-                  <p>For the photo that almost did not fit.</p>
-                </div>
-                <div class="scrap-page right-page">
-                  <span class="tape tape-one"></span>
-                  <div class="scrap-photo photo-fill-eight" data-photo-number="32"></div>
-                  <h3>Chapter close</h3>
-                  <p>A soft landing for the last uploaded memory.</p>
+                  <span class="coming-soon-mark" aria-hidden="true">...</span>
+                  <h3>Coming Soon...</h3>
+                  <p>More Adventures Coming Soon...</p>
                 </div>
               </article>
               <div class="page-turner" id="page-turner" aria-hidden="true">
@@ -510,8 +509,45 @@
             </div>
             <div class="scrapbook-controls">
               <button class="small-button" id="scrap-prev" type="button">Previous page</button>
-              <span id="scrap-count">Page 1 of 16</span>
+              <span id="scrap-count">Page 1 of 14</span>
               <button class="small-button" id="scrap-next" type="button">Next page</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="jar" data-chapter="jar" aria-labelledby="jar-title">
+        <div class="chapter-grid jar-grid-wrap">
+          <div class="chapter-copy">
+            <p class="eyebrow">Memory jar</p>
+            <h2 id="jar-title">Shake loose a tiny memory.</h2>
+            <p class="lead">
+              The crumpled notes drift around the jar when the mouse moves.
+              Click one and it opens on screen like a little post-it memory.
+            </p>
+            <div class="jar-message" id="jar-message" role="status" aria-live="polite">
+              Pick a note from the jar.
+            </div>
+          </div>
+          <div class="jar-stage" id="jar-stage" aria-label="Jar of crumpled memory notes">
+            <div class="jar-lid" aria-hidden="true"></div>
+            <div class="glass-jar">
+              <button class="paper-note note-one" type="button" data-note="first">
+                <span></span>
+              </button>
+              <button class="paper-note note-two" type="button" data-note="laugh">
+                <span></span>
+              </button>
+              <button class="paper-note note-three" type="button" data-note="dinner">
+                <span></span>
+              </button>
+              <button class="paper-note note-four" type="button" data-note="drive">
+                <span></span>
+              </button>
+              <button class="paper-note note-five" type="button" data-note="future">
+                <span></span>
+              </button>
+              <div class="jar-shine" aria-hidden="true"></div>
             </div>
           </div>
         </div>
@@ -640,43 +676,6 @@
             </article>
           </div>
           <ol class="plan-list" id="result-plan"></ol>
-        </div>
-      </section>
-
-      <section class="chapter" id="jar" data-chapter="jar" aria-labelledby="jar-title">
-        <div class="chapter-grid jar-grid-wrap">
-          <div class="chapter-copy">
-            <p class="eyebrow">Memory jar</p>
-            <h2 id="jar-title">Shake loose a tiny memory.</h2>
-            <p class="lead">
-              The crumpled notes drift around the jar when the mouse moves.
-              Click one and it opens on screen like a little post-it memory.
-            </p>
-            <div class="jar-message" id="jar-message" role="status" aria-live="polite">
-              Pick a note from the jar.
-            </div>
-          </div>
-          <div class="jar-stage" id="jar-stage" aria-label="Jar of crumpled memory notes">
-            <div class="jar-lid" aria-hidden="true"></div>
-            <div class="glass-jar">
-              <button class="paper-note note-one" type="button" data-note="first">
-                <span></span>
-              </button>
-              <button class="paper-note note-two" type="button" data-note="laugh">
-                <span></span>
-              </button>
-              <button class="paper-note note-three" type="button" data-note="dinner">
-                <span></span>
-              </button>
-              <button class="paper-note note-four" type="button" data-note="drive">
-                <span></span>
-              </button>
-              <button class="paper-note note-five" type="button" data-note="future">
-                <span></span>
-              </button>
-              <div class="jar-shine" aria-hidden="true"></div>
-            </div>
-          </div>
         </div>
       </section>
 
