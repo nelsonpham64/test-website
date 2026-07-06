@@ -6725,3 +6725,105 @@ body.is-letter-arriving #intro .letter-card {
     opacity: 1;
   }
 }
+
+/* Calmer jar and sticky-note reveal refinement */
+.jar-shell {
+  cursor: default;
+}
+
+.jar-shell.is-grabbing {
+  cursor: default;
+}
+
+.sticky-memory {
+  width: min(540px, 92vw);
+  min-height: 380px;
+  padding: 3.1rem 2.1rem 2rem;
+  border: 0;
+  border-radius: 18px 24px 16px 25px;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.6), transparent 28%),
+    repeating-linear-gradient(180deg, transparent 0 2.2rem, rgba(176, 137, 52, 0.12) 2.2rem 2.28rem),
+    #ffe97b;
+  clip-path: polygon(2% 3%, 36% 0, 64% 4%, 97% 1%, 100% 34%, 96% 61%, 99% 97%, 62% 94%, 34% 100%, 0 94%, 4% 62%, 0 35%);
+  box-shadow:
+    0 42px 110px rgba(58, 45, 68, 0.46),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.42);
+  transform: rotate(-1.2deg) scale(0.96);
+}
+
+.note-modal.is-open .sticky-memory {
+  transform: rotate(-1.2deg) scale(1);
+}
+
+.sticky-memory::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0.65rem;
+  width: 6.8rem;
+  height: 1.55rem;
+  border-radius: 4px;
+  background: rgba(255, 154, 205, 0.48);
+  box-shadow: 0 0.5rem 1rem rgba(178, 88, 137, 0.16);
+  transform: translateX(-50%) rotate(1.5deg);
+}
+
+.sticky-memory #note-modal-kicker {
+  position: relative;
+  z-index: 1;
+  color: #e24e9d;
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+}
+
+.sticky-memory h3 {
+  position: relative;
+  z-index: 1;
+  margin: 0.55rem 0 1rem;
+  color: #1d263f;
+  font-size: clamp(1.7rem, 5vw, 2.6rem);
+  line-height: 1.02;
+}
+
+.sticky-note-lines {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.sticky-line {
+  margin: 0;
+  color: rgba(29, 38, 63, 0.78);
+  font-size: clamp(1rem, 2vw, 1.16rem);
+  font-weight: 800;
+  line-height: 1.45;
+  opacity: 0;
+  transform: translateY(0.45rem);
+  animation: stickyLineIn 360ms ease forwards;
+  animation-delay: var(--bubble-delay);
+}
+
+.sticky-memory .note-close {
+  top: 0.95rem;
+  right: 1rem;
+  z-index: 3;
+  border-color: rgba(29, 38, 63, 0.12);
+  background: rgba(255, 255, 255, 0.58);
+}
+
+@keyframes stickyLineIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sticky-line {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}

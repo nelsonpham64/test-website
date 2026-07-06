@@ -388,7 +388,7 @@ function setChapter(index) {
 
       initializeJarPhysics();
       startJarPhysics();
-      bumpJarNotes(0.45);
+      bumpJarNotes(0.12);
     }, 120);
   } else {
     stopJarPhysics();
@@ -1012,9 +1012,9 @@ function stepJarPhysics(time) {
   }
 
   jarPhysics.notes.forEach((note) => {
-    note.vy += 0.16 * delta;
-    note.vx += jarPhysics.tilt.x * 0.018 * delta;
-    note.vy += jarPhysics.tilt.y * 0.01 * delta;
+    note.vy += 0.11 * delta;
+    note.vx += jarPhysics.tilt.x * 0.006 * delta;
+    note.vy += jarPhysics.tilt.y * 0.004 * delta;
     note.x += note.vx * delta;
     note.y += note.vy * delta;
     note.angle += note.spin * delta;
@@ -1025,15 +1025,15 @@ function stepJarPhysics(time) {
     const limits = getJarLimits(note);
     if (note.x <= limits.minX || note.x >= limits.maxX) {
       note.x = clamp(note.x, limits.minX, limits.maxX);
-      note.vx *= -0.68;
-      note.spin += note.vx * 0.05;
+      note.vx *= -0.48;
+      note.spin += note.vx * 0.025;
     }
 
     if (note.y <= limits.minY || note.y >= limits.maxY) {
       note.y = clamp(note.y, limits.minY, limits.maxY);
-      note.vy *= -0.58;
+      note.vy *= -0.38;
       note.vx *= 0.96;
-      note.spin *= 0.8;
+      note.spin *= 0.68;
     }
   });
 
@@ -1073,8 +1073,8 @@ function updateJarTilt(event) {
   const relY = clamp((event.clientY - rect.top) / rect.height - 0.5, -0.5, 0.5);
 
   jarPhysics.tilt = { x: relX, y: relY };
-  jarShell.style.setProperty("--jar-tilt-x", `${relY * -7}deg`);
-  jarShell.style.setProperty("--jar-tilt-y", `${relX * 9}deg`);
+  jarShell.style.setProperty("--jar-tilt-x", `${relY * -3.5}deg`);
+  jarShell.style.setProperty("--jar-tilt-y", `${relX * 4.5}deg`);
 }
 
 function startJarDrag(event) {
@@ -1164,7 +1164,7 @@ function openNote(key, sourceEl) {
   thread.textContent = "";
   (note.messages || [note.body]).forEach((message, index) => {
     const bubble = document.createElement("p");
-    bubble.className = index % 2 === 0 ? "text-bubble text-bubble-left" : "text-bubble text-bubble-right";
+    bubble.className = "sticky-line";
     bubble.textContent = message;
     bubble.style.setProperty("--bubble-delay", `${index * 130}ms`);
     thread.appendChild(bubble);
@@ -1281,13 +1281,9 @@ document.querySelectorAll(".paper-note").forEach((note) => {
   note.addEventListener("click", () => openNote(note.dataset.note, note));
 });
 
-jarShell?.addEventListener("pointerdown", startJarDrag);
-jarShell?.addEventListener("pointermove", dragJar);
-jarShell?.addEventListener("pointerup", endJarDrag);
-jarShell?.addEventListener("pointercancel", endJarDrag);
 jarShakeButton?.addEventListener("click", () => {
   startJarPhysics();
-  bumpJarNotes(1.15);
+  bumpJarNotes(0.62);
   document.querySelector("#jar-message").textContent = "Shuffled. Pick a note from the jar.";
 });
 window.addEventListener("resize", () => {

@@ -523,7 +523,7 @@
             <h2 id="jar-title">Memory Jar</h2>
             <p class="lead">Shake the jar, pick a note, open a little text from us.</p>
             <div class="jar-directions" aria-label="Memory jar directions">
-              <span>Drag the jar</span>
+              <span>Watch the notes</span>
               <span>Tap shake</span>
               <span>Choose a note</span>
             </div>
@@ -531,7 +531,7 @@
 
           <div class="jar-stage" id="jar-stage" aria-label="Interactive jar of rolled memory notes">
             <div class="jar-aura" aria-hidden="true"></div>
-            <div class="jar-shell" id="jar-shell" tabindex="0" aria-label="Drag or shake the memory jar">
+            <div class="jar-shell" id="jar-shell" tabindex="0" aria-label="Memory jar with interactive notes">
               <div class="jar-lid" aria-hidden="true">
                 <span></span>
               </div>
@@ -851,12 +851,11 @@
 
     <div class="note-modal" id="note-modal" aria-hidden="true" role="dialog" aria-labelledby="note-modal-title">
       <button class="note-backdrop" id="note-backdrop" type="button" aria-label="Close memory note"></button>
-      <article class="open-note phone-memory">
+      <article class="open-note sticky-memory">
         <button class="note-close" id="note-close" type="button" aria-label="Close memory note">Close</button>
-        <div class="phone-speaker" aria-hidden="true"></div>
         <span id="note-modal-kicker">Memory note</span>
         <h3 id="note-modal-title">A tiny memory</h3>
-        <div class="phone-thread" id="note-modal-thread"></div>
+        <div class="sticky-note-lines" id="note-modal-thread"></div>
       </article>
     </div>
 
