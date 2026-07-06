@@ -6458,6 +6458,10 @@ body.is-letter-arriving #intro .letter-card {
 .paper-note:focus-visible {
   filter: brightness(1.12) saturate(1.08);
   outline: none;
+  transform:
+    translate3d(var(--jar-x), var(--jar-y), var(--jar-depth))
+    rotate(var(--jar-rotate))
+    scale(var(--jar-scale));
 }
 
 .paper-note.is-opening {

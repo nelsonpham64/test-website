@@ -1068,6 +1068,10 @@ function updateJarTilt(event) {
     return;
   }
 
+  if (event.target?.closest?.(".paper-note")) {
+    return;
+  }
+
   const rect = jarStage.getBoundingClientRect();
   const relX = clamp((event.clientX - rect.left) / rect.width - 0.5, -0.5, 0.5);
   const relY = clamp((event.clientY - rect.top) / rect.height - 0.5, -0.5, 0.5);
