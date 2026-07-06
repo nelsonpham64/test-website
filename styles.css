@@ -6423,7 +6423,7 @@ body.is-letter-arriving #intro .letter-card {
     rotate(var(--jar-rotate))
     scale(var(--jar-scale));
   transform-origin: center;
-  transition: filter 160ms ease, scale 160ms ease;
+  transition: filter 160ms ease;
   animation: none;
   will-change: transform;
 }
@@ -6462,6 +6462,11 @@ body.is-letter-arriving #intro .letter-card {
     translate3d(var(--jar-x), var(--jar-y), var(--jar-depth))
     rotate(var(--jar-rotate))
     scale(var(--jar-scale));
+}
+
+.paper-note.is-hover-rest {
+  z-index: 5;
+  filter: brightness(1.12) saturate(1.08);
 }
 
 .paper-note.is-opening {

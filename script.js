@@ -44,6 +44,7 @@ const jarPhysics = {
   notes: [],
   dragging: false,
   didDrag: false,
+  hoveredNote: null,
   lastPointer: { x: 0, y: 0, time: 0 },
   tilt: { x: 0, y: 0 },
   bounds: { width: 0, height: 0 },
@@ -949,6 +950,8 @@ function bumpJarNotes(strength = 1) {
     return;
   }
 
+  jarPhysics.hoveredNote?.el.classList.remove("is-hover-rest");
+  jarPhysics.hoveredNote = null;
   jarShell?.classList.add("is-shaking");
   window.setTimeout(() => jarShell?.classList.remove("is-shaking"), 520);
 
@@ -960,11 +963,13 @@ function bumpJarNotes(strength = 1) {
   });
 }
 
-function resolveJarCollisions() {
+function resolveJarCollisions(pinnedNote = null) {
   for (let i = 0; i < jarPhysics.notes.length; i += 1) {
     for (let j = i + 1; j < jarPhysics.notes.length; j += 1) {
       const a = jarPhysics.notes[i];
       const b = jarPhysics.notes[j];
+      const aPinned = a === pinnedNote;
+      const bPinned = b === pinnedNote;
       const ax = a.x + a.width / 2;
       const ay = a.y + a.height / 2;
       const bx = b.x + b.width / 2;
@@ -980,19 +985,33 @@ function resolveJarCollisions() {
 
       const normalX = dx / distance;
       const normalY = dy / distance;
-      const overlap = (minDistance - distance) * 0.5;
-      a.x -= normalX * overlap;
-      a.y -= normalY * overlap;
-      b.x += normalX * overlap;
-      b.y += normalY * overlap;
+      const correction = minDistance - distance;
+
+      if (aPinned && !bPinned) {
+        b.x += normalX * correction;
+        b.y += normalY * correction;
+      } else if (bPinned && !aPinned) {
+        a.x -= normalX * correction;
+        a.y -= normalY * correction;
+      } else {
+        const overlap = correction * 0.5;
+        a.x -= normalX * overlap;
+        a.y -= normalY * overlap;
+        b.x += normalX * overlap;
+        b.y += normalY * overlap;
+      }
 
       const relativeVelocity = (b.vx - a.vx) * normalX + (b.vy - a.vy) * normalY;
       if (relativeVelocity < 0) {
         const impulse = relativeVelocity * -0.42;
-        a.vx -= impulse * normalX;
-        a.vy -= impulse * normalY;
-        b.vx += impulse * normalX;
-        b.vy += impulse * normalY;
+        if (!aPinned) {
+          a.vx -= impulse * normalX;
+          a.vy -= impulse * normalY;
+        }
+        if (!bPinned) {
+          b.vx += impulse * normalX;
+          b.vy += impulse * normalY;
+        }
       }
     }
   }
@@ -1011,16 +1030,26 @@ function stepJarPhysics(time) {
     return;
   }
 
+  const pinnedNote = jarPhysics.hoveredNote;
+
   jarPhysics.notes.forEach((note) => {
-    note.vy += 0.11 * delta;
-    note.vx += jarPhysics.tilt.x * 0.006 * delta;
-    note.vy += jarPhysics.tilt.y * 0.004 * delta;
+    if (note === pinnedNote) {
+      note.vx = 0;
+      note.vy = 0;
+      note.spin = 0;
+      return;
+    }
+
+    const hoverDamp = pinnedNote ? 0.28 : 1;
+    note.vy += 0.11 * hoverDamp * delta;
+    note.vx += jarPhysics.tilt.x * 0.006 * hoverDamp * delta;
+    note.vy += jarPhysics.tilt.y * 0.004 * hoverDamp * delta;
     note.x += note.vx * delta;
     note.y += note.vy * delta;
     note.angle += note.spin * delta;
-    note.vx *= 0.986;
-    note.vy *= 0.986;
-    note.spin *= 0.988;
+    note.vx *= pinnedNote ? 0.94 : 0.986;
+    note.vy *= pinnedNote ? 0.94 : 0.986;
+    note.spin *= pinnedNote ? 0.92 : 0.988;
 
     const limits = getJarLimits(note);
     if (note.x <= limits.minX || note.x >= limits.maxX) {
@@ -1037,11 +1066,16 @@ function stepJarPhysics(time) {
     }
   });
 
-  resolveJarCollisions();
+  resolveJarCollisions(pinnedNote);
   jarPhysics.notes.forEach((note) => {
     const limits = getJarLimits(note);
     note.x = clamp(note.x, limits.minX, limits.maxX);
     note.y = clamp(note.y, limits.minY, limits.maxY);
+    if (note === pinnedNote) {
+      note.vx = 0;
+      note.vy = 0;
+      note.spin = 0;
+    }
     applyJarNoteState(note);
   });
 
@@ -1079,6 +1113,42 @@ function updateJarTilt(event) {
   jarPhysics.tilt = { x: relX, y: relY };
   jarShell.style.setProperty("--jar-tilt-x", `${relY * -3.5}deg`);
   jarShell.style.setProperty("--jar-tilt-y", `${relX * 4.5}deg`);
+}
+
+function settleJarNoteHover(event) {
+  if (!initializeJarPhysics()) {
+    return;
+  }
+
+  const hovered = jarPhysics.notes.find((note) => note.el === event.currentTarget);
+  if (!hovered) {
+    return;
+  }
+
+  jarPhysics.hoveredNote?.el.classList.remove("is-hover-rest");
+  jarPhysics.hoveredNote = hovered;
+  jarPhysics.tilt = { x: 0, y: 0 };
+  jarShell?.style.setProperty("--jar-tilt-x", "0deg");
+  jarShell?.style.setProperty("--jar-tilt-y", "0deg");
+
+  jarPhysics.notes.forEach((note) => {
+    note.vx *= 0.16;
+    note.vy *= 0.16;
+    note.spin *= 0.12;
+  });
+
+  hovered.vx = 0;
+  hovered.vy = 0;
+  hovered.spin = 0;
+  hovered.el.classList.add("is-hover-rest");
+  applyJarNoteState(hovered);
+}
+
+function releaseJarNoteHover(event) {
+  event.currentTarget.classList.remove("is-hover-rest");
+  if (jarPhysics.hoveredNote?.el === event.currentTarget) {
+    jarPhysics.hoveredNote = null;
+  }
 }
 
 function startJarDrag(event) {
@@ -1282,6 +1352,10 @@ scrapbookBook.addEventListener("keydown", (event) => {
 });
 
 document.querySelectorAll(".paper-note").forEach((note) => {
+  note.addEventListener("pointerenter", settleJarNoteHover);
+  note.addEventListener("pointerleave", releaseJarNoteHover);
+  note.addEventListener("focus", settleJarNoteHover);
+  note.addEventListener("blur", releaseJarNoteHover);
   note.addEventListener("click", () => openNote(note.dataset.note, note));
 });
 
