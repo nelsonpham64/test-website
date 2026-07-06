@@ -516,39 +516,54 @@
         </div>
       </section>
 
-      <section class="chapter" id="jar" data-chapter="jar" aria-labelledby="jar-title">
-        <div class="chapter-grid jar-grid-wrap">
-          <div class="chapter-copy">
+      <section class="chapter jar-chapter" id="jar" data-chapter="jar" aria-labelledby="jar-title">
+        <div class="jar-experience">
+          <div class="jar-copy-center">
             <p class="eyebrow">Memory jar</p>
-            <h2 id="jar-title">Shake loose a tiny memory.</h2>
-            <p class="lead">
-              The crumpled notes drift around the jar when the mouse moves.
-              Click one and it opens on screen like a little post-it memory.
-            </p>
-            <div class="jar-message" id="jar-message" role="status" aria-live="polite">
-              Pick a note from the jar.
+            <h2 id="jar-title">Memory Jar</h2>
+            <p class="lead">Shake the jar, pick a note, open a little text from us.</p>
+            <div class="jar-directions" aria-label="Memory jar directions">
+              <span>Drag the jar</span>
+              <span>Tap shake</span>
+              <span>Choose a note</span>
             </div>
           </div>
-          <div class="jar-stage" id="jar-stage" aria-label="Jar of crumpled memory notes">
-            <div class="jar-lid" aria-hidden="true"></div>
-            <div class="glass-jar">
-              <button class="paper-note note-one" type="button" data-note="first">
+
+          <div class="jar-stage" id="jar-stage" aria-label="Interactive jar of rolled memory notes">
+            <div class="jar-aura" aria-hidden="true"></div>
+            <div class="jar-shell" id="jar-shell" tabindex="0" aria-label="Drag or shake the memory jar">
+              <div class="jar-lid" aria-hidden="true">
                 <span></span>
-              </button>
-              <button class="paper-note note-two" type="button" data-note="laugh">
-                <span></span>
-              </button>
-              <button class="paper-note note-three" type="button" data-note="dinner">
-                <span></span>
-              </button>
-              <button class="paper-note note-four" type="button" data-note="drive">
-                <span></span>
-              </button>
-              <button class="paper-note note-five" type="button" data-note="future">
-                <span></span>
-              </button>
-              <div class="jar-shine" aria-hidden="true"></div>
+              </div>
+              <div class="glass-jar" id="glass-jar">
+                <div class="jar-depth jar-depth-back" aria-hidden="true"></div>
+                <div class="jar-notes-layer" id="jar-notes-layer">
+                  <button class="paper-note note-one" type="button" data-note="first" aria-label="Open note: remember when">
+                    <span></span>
+                  </button>
+                  <button class="paper-note note-two" type="button" data-note="laugh" aria-label="Open note: I knew I liked you when">
+                    <span></span>
+                  </button>
+                  <button class="paper-note note-three" type="button" data-note="dinner" aria-label="Open note: date night memory">
+                    <span></span>
+                  </button>
+                  <button class="paper-note note-four" type="button" data-note="drive" aria-label="Open note: quiet ride home">
+                    <span></span>
+                  </button>
+                  <button class="paper-note note-five" type="button" data-note="future" aria-label="Open note: future plan unlocked">
+                    <span></span>
+                  </button>
+                </div>
+                <div class="jar-depth jar-depth-front" aria-hidden="true"></div>
+                <div class="jar-shine" aria-hidden="true"></div>
+              </div>
+              <div class="jar-base" aria-hidden="true"></div>
             </div>
+            <button class="jar-shake-button" id="jar-shake-button" type="button">Shake jar</button>
+          </div>
+
+          <div class="jar-message" id="jar-message" role="status" aria-live="polite">
+            The notes are waiting inside.
           </div>
         </div>
       </section>
@@ -836,11 +851,12 @@
 
     <div class="note-modal" id="note-modal" aria-hidden="true" role="dialog" aria-labelledby="note-modal-title">
       <button class="note-backdrop" id="note-backdrop" type="button" aria-label="Close memory note"></button>
-      <article class="open-note">
+      <article class="open-note phone-memory">
         <button class="note-close" id="note-close" type="button" aria-label="Close memory note">Close</button>
+        <div class="phone-speaker" aria-hidden="true"></div>
         <span id="note-modal-kicker">Memory note</span>
         <h3 id="note-modal-title">A tiny memory</h3>
-        <p id="note-modal-body"></p>
+        <div class="phone-thread" id="note-modal-thread"></div>
       </article>
     </div>
 

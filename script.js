@@ -14,6 +14,12 @@ const letterAnnouncement = document.querySelector("#letter-announcement");
 const dateForm = document.querySelector("#date-form");
 const dateInput = document.querySelector("#anniversary-date");
 const lockHint = document.querySelector("#lock-hint");
+const jarStage = document.querySelector("#jar-stage");
+const jarShell = document.querySelector("#jar-shell");
+const glassJar = document.querySelector("#glass-jar");
+const jarShakeButton = document.querySelector("#jar-shake-button");
+const jarNotes = Array.from(document.querySelectorAll(".paper-note"));
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const storyState = {
   current: 0,
@@ -30,6 +36,20 @@ const scrapbookHold = {
   releaseTimer: null
 };
 
+const jarPhysics = {
+  initialized: false,
+  running: false,
+  raf: 0,
+  lastTime: 0,
+  notes: [],
+  dragging: false,
+  didDrag: false,
+  lastPointer: { x: 0, y: 0, time: 0 },
+  tilt: { x: 0, y: 0 },
+  bounds: { width: 0, height: 0 },
+  suppressClickUntil: 0
+};
+
 const HOLD_TO_FLIP_MS = 660;
 const SCRAPBOOK_FLIP_MS = 1120;
 const SCRAPBOOK_PAGE_SWAP_MS = 640;
@@ -41,7 +61,7 @@ const SCRAPBOOK_VIDEO_EXTENSIONS = ["mp4", "MP4", "webm", "WEBM", "mov", "MOV"];
 const scrapbookMediaCache = new Map();
 const canUsePointerEffects =
   window.matchMedia("(pointer: fine)").matches &&
-  !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  !prefersReducedMotion;
 
 const chapterLabels = {
   intro: "Continue",
@@ -187,24 +207,49 @@ const results = {
 
 const memoryNotes = {
   first: {
+    kicker: "remember when...",
     title: "The first little spark",
-    body: "Replace this with the moment that still feels like the beginning of everything."
+    messages: [
+      "remember when everything started feeling a little different?",
+      "one small moment turned into the beginning of us.",
+      "save this one for the memory that still feels like the start."
+    ]
   },
   laugh: {
+    kicker: "i knew i liked you when...",
     title: "The laugh we kept",
-    body: "A small memory for the joke, face, or moment that still makes both of you smile."
+    messages: [
+      "i knew i liked you when even the random moments felt fun with you.",
+      "like somehow the smallest joke became an inside joke.",
+      "this note is for the laugh we kept."
+    ]
   },
   dinner: {
+    kicker: "date-night receipt",
     title: "The meal that became a memory",
-    body: "Put the restaurant, snack, dessert, or kitchen experiment that deserves its own tiny award."
+    messages: [
+      "one table, one snack, one dessert, or one tiny food sidequest.",
+      "whatever memory belongs here deserves its own little award.",
+      "total due: another date with you."
+    ]
   },
   drive: {
+    kicker: "quiet little moment",
     title: "The quiet ride home",
-    body: "For the drive, walk, or late-night conversation that made the world feel smaller."
+    messages: [
+      "some memories are not loud.",
+      "they are just a drive, a walk, or a conversation that made the world feel smaller.",
+      "this is one of those."
+    ]
   },
   future: {
+    kicker: "future plan unlocked",
     title: "A note from the next chapter",
-    body: "One year is the opening scene. The best part is that there is still so much left to find."
+    messages: [
+      "future plan unlocked:",
+      "more trips, more food, more photos, more random memories.",
+      "one year is just the opening scene."
+    ]
   }
 };
 
@@ -333,6 +378,20 @@ function setChapter(index) {
 
   if (chapters[boundedIndex].dataset.chapter === "wrapped") {
     triggerWrappedReveal();
+  }
+
+  if (activeChapterKey === "jar") {
+    window.setTimeout(() => {
+      if (chapters[storyState.current].dataset.chapter !== "jar") {
+        return;
+      }
+
+      initializeJarPhysics();
+      startJarPhysics();
+      bumpJarNotes(0.45);
+    }, 120);
+  } else {
+    stopJarPhysics();
   }
 }
 
@@ -794,14 +853,322 @@ function getChapterIndex(key) {
   return chapters.findIndex((chapter) => chapter.dataset.chapter === key);
 }
 
-function openNote(key) {
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(value, max));
+}
+
+function measureJarBounds() {
+  if (!glassJar) {
+    return false;
+  }
+
+  const rect = glassJar.getBoundingClientRect();
+  if (rect.width < 120 || rect.height < 160) {
+    return false;
+  }
+
+  jarPhysics.bounds = {
+    width: rect.width,
+    height: rect.height
+  };
+  return true;
+}
+
+function getJarLimits(note) {
+  const verticalProgress = clamp(note.y / Math.max(jarPhysics.bounds.height, 1), 0, 1);
+  const sideInset = 22 + Math.abs(verticalProgress - 0.56) * 58;
+
+  return {
+    minX: sideInset,
+    maxX: jarPhysics.bounds.width - note.width - sideInset,
+    minY: 54,
+    maxY: jarPhysics.bounds.height - note.height - 26
+  };
+}
+
+function applyJarNoteState(note) {
+  note.el.style.setProperty("--jar-x", `${note.x}px`);
+  note.el.style.setProperty("--jar-y", `${note.y}px`);
+  note.el.style.setProperty("--jar-rotate", `${note.angle}deg`);
+  note.el.style.setProperty("--jar-depth", `${note.depth}px`);
+  note.el.style.setProperty("--jar-scale", note.scale);
+}
+
+function initializeJarPhysics(force = false) {
+  if (!measureJarBounds() || jarNotes.length === 0) {
+    return false;
+  }
+
+  if (jarPhysics.initialized && !force) {
+    jarPhysics.notes.forEach((note) => {
+      const limits = getJarLimits(note);
+      note.x = clamp(note.x, limits.minX, limits.maxX);
+      note.y = clamp(note.y, limits.minY, limits.maxY);
+      applyJarNoteState(note);
+    });
+    return true;
+  }
+
+  const startingPoints = [
+    { x: 0.22, y: 0.36, depth: 10, scale: 0.96 },
+    { x: 0.57, y: 0.34, depth: 34, scale: 1.05 },
+    { x: 0.39, y: 0.55, depth: 20, scale: 1 },
+    { x: 0.24, y: 0.69, depth: 42, scale: 1.08 },
+    { x: 0.6, y: 0.68, depth: 14, scale: 0.98 }
+  ];
+
+  jarPhysics.notes = jarNotes.map((el, index) => {
+    const point = startingPoints[index % startingPoints.length];
+    const note = {
+      el,
+      x: jarPhysics.bounds.width * point.x,
+      y: jarPhysics.bounds.height * point.y,
+      width: el.offsetWidth || 96,
+      height: el.offsetHeight || 82,
+      radius: Math.max(el.offsetWidth || 96, el.offsetHeight || 82) * 0.42,
+      vx: (index % 2 === 0 ? 0.42 : -0.36) * (1 + index * 0.12),
+      vy: -0.15 * index,
+      angle: Number.parseFloat(getComputedStyle(el).getPropertyValue("--note-angle")) || 0,
+      spin: index % 2 === 0 ? 0.22 : -0.2,
+      depth: point.depth,
+      scale: point.scale
+    };
+    const limits = getJarLimits(note);
+    note.x = clamp(note.x, limits.minX, limits.maxX);
+    note.y = clamp(note.y, limits.minY, limits.maxY);
+    applyJarNoteState(note);
+    return note;
+  });
+
+  jarPhysics.initialized = true;
+  return true;
+}
+
+function bumpJarNotes(strength = 1) {
+  if (!initializeJarPhysics()) {
+    return;
+  }
+
+  jarShell?.classList.add("is-shaking");
+  window.setTimeout(() => jarShell?.classList.remove("is-shaking"), 520);
+
+  jarPhysics.notes.forEach((note, index) => {
+    const side = index % 2 === 0 ? 1 : -1;
+    note.vx += side * (3.2 + index * 0.42) * strength;
+    note.vy -= (4.4 + index * 0.38) * strength;
+    note.spin += side * (1.1 + index * 0.12) * strength;
+  });
+}
+
+function resolveJarCollisions() {
+  for (let i = 0; i < jarPhysics.notes.length; i += 1) {
+    for (let j = i + 1; j < jarPhysics.notes.length; j += 1) {
+      const a = jarPhysics.notes[i];
+      const b = jarPhysics.notes[j];
+      const ax = a.x + a.width / 2;
+      const ay = a.y + a.height / 2;
+      const bx = b.x + b.width / 2;
+      const by = b.y + b.height / 2;
+      const dx = bx - ax;
+      const dy = by - ay;
+      const distance = Math.hypot(dx, dy) || 1;
+      const minDistance = a.radius + b.radius;
+
+      if (distance >= minDistance) {
+        continue;
+      }
+
+      const normalX = dx / distance;
+      const normalY = dy / distance;
+      const overlap = (minDistance - distance) * 0.5;
+      a.x -= normalX * overlap;
+      a.y -= normalY * overlap;
+      b.x += normalX * overlap;
+      b.y += normalY * overlap;
+
+      const relativeVelocity = (b.vx - a.vx) * normalX + (b.vy - a.vy) * normalY;
+      if (relativeVelocity < 0) {
+        const impulse = relativeVelocity * -0.42;
+        a.vx -= impulse * normalX;
+        a.vy -= impulse * normalY;
+        b.vx += impulse * normalX;
+        b.vy += impulse * normalY;
+      }
+    }
+  }
+}
+
+function stepJarPhysics(time) {
+  if (!jarPhysics.running) {
+    return;
+  }
+
+  const delta = clamp((time - jarPhysics.lastTime) / 16.67, 0.5, 2);
+  jarPhysics.lastTime = time;
+
+  if (!measureJarBounds()) {
+    jarPhysics.raf = window.requestAnimationFrame(stepJarPhysics);
+    return;
+  }
+
+  jarPhysics.notes.forEach((note) => {
+    note.vy += 0.16 * delta;
+    note.vx += jarPhysics.tilt.x * 0.018 * delta;
+    note.vy += jarPhysics.tilt.y * 0.01 * delta;
+    note.x += note.vx * delta;
+    note.y += note.vy * delta;
+    note.angle += note.spin * delta;
+    note.vx *= 0.986;
+    note.vy *= 0.986;
+    note.spin *= 0.988;
+
+    const limits = getJarLimits(note);
+    if (note.x <= limits.minX || note.x >= limits.maxX) {
+      note.x = clamp(note.x, limits.minX, limits.maxX);
+      note.vx *= -0.68;
+      note.spin += note.vx * 0.05;
+    }
+
+    if (note.y <= limits.minY || note.y >= limits.maxY) {
+      note.y = clamp(note.y, limits.minY, limits.maxY);
+      note.vy *= -0.58;
+      note.vx *= 0.96;
+      note.spin *= 0.8;
+    }
+  });
+
+  resolveJarCollisions();
+  jarPhysics.notes.forEach((note) => {
+    const limits = getJarLimits(note);
+    note.x = clamp(note.x, limits.minX, limits.maxX);
+    note.y = clamp(note.y, limits.minY, limits.maxY);
+    applyJarNoteState(note);
+  });
+
+  jarPhysics.raf = window.requestAnimationFrame(stepJarPhysics);
+}
+
+function startJarPhysics() {
+  if (prefersReducedMotion || jarPhysics.running || !initializeJarPhysics()) {
+    return;
+  }
+
+  jarPhysics.running = true;
+  jarPhysics.lastTime = performance.now();
+  jarPhysics.raf = window.requestAnimationFrame(stepJarPhysics);
+}
+
+function stopJarPhysics() {
+  jarPhysics.running = false;
+  window.cancelAnimationFrame(jarPhysics.raf);
+}
+
+function updateJarTilt(event) {
+  if (!jarStage || !jarShell) {
+    return;
+  }
+
+  const rect = jarStage.getBoundingClientRect();
+  const relX = clamp((event.clientX - rect.left) / rect.width - 0.5, -0.5, 0.5);
+  const relY = clamp((event.clientY - rect.top) / rect.height - 0.5, -0.5, 0.5);
+
+  jarPhysics.tilt = { x: relX, y: relY };
+  jarShell.style.setProperty("--jar-tilt-x", `${relY * -7}deg`);
+  jarShell.style.setProperty("--jar-tilt-y", `${relX * 9}deg`);
+}
+
+function startJarDrag(event) {
+  if (event.button !== undefined && event.button !== 0) {
+    return;
+  }
+
+  if (event.target.closest(".paper-note")) {
+    return;
+  }
+
+  event.preventDefault();
+  startJarPhysics();
+  jarPhysics.dragging = true;
+  jarPhysics.didDrag = false;
+  jarPhysics.lastPointer = {
+    x: event.clientX,
+    y: event.clientY,
+    time: performance.now()
+  };
+  jarShell?.setPointerCapture?.(event.pointerId);
+  jarShell?.classList.add("is-grabbing");
+}
+
+function dragJar(event) {
+  updateJarTilt(event);
+
+  if (!jarPhysics.dragging || !initializeJarPhysics()) {
+    return;
+  }
+
+  const now = performance.now();
+  const dx = event.clientX - jarPhysics.lastPointer.x;
+  const dy = event.clientY - jarPhysics.lastPointer.y;
+  const elapsed = Math.max(now - jarPhysics.lastPointer.time, 16);
+
+  if (Math.abs(dx) + Math.abs(dy) > 4) {
+    jarPhysics.didDrag = true;
+  }
+
+  jarPhysics.notes.forEach((note, index) => {
+    const depthBoost = 1 + note.depth / 64;
+    note.vx += (dx / elapsed) * 9.5 * depthBoost;
+    note.vy += (dy / elapsed) * 5.6 * depthBoost;
+    note.spin += (dx / elapsed) * (1.8 + index * 0.08);
+  });
+
+  jarPhysics.lastPointer = {
+    x: event.clientX,
+    y: event.clientY,
+    time: now
+  };
+}
+
+function endJarDrag(event) {
+  if (!jarPhysics.dragging) {
+    return;
+  }
+
+  jarPhysics.dragging = false;
+  jarShell?.classList.remove("is-grabbing");
+  if (event?.pointerId !== undefined && jarShell?.hasPointerCapture?.(event.pointerId)) {
+    jarShell.releasePointerCapture(event.pointerId);
+  }
+
+  if (jarPhysics.didDrag) {
+    jarPhysics.suppressClickUntil = performance.now() + 260;
+    document.querySelector("#jar-message").textContent = "The notes are mixed. Pick one when it feels right.";
+  }
+}
+
+function openNote(key, sourceEl) {
+  if (performance.now() < jarPhysics.suppressClickUntil) {
+    return;
+  }
+
   const note = memoryNotes[key];
   if (!note) {
     return;
   }
 
+  sourceEl?.classList.add("is-opening");
+  window.setTimeout(() => sourceEl?.classList.remove("is-opening"), 460);
+  document.querySelector("#note-modal-kicker").textContent = note.kicker || "Memory note";
   document.querySelector("#note-modal-title").textContent = note.title;
-  document.querySelector("#note-modal-body").textContent = note.body;
+  const thread = document.querySelector("#note-modal-thread");
+  thread.textContent = "";
+  (note.messages || [note.body]).forEach((message, index) => {
+    const bubble = document.createElement("p");
+    bubble.className = index % 2 === 0 ? "text-bubble text-bubble-left" : "text-bubble text-bubble-right";
+    bubble.textContent = message;
+    bubble.style.setProperty("--bubble-delay", `${index * 130}ms`);
+    thread.appendChild(bubble);
+  });
   document.querySelector("#jar-message").textContent = `Opened: ${note.title}`;
   document.querySelector("#note-modal").classList.add("is-open");
   document.querySelector("#note-modal").setAttribute("aria-hidden", "false");
@@ -835,23 +1202,6 @@ function scheduleCursorUpdate(event) {
     if (cursorDot) {
       cursorDot.style.transform = `translate3d(${latestPointer.x}px, ${latestPointer.y}px, 0)`;
     }
-  });
-}
-
-function moveJarNotes(event) {
-  const jarStage = document.querySelector("#jar-stage");
-  if (!jarStage) {
-    return;
-  }
-
-  const rect = jarStage.getBoundingClientRect();
-  const relX = (event.clientX - rect.left) / rect.width - 0.5;
-  const relY = (event.clientY - rect.top) / rect.height - 0.5;
-
-  jarStage.querySelectorAll(".paper-note").forEach((note, index) => {
-    const strength = 9 + index * 2;
-    note.style.setProperty("--float-x", `${relX * strength}px`);
-    note.style.setProperty("--float-y", `${relY * strength}px`);
   });
 }
 
@@ -928,13 +1278,28 @@ scrapbookBook.addEventListener("keydown", (event) => {
 });
 
 document.querySelectorAll(".paper-note").forEach((note) => {
-  note.addEventListener("click", () => openNote(note.dataset.note));
+  note.addEventListener("click", () => openNote(note.dataset.note, note));
+});
+
+jarShell?.addEventListener("pointerdown", startJarDrag);
+jarShell?.addEventListener("pointermove", dragJar);
+jarShell?.addEventListener("pointerup", endJarDrag);
+jarShell?.addEventListener("pointercancel", endJarDrag);
+jarShakeButton?.addEventListener("click", () => {
+  startJarPhysics();
+  bumpJarNotes(1.15);
+  document.querySelector("#jar-message").textContent = "Shuffled. Pick a note from the jar.";
+});
+window.addEventListener("resize", () => {
+  if (chapters[storyState.current].dataset.chapter === "jar") {
+    initializeJarPhysics(true);
+  }
 });
 
 letterButton.addEventListener("pointerdown", openLetter);
 letterButton.addEventListener("click", openLetter);
 if (canUsePointerEffects) {
-  document.querySelector("#jar-stage").addEventListener("mousemove", moveJarNotes, { passive: true });
+  jarStage?.addEventListener("pointermove", updateJarTilt, { passive: true });
   window.addEventListener("pointermove", scheduleCursorUpdate, { passive: true });
 } else if (cursorDot) {
   cursorDot.hidden = true;
