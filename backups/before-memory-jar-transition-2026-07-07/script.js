@@ -13,7 +13,6 @@ const scrapbookLetterLines = Array.from(document.querySelectorAll(".letter-line"
 const scrapbookLetterTexts = scrapbookLetterLines.map((line) =>
   line.textContent.replace(/\s+/g, " ").trim()
 );
-const scrapbookJarTransition = document.querySelector("#scrapbook-jar-transition");
 const lockScreen = document.querySelector("#lock-screen");
 const heartLock = document.querySelector("#heart-lock");
 const loadingScreen = document.querySelector("#loading-screen");
@@ -38,7 +37,6 @@ const storyState = {
   scrapbookLetterReady: false,
   scrapbookTypingStarted: false,
   scrapbookTypingTimer: null,
-  transitioningToJar: false,
   enteringLetter: false
 };
 
@@ -416,23 +414,10 @@ function setChapter(index) {
   }
 }
 
-function getScrapbookSpreadCount() {
-  return document.querySelectorAll(".scrapbook-spread").length;
-}
-
-function isOnFinalScrapbookPage() {
-  return storyState.scrapbookPage >= getScrapbookSpreadCount() - 1;
-}
-
 function updateStoryControls() {
   const chapter = chapters[storyState.current];
   const chapterKey = chapter.dataset.chapter;
   const progress = ((storyState.current + 1) / chapters.length) * 100;
-  const shouldHideScrapbookNext =
-    chapterKey === "scrapbook" &&
-    (!storyState.scrapbookIntroComplete ||
-      !isOnFinalScrapbookPage() ||
-      storyState.transitioningToJar);
 
   counter.textContent = `Chapter ${storyState.current + 1} of ${chapters.length}`;
   storyProgressBar.style.width = `${progress}%`;
@@ -447,12 +432,12 @@ function updateStoryControls() {
     "is-hidden",
     chapterKey === "intro" ||
       chapterKey === "finale" ||
-      shouldHideScrapbookNext
+      (chapterKey === "scrapbook" && !storyState.scrapbookIntroComplete)
   );
   nextButton.textContent = chapterLabels[chapterKey] || "Next";
 
   const onQuiz = chapterKey === "quiz";
-  nextButton.disabled = storyState.transitioningToJar || (onQuiz && !storyState.quizComplete);
+  nextButton.disabled = onQuiz && !storyState.quizComplete;
 
   if (chapterKey === "ending") {
     nextButton.classList.remove("is-hidden");
@@ -470,19 +455,6 @@ function nextChapter() {
   }
 
   if (chapterKey === "quiz" && !storyState.quizComplete) {
-    return;
-  }
-
-  if (chapterKey === "scrapbook") {
-    if (
-      !storyState.scrapbookIntroComplete ||
-      !isOnFinalScrapbookPage() ||
-      storyState.transitioningToJar
-    ) {
-      return;
-    }
-
-    playScrapbookJarTransition();
     return;
   }
 
@@ -519,36 +491,6 @@ function previousChapter() {
     return;
   }
   setChapter(storyState.current - 1);
-}
-
-function playScrapbookJarTransition() {
-  const jarChapterIndex = getChapterIndex("jar");
-
-  if (jarChapterIndex < 0 || storyState.transitioningToJar) {
-    return;
-  }
-
-  if (prefersReducedMotion || !scrapbookJarTransition) {
-    setChapter(jarChapterIndex);
-    return;
-  }
-
-  storyState.transitioningToJar = true;
-  updateStoryControls();
-  clearScrapbookHold();
-  document.body.classList.add("is-transitioning-to-jar");
-  scrapbookJarTransition.classList.remove("is-playing");
-  scrapbookJarTransition.setAttribute("aria-hidden", "false");
-  void scrapbookJarTransition.offsetWidth;
-  scrapbookJarTransition.classList.add("is-playing");
-
-  window.setTimeout(() => {
-    scrapbookJarTransition.classList.remove("is-playing");
-    scrapbookJarTransition.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("is-transitioning-to-jar");
-    storyState.transitioningToJar = false;
-    setChapter(jarChapterIndex);
-  }, 3100);
 }
 
 function renderQuestion() {
@@ -641,10 +583,6 @@ function setScrapbookPage(pageIndex) {
 
   loadVisibleScrapbookMedia();
   syncScrapbookVideoPlayback();
-
-  if (chapters[storyState.current]?.dataset.chapter === "scrapbook") {
-    updateStoryControls();
-  }
 }
 
 function getScrapbookPageForEra(eraIndex) {
