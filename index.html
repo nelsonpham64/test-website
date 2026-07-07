@@ -167,17 +167,31 @@
         </div>
       </section>
 
-      <section class="chapter" id="scrapbook" data-chapter="scrapbook" aria-labelledby="scrapbook-title">
-        <div class="chapter-grid scrapbook-feature">
-          <div class="chapter-copy">
-            <p class="eyebrow">Scrapbook</p>
-            <h2 id="scrapbook-title">Cheers to 1 year of us!</h2>
-            <p class="lead">
-              Time truly flies. I feel like it was only yesterday we were on our first date. I guess that's 
-              what happens when you're with someone you love. I compiled some of our favorite moments in this scrapbook.
-              I hope you like it!
-            </p>
-            <div class="mini-hint">Use the arrows or hold down on the pages.</div>
+      <section class="chapter scrapbook-chapter" id="scrapbook" data-chapter="scrapbook" aria-labelledby="scrapbook-title">
+        <div class="chapter-grid scrapbook-feature is-reading-letter" id="scrapbook-feature">
+          <div class="chapter-copy cinematic-letter-copy">
+            <article class="scrapbook-letter" aria-label="Letter before the scrapbook">
+              <p class="eyebrow">Dear Bella...</p>
+              <h2 id="scrapbook-title">Cheers to 1 year of us!</h2>
+              <div class="scrapbook-letter-body" id="scrapbook-letter-body">
+                <p class="letter-line is-visible" data-letter-step="0">
+                  Time truly flies. I feel like it was only yesterday we were on
+                  our first date.
+                </p>
+                <p class="letter-line" data-letter-step="1">
+                  I guess that's what happens when you're with someone you love.
+                  Every little moment starts feeling like a scene I want to replay.
+                </p>
+                <p class="letter-line" data-letter-step="2">
+                  So I saved some of my favorite scenes from us here, like a tiny
+                  movie we can flip through together.
+                </p>
+              </div>
+              <button class="button button-primary scrapbook-letter-button" id="scrapbook-letter-next" type="button">
+                Continue reading
+              </button>
+              <div class="mini-hint">The scrapbook opens after the letter.</div>
+            </article>
             <div class="era-index" aria-label="Scrapbook era list">
               <button class="era-index-item is-active" type="button" data-era-index="0" aria-pressed="true">
                 <strong>Chapter 0</strong>

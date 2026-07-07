@@ -6,7 +6,10 @@ const storyProgressBar = document.querySelector("#story-progress-bar");
 const dotsWrap = document.querySelector("#chapter-dots");
 const cursorDot = document.querySelector(".cursor-dot");
 const letterButton = document.querySelector("#letter-button");
+const scrapbookFeature = document.querySelector("#scrapbook-feature");
 const scrapbookBook = document.querySelector("#scrapbook-book");
+const scrapbookLetterButton = document.querySelector("#scrapbook-letter-next");
+const scrapbookLetterLines = Array.from(document.querySelectorAll(".letter-line"));
 const lockScreen = document.querySelector("#lock-screen");
 const heartLock = document.querySelector("#heart-lock");
 const loadingScreen = document.querySelector("#loading-screen");
@@ -26,6 +29,8 @@ const storyState = {
   hasReachedEnd: false,
   quizComplete: false,
   scrapbookPage: 0,
+  scrapbookIntroComplete: false,
+  scrapbookLetterStep: 0,
   enteringLetter: false
 };
 
@@ -381,6 +386,10 @@ function setChapter(index) {
     triggerWrappedReveal();
   }
 
+  if (activeChapterKey === "scrapbook") {
+    syncScrapbookIntro();
+  }
+
   if (activeChapterKey === "jar") {
     window.setTimeout(() => {
       if (chapters[storyState.current].dataset.chapter !== "jar") {
@@ -410,7 +419,12 @@ function updateStoryControls() {
   dotsWrap.classList.toggle("is-hidden", chapterKey === "ending");
 
   backButton.classList.toggle("is-hidden", !storyState.hasReachedEnd);
-  nextButton.classList.toggle("is-hidden", chapterKey === "intro" || chapterKey === "finale");
+  nextButton.classList.toggle(
+    "is-hidden",
+    chapterKey === "intro" ||
+      chapterKey === "finale" ||
+      (chapterKey === "scrapbook" && !storyState.scrapbookIntroComplete)
+  );
   nextButton.textContent = chapterLabels[chapterKey] || "Next";
 
   const onQuiz = chapterKey === "quiz";
@@ -426,6 +440,7 @@ function nextChapter() {
   const chapterKey = chapters[storyState.current].dataset.chapter;
 
   if (chapterKey === "ending") {
+    resetScrapbookIntro();
     setChapter(0);
     return;
   }
@@ -593,6 +608,10 @@ function jumpToScrapbookPage(pageIndex) {
 }
 
 function jumpToScrapbookEra(eraIndex) {
+  if (!storyState.scrapbookIntroComplete) {
+    return;
+  }
+
   const targetPage = getScrapbookPageForEra(eraIndex);
 
   if (targetPage < 0) {
@@ -851,6 +870,59 @@ function cancelScrapbookHold(event) {
 
 function getChapterIndex(key) {
   return chapters.findIndex((chapter) => chapter.dataset.chapter === key);
+}
+
+function renderScrapbookLetter() {
+  scrapbookLetterLines.forEach((line, index) => {
+    line.classList.toggle("is-visible", index <= storyState.scrapbookLetterStep);
+  });
+
+  if (!scrapbookLetterButton) {
+    return;
+  }
+
+  scrapbookLetterButton.textContent =
+    storyState.scrapbookLetterStep >= scrapbookLetterLines.length - 1
+      ? "Open our scrapbook"
+      : "Continue reading";
+}
+
+function syncScrapbookIntro() {
+  if (!scrapbookFeature) {
+    return;
+  }
+
+  scrapbookFeature.classList.toggle("is-reading-letter", !storyState.scrapbookIntroComplete);
+  scrapbookFeature.classList.toggle("is-scrapbook-revealed", storyState.scrapbookIntroComplete);
+  renderScrapbookLetter();
+}
+
+function revealScrapbookIntro() {
+  storyState.scrapbookIntroComplete = true;
+  storyState.scrapbookLetterStep = scrapbookLetterLines.length - 1;
+  syncScrapbookIntro();
+  setScrapbookPage(storyState.scrapbookPage);
+  updateStoryControls();
+}
+
+function resetScrapbookIntro() {
+  storyState.scrapbookIntroComplete = false;
+  storyState.scrapbookLetterStep = 0;
+  syncScrapbookIntro();
+}
+
+function advanceScrapbookLetter() {
+  if (storyState.scrapbookIntroComplete) {
+    return;
+  }
+
+  if (storyState.scrapbookLetterStep < scrapbookLetterLines.length - 1) {
+    storyState.scrapbookLetterStep += 1;
+    renderScrapbookLetter();
+    return;
+  }
+
+  revealScrapbookIntro();
 }
 
 function clamp(value, min, max) {
@@ -1333,6 +1405,8 @@ document.querySelector("#scrap-next").addEventListener("click", () => {
 document.querySelectorAll(".era-index-item").forEach((item) => {
   item.addEventListener("click", () => jumpToScrapbookEra(item.dataset.eraIndex));
 });
+
+scrapbookLetterButton?.addEventListener("click", advanceScrapbookLetter);
 
 scrapbookBook.addEventListener("pointerdown", startScrapbookHold);
 scrapbookBook.addEventListener("pointerup", cancelScrapbookHold);
