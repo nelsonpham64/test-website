@@ -5727,7 +5727,12 @@ h2 {
 }
 
 .scrapbook-chapter {
-  overflow: hidden;
+  place-items: start center;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-top: clamp(5.4rem, 7vh, 6.7rem);
+  padding-bottom: clamp(8rem, 13vh, 10rem);
+  scroll-padding-bottom: 8rem;
 }
 
 .scrapbook-feature {
@@ -5738,7 +5743,7 @@ h2 {
   width: min(1320px, 100%);
   grid-template-columns: minmax(300px, 0.66fr) minmax(560px, 1.34fr);
   gap: clamp(1rem, 2.4vw, 2.2rem);
-  align-items: center;
+  align-items: start;
 }
 
 .scrapbook-feature.is-reading-letter {
@@ -5857,9 +5862,29 @@ h2 {
   transform: translateY(0);
 }
 
+.letter-line.is-typing::after {
+  content: "";
+  display: inline-block;
+  width: 0.16em;
+  height: 0.95em;
+  margin-left: 0.12em;
+  border-radius: 999px;
+  background: #f45fae;
+  vertical-align: -0.12em;
+  animation: typingCaret 740ms steps(1, end) infinite;
+}
+
 .scrapbook-letter-button {
   justify-self: start;
   min-height: 3.2rem;
+}
+
+.scrapbook-letter-button[hidden] {
+  display: none;
+}
+
+.scrapbook-feature.is-letter-ready .scrapbook-letter-button {
+  animation: letterButtonPop 420ms cubic-bezier(0.18, 0.86, 0.22, 1) both;
 }
 
 .scrapbook-feature.is-reading-letter .era-index {
@@ -5884,6 +5909,17 @@ h2 {
 
 .scrapbook-feature.is-scrapbook-revealed .scrapbook {
   animation: scrapbookSceneReveal 780ms cubic-bezier(0.18, 0.86, 0.22, 1) both;
+}
+
+.scrapbook-feature.is-scrapbook-revealed .scrapbook-book {
+  height: clamp(330px, 39vw, 440px);
+}
+
+.scrapbook-feature.is-scrapbook-revealed .scrapbook-controls {
+  position: relative;
+  z-index: 30;
+  margin-top: clamp(0.25rem, 0.8vw, 0.55rem);
+  padding-bottom: clamp(1.2rem, 3vh, 2rem);
 }
 
 .scrapbook-feature.is-scrapbook-revealed .era-index {
@@ -5937,6 +5973,29 @@ h2 {
 
   100% {
     transform: translateX(0) scale(0.98);
+  }
+}
+
+@keyframes typingCaret {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes letterButtonPop {
+  0% {
+    opacity: 0;
+    transform: translateY(0.55rem) scale(0.92);
+  }
+
+  68% {
+    opacity: 1;
+    transform: translateY(-0.08rem) scale(1.04);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 

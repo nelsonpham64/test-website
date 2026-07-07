@@ -10,6 +10,9 @@ const scrapbookFeature = document.querySelector("#scrapbook-feature");
 const scrapbookBook = document.querySelector("#scrapbook-book");
 const scrapbookLetterButton = document.querySelector("#scrapbook-letter-next");
 const scrapbookLetterLines = Array.from(document.querySelectorAll(".letter-line"));
+const scrapbookLetterTexts = scrapbookLetterLines.map((line) =>
+  line.textContent.replace(/\s+/g, " ").trim()
+);
 const lockScreen = document.querySelector("#lock-screen");
 const heartLock = document.querySelector("#heart-lock");
 const loadingScreen = document.querySelector("#loading-screen");
@@ -31,6 +34,9 @@ const storyState = {
   scrapbookPage: 0,
   scrapbookIntroComplete: false,
   scrapbookLetterStep: 0,
+  scrapbookLetterReady: false,
+  scrapbookTypingStarted: false,
+  scrapbookTypingTimer: null,
   enteringLetter: false
 };
 
@@ -364,6 +370,7 @@ function setChapter(index) {
   const boundedIndex = Math.max(0, Math.min(index, chapters.length - 1));
   storyState.current = boundedIndex;
   const activeChapterKey = chapters[boundedIndex].dataset.chapter;
+  document.body.dataset.activeChapter = activeChapterKey;
 
   chapters.forEach((chapter, chapterIndex) => {
     chapter.classList.toggle("is-active", chapterIndex === boundedIndex);
@@ -388,6 +395,8 @@ function setChapter(index) {
 
   if (activeChapterKey === "scrapbook") {
     syncScrapbookIntro();
+  } else {
+    clearScrapbookTyping();
   }
 
   if (activeChapterKey === "jar") {
@@ -872,19 +881,115 @@ function getChapterIndex(key) {
   return chapters.findIndex((chapter) => chapter.dataset.chapter === key);
 }
 
-function renderScrapbookLetter() {
-  scrapbookLetterLines.forEach((line, index) => {
-    line.classList.toggle("is-visible", index <= storyState.scrapbookLetterStep);
-  });
+function clearScrapbookTyping() {
+  if (!storyState.scrapbookTypingTimer) {
+    return;
+  }
+
+  window.clearTimeout(storyState.scrapbookTypingTimer);
+  storyState.scrapbookTypingTimer = null;
+}
+
+function setScrapbookLetterButtonReady(isReady) {
+  storyState.scrapbookLetterReady = isReady;
+  scrapbookFeature?.classList.toggle(
+    "is-letter-ready",
+    isReady && !storyState.scrapbookIntroComplete
+  );
 
   if (!scrapbookLetterButton) {
     return;
   }
 
-  scrapbookLetterButton.textContent =
-    storyState.scrapbookLetterStep >= scrapbookLetterLines.length - 1
-      ? "Open our scrapbook"
-      : "Continue reading";
+  scrapbookLetterButton.hidden = !isReady;
+  scrapbookLetterButton.disabled = !isReady;
+  scrapbookLetterButton.textContent = "Continue";
+}
+
+function fillScrapbookLetter() {
+  scrapbookLetterLines.forEach((line, index) => {
+    line.textContent = scrapbookLetterTexts[index] || "";
+    line.classList.add("is-visible");
+    line.classList.remove("is-typing");
+  });
+  storyState.scrapbookLetterStep = Math.max(scrapbookLetterLines.length - 1, 0);
+}
+
+function resetScrapbookLetterText() {
+  clearScrapbookTyping();
+  storyState.scrapbookLetterStep = 0;
+  storyState.scrapbookTypingStarted = false;
+  setScrapbookLetterButtonReady(false);
+
+  scrapbookLetterLines.forEach((line, index) => {
+    line.textContent = "";
+    line.classList.toggle("is-visible", index === 0);
+    line.classList.remove("is-typing");
+  });
+}
+
+function completeScrapbookTyping() {
+  clearScrapbookTyping();
+  storyState.scrapbookTypingStarted = true;
+  fillScrapbookLetter();
+  setScrapbookLetterButtonReady(true);
+}
+
+function typeScrapbookLine(lineIndex = 0, characterIndex = 0) {
+  if (
+    storyState.scrapbookIntroComplete ||
+    chapters[storyState.current]?.dataset.chapter !== "scrapbook"
+  ) {
+    return;
+  }
+
+  if (lineIndex >= scrapbookLetterLines.length) {
+    completeScrapbookTyping();
+    return;
+  }
+
+  const line = scrapbookLetterLines[lineIndex];
+  const fullText = scrapbookLetterTexts[lineIndex] || "";
+
+  storyState.scrapbookLetterStep = lineIndex;
+  scrapbookLetterLines.forEach((letterLine, index) => {
+    letterLine.classList.toggle("is-visible", index <= lineIndex);
+    letterLine.classList.toggle("is-typing", index === lineIndex);
+  });
+  line.textContent = fullText.slice(0, characterIndex);
+
+  if (prefersReducedMotion) {
+    completeScrapbookTyping();
+    return;
+  }
+
+  if (characterIndex < fullText.length) {
+    storyState.scrapbookTypingTimer = window.setTimeout(
+      () => typeScrapbookLine(lineIndex, characterIndex + 1),
+      16
+    );
+    return;
+  }
+
+  line.classList.remove("is-typing");
+  storyState.scrapbookTypingTimer = window.setTimeout(
+    () => typeScrapbookLine(lineIndex + 1, 0),
+    260
+  );
+}
+
+function startScrapbookTyping() {
+  if (
+    !scrapbookFeature ||
+    storyState.scrapbookIntroComplete ||
+    storyState.scrapbookTypingStarted
+  ) {
+    return;
+  }
+
+  resetScrapbookLetterText();
+  storyState.scrapbookTypingStarted = true;
+  typeScrapbookLine();
 }
 
 function syncScrapbookIntro() {
@@ -894,12 +999,26 @@ function syncScrapbookIntro() {
 
   scrapbookFeature.classList.toggle("is-reading-letter", !storyState.scrapbookIntroComplete);
   scrapbookFeature.classList.toggle("is-scrapbook-revealed", storyState.scrapbookIntroComplete);
-  renderScrapbookLetter();
+
+  if (storyState.scrapbookIntroComplete) {
+    clearScrapbookTyping();
+    fillScrapbookLetter();
+    setScrapbookLetterButtonReady(false);
+    return;
+  }
+
+  startScrapbookTyping();
 }
 
 function revealScrapbookIntro() {
+  if (!storyState.scrapbookLetterReady) {
+    return;
+  }
+
+  clearScrapbookTyping();
   storyState.scrapbookIntroComplete = true;
-  storyState.scrapbookLetterStep = scrapbookLetterLines.length - 1;
+  fillScrapbookLetter();
+  setScrapbookLetterButtonReady(false);
   syncScrapbookIntro();
   setScrapbookPage(storyState.scrapbookPage);
   updateStoryControls();
@@ -907,21 +1026,11 @@ function revealScrapbookIntro() {
 
 function resetScrapbookIntro() {
   storyState.scrapbookIntroComplete = false;
-  storyState.scrapbookLetterStep = 0;
+  resetScrapbookLetterText();
   syncScrapbookIntro();
 }
 
 function advanceScrapbookLetter() {
-  if (storyState.scrapbookIntroComplete) {
-    return;
-  }
-
-  if (storyState.scrapbookLetterStep < scrapbookLetterLines.length - 1) {
-    storyState.scrapbookLetterStep += 1;
-    renderScrapbookLetter();
-    return;
-  }
-
   revealScrapbookIntro();
 }
 
