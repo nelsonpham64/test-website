@@ -6873,9 +6873,9 @@ body.is-letter-arriving #intro .letter-card {
   }
 }
 
-/* Center-stage physics memory jar */
+/* Center-stage physics Notes Jar */
 .jar-chapter {
-  align-items: center;
+  align-items: start;
 }
 
 .jar-experience {
@@ -7256,17 +7256,18 @@ body.is-letter-arriving #intro .letter-card {
 }
 
 .jar-chapter {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   padding-top: clamp(4.8rem, 8vh, 6rem);
-  padding-bottom: clamp(4.2rem, 7vh, 5.8rem);
+  padding-bottom: clamp(7rem, 12vh, 9rem);
 }
 
 .jar-experience {
   grid-template-rows: auto minmax(15rem, auto) auto;
   align-content: center;
   gap: clamp(0.35rem, 1.2vh, 0.75rem);
-  min-height: auto;
-  max-height: calc(100vh - 8.5rem);
+  min-height: clamp(48rem, 92vh, 58rem);
+  max-height: none;
 }
 
 .jar-copy-center h2 {
@@ -7433,8 +7434,8 @@ body.is-letter-arriving #intro .letter-card {
   .jar-experience {
     grid-template-rows: auto minmax(14rem, auto) auto;
     gap: 0.35rem;
-    min-height: auto;
-    max-height: calc(100vh - 7rem);
+    min-height: clamp(44rem, 98vh, 52rem);
+    max-height: none;
     padding-inline: 0.25rem;
   }
 
@@ -7505,6 +7506,7 @@ body.is-letter-arriving #intro .letter-card {
 }
 
 .sticky-memory {
+  --open-note-color: #ffe97b;
   width: min(540px, 92vw);
   min-height: 380px;
   padding: 3.1rem 2.1rem 2rem;
@@ -7513,7 +7515,7 @@ body.is-letter-arriving #intro .letter-card {
   background:
     linear-gradient(160deg, rgba(255, 255, 255, 0.6), transparent 28%),
     repeating-linear-gradient(180deg, transparent 0 2.2rem, rgba(176, 137, 52, 0.12) 2.2rem 2.28rem),
-    #ffe97b;
+    var(--open-note-color);
   clip-path: polygon(2% 3%, 36% 0, 64% 4%, 97% 1%, 100% 34%, 96% 61%, 99% 97%, 62% 94%, 34% 100%, 0 94%, 4% 62%, 0 35%);
   box-shadow:
     0 42px 110px rgba(58, 45, 68, 0.46),

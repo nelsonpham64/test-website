@@ -201,7 +201,7 @@ const results = {
     plan: [
       "Visit one place from your first year together.",
       "Recreate a photo, order a favorite, or replay a tiny tradition.",
-      "End by opening the memory jar and picking one note."
+      "End by opening the Notes Jar and picking one note."
     ]
   },
   chaotic: {
@@ -221,48 +221,48 @@ const results = {
 
 const memoryNotes = {
   first: {
-    kicker: "remember when...",
-    title: "The first little spark",
+    kicker: "i knew i liked you when...",
+    title: "You made normal moments feel different",
     messages: [
-      "remember when everything started feeling a little different?",
-      "one small moment turned into the beginning of us.",
-      "save this one for the memory that still feels like the start."
+      "I knew I liked you when being around you started feeling easy in a way I did not want to end.",
+      "It was not one giant movie moment. It was all the little moments adding up.",
+      "Somewhere in the middle of laughing with you, I realized I wanted a lot more of you in my life."
     ]
   },
   laugh: {
-    kicker: "i knew i liked you when...",
-    title: "The laugh we kept",
+    kicker: "one thing i love about you is...",
+    title: "Your soft, funny little way",
     messages: [
-      "i knew i liked you when even the random moments felt fun with you.",
-      "like somehow the smallest joke became an inside joke.",
-      "this note is for the laugh we kept."
+      "One thing I love about you is how you can make the smallest moment feel lighter.",
+      "You have this way of making me laugh and calm down at the same time.",
+      "Being loved by you feels like having a favorite place to come back to."
     ]
   },
   dinner: {
-    kicker: "date-night receipt",
-    title: "The meal that became a memory",
+    kicker: "you make me feel...",
+    title: "Chosen, lucky, and understood",
     messages: [
-      "one table, one snack, one dessert, or one tiny food sidequest.",
-      "whatever memory belongs here deserves its own little award.",
-      "total due: another date with you."
+      "You make me feel wanted in the little everyday ways that matter most.",
+      "You make me feel lucky, not just because you are beautiful, but because your heart is genuinely rare.",
+      "I hope I make you feel even a little bit of how special you make me feel."
     ]
   },
   drive: {
-    kicker: "quiet little moment",
-    title: "The quiet ride home",
+    kicker: "something you do that melts me is...",
+    title: "The tiny things",
     messages: [
-      "some memories are not loud.",
-      "they are just a drive, a walk, or a conversation that made the world feel smaller.",
-      "this is one of those."
+      "Something you do that melts me is how you care without always making a big thing out of it.",
+      "The way you look at me, laugh with me, or check on me stays with me more than you know.",
+      "I notice those little things. I keep them."
     ]
   },
   future: {
-    kicker: "future plan unlocked",
-    title: "A note from the next chapter",
+    kicker: "one thing i hope you remember is...",
+    title: "You are so loved",
     messages: [
-      "future plan unlocked:",
-      "more trips, more food, more photos, more random memories.",
-      "one year is just the opening scene."
+      "One thing I hope you always remember is that you are deeply loved by me.",
+      "Not just on anniversaries, not just when everything is perfect, but in the ordinary days too.",
+      "I love you so much, and I am so happy I get to keep choosing you."
     ]
   }
 };
@@ -1474,7 +1474,10 @@ function openNote(key, sourceEl) {
 
   sourceEl?.classList.add("is-opening");
   window.setTimeout(() => sourceEl?.classList.remove("is-opening"), 460);
-  document.querySelector("#note-modal-kicker").textContent = note.kicker || "Memory note";
+  const openNoteEl = document.querySelector(".open-note");
+  const noteColor = sourceEl ? getComputedStyle(sourceEl).getPropertyValue("--note-color").trim() : "";
+  openNoteEl?.style.setProperty("--open-note-color", noteColor || "#ffe97b");
+  document.querySelector("#note-modal-kicker").textContent = note.kicker || "Love note";
   document.querySelector("#note-modal-title").textContent = note.title;
   const thread = document.querySelector("#note-modal-thread");
   thread.textContent = "";
@@ -1606,7 +1609,7 @@ document.querySelectorAll(".paper-note").forEach((note) => {
 jarShakeButton?.addEventListener("click", () => {
   startJarPhysics();
   bumpJarNotes(0.62);
-  document.querySelector("#jar-message").textContent = "Shuffled. Pick a note from the jar.";
+  document.querySelector("#jar-message").textContent = "Shuffled. Pick a love note from the jar.";
 });
 window.addEventListener("resize", () => {
   if (chapters[storyState.current].dataset.chapter === "jar") {
