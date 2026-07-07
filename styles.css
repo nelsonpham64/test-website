@@ -5734,6 +5734,13 @@ h2 {
   position: relative;
 }
 
+.scrapbook-feature.is-scrapbook-revealed {
+  width: min(1320px, 100%);
+  grid-template-columns: minmax(300px, 0.66fr) minmax(560px, 1.34fr);
+  gap: clamp(1rem, 2.4vw, 2.2rem);
+  align-items: center;
+}
+
 .scrapbook-feature.is-reading-letter {
   width: min(980px, 100%);
   grid-template-columns: minmax(0, min(46rem, 100%));
@@ -5760,6 +5767,11 @@ h2 {
   box-shadow:
     0 2rem 4.8rem rgba(197, 91, 138, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.86);
+}
+
+.scrapbook-feature.is-scrapbook-revealed .scrapbook-letter {
+  gap: clamp(0.38rem, 0.8vw, 0.62rem);
+  padding: clamp(0.9rem, 1.55vw, 1.35rem);
 }
 
 .scrapbook-letter::before,
@@ -5801,13 +5813,18 @@ h2 {
 }
 
 .scrapbook-letter h2 {
-  max-width: 12ch;
+  max-width: 100%;
   color: #f45fae;
-  font-size: clamp(2.9rem, 6.8vw, 5.6rem);
-  line-height: 0.92;
+  font-size: clamp(2.75rem, 5.2vw, 4.7rem);
+  line-height: 0.94;
   text-shadow:
     0 2px 0 rgba(255, 255, 255, 0.78),
     0 12px 28px rgba(205, 76, 151, 0.18);
+}
+
+.scrapbook-feature.is-scrapbook-revealed .scrapbook-letter h2 {
+  font-size: clamp(2.15rem, 3.35vw, 3.25rem);
+  line-height: 0.96;
 }
 
 .scrapbook-letter-body {
@@ -5817,6 +5834,12 @@ h2 {
   font-size: clamp(1rem, 1.5vw, 1.2rem);
   font-weight: 780;
   line-height: 1.56;
+}
+
+.scrapbook-feature.is-scrapbook-revealed .scrapbook-letter-body {
+  gap: 0.32rem;
+  font-size: clamp(0.84rem, 1.02vw, 0.98rem);
+  line-height: 1.38;
 }
 
 .letter-line {
@@ -5829,7 +5852,7 @@ h2 {
 }
 
 .letter-line.is-visible {
-  max-height: 9rem;
+  max-height: 7rem;
   opacity: 1;
   transform: translateY(0);
 }
@@ -5861,6 +5884,27 @@ h2 {
 
 .scrapbook-feature.is-scrapbook-revealed .scrapbook {
   animation: scrapbookSceneReveal 780ms cubic-bezier(0.18, 0.86, 0.22, 1) both;
+}
+
+.scrapbook-feature.is-scrapbook-revealed .era-index {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.44rem;
+  max-height: min(23vh, 10.6rem);
+  margin-top: 0.62rem;
+}
+
+.scrapbook-feature.is-scrapbook-revealed .era-index-item {
+  min-height: 3.35rem;
+  padding: 0.52rem 0.62rem;
+}
+
+.scrapbook-feature.is-scrapbook-revealed .era-index-item strong,
+.scrapbook-feature.is-scrapbook-revealed .era-index-item span {
+  font-size: 0.61rem;
+}
+
+.scrapbook-feature.is-scrapbook-revealed .era-index-item em {
+  font-size: clamp(0.72rem, 0.9vw, 0.88rem);
 }
 
 .scrapbook-feature.is-scrapbook-revealed .scrapbook-letter {
@@ -5897,6 +5941,10 @@ h2 {
 }
 
 @media (max-width: 980px) {
+  .scrapbook-feature.is-scrapbook-revealed {
+    grid-template-columns: 1fr;
+  }
+
   .scrapbook-feature.is-reading-letter {
     width: min(760px, 100%);
   }
@@ -5919,6 +5967,10 @@ h2 {
 
   .scrapbook-letter h2 {
     font-size: clamp(2.45rem, 15vw, 3.55rem);
+  }
+
+  .scrapbook-feature.is-scrapbook-revealed .scrapbook-letter h2 {
+    font-size: clamp(2rem, 12vw, 3rem);
   }
 
   .scrapbook-letter-body {
