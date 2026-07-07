@@ -708,7 +708,6 @@ async function loadScrapbookSlot(slot) {
 
   slot.classList.add("has-real-photo");
   slot.dataset.mediaLoaded = "true";
-  slot.dataset.photoFile = media.url.split("/").pop();
 
   if (media.type === "video") {
     slot.classList.add("has-video");

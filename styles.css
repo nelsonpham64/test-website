@@ -210,7 +210,7 @@ img {
 }
 
 .brand {
-  display: inline-flex;
+  display: none;
   align-items: center;
   gap: 0.7rem;
   min-width: 0;
@@ -233,6 +233,7 @@ img {
   display: flex;
   align-items: center;
   gap: 0.9rem;
+  margin-left: auto;
   min-width: min(390px, 45vw);
   color: var(--muted);
   font-size: 0.86rem;
@@ -5725,6 +5726,16 @@ h2 {
   background-color: rgba(255, 238, 248, 0.8);
 }
 
+.scrap-photo::before,
+.scrap-photo::after,
+.scrap-photo.has-real-photo::before,
+.scrap-photo.has-real-photo::after,
+.scrap-photo.has-video::before,
+.scrap-photo.has-video::after {
+  content: none;
+  display: none;
+}
+
 /* Scrapbook era chapters */
 .era-index {
   display: grid;
@@ -6564,6 +6575,52 @@ body.is-letter-arriving #intro .letter-card {
     inset 0 1px 0 rgba(255, 255, 255, 0.72);
 }
 
+.jar-chapter {
+  overflow: hidden;
+  padding-top: clamp(4.8rem, 8vh, 6rem);
+  padding-bottom: clamp(4.2rem, 7vh, 5.8rem);
+}
+
+.jar-experience {
+  grid-template-rows: auto minmax(15rem, auto) auto;
+  align-content: center;
+  gap: clamp(0.35rem, 1.2vh, 0.75rem);
+  min-height: auto;
+  max-height: calc(100vh - 8.5rem);
+}
+
+.jar-copy-center h2 {
+  max-width: 100%;
+  font-size: clamp(3.5rem, 7.6vw, 6.35rem);
+  line-height: 0.9;
+}
+
+.jar-copy-center .lead {
+  margin-top: clamp(0.35rem, 0.9vh, 0.7rem);
+  font-size: clamp(0.94rem, 1.2vw, 1.08rem);
+}
+
+.jar-directions {
+  margin-top: clamp(0.45rem, 0.9vh, 0.7rem);
+}
+
+.jar-stage {
+  width: min(100%, 34rem);
+  min-height: clamp(17rem, 42vh, 27rem);
+}
+
+.jar-shell {
+  width: min(21.5rem, 62vw);
+  height: min(25rem, 43vh);
+}
+
+.jar-message {
+  width: min(100%, 31rem);
+  margin-top: clamp(0.25rem, 0.8vh, 0.55rem);
+  padding: 0.72rem 0.95rem;
+  background: rgba(255, 255, 255, 0.7);
+}
+
 .phone-memory {
   display: grid;
   width: min(430px, 92vw);
@@ -6694,21 +6751,44 @@ body.is-letter-arriving #intro .letter-card {
 
 @media (max-width: 760px) {
   .jar-experience {
-    min-height: 74vh;
+    grid-template-rows: auto minmax(14rem, auto) auto;
+    gap: 0.35rem;
+    min-height: auto;
+    max-height: calc(100vh - 7rem);
     padding-inline: 0.25rem;
   }
 
   .jar-copy-center h2 {
-    font-size: clamp(3.7rem, 18vw, 5.4rem);
+    font-size: clamp(3rem, 14vw, 4.4rem);
+  }
+
+  .jar-copy-center .lead {
+    font-size: 0.95rem;
+  }
+
+  .jar-directions {
+    gap: 0.4rem;
+    margin-top: 0.42rem;
+  }
+
+  .jar-directions span {
+    padding: 0.42rem 0.58rem;
+    font-size: 0.68rem;
   }
 
   .jar-stage {
-    min-height: 24rem;
+    min-height: clamp(15rem, 42vh, 21rem);
   }
 
   .jar-shell {
-    width: min(21rem, 86vw);
-    height: 27rem;
+    width: min(18.5rem, 82vw);
+    height: min(22rem, 41vh);
+  }
+
+  .jar-message {
+    width: min(100%, 27rem);
+    padding: 0.65rem 0.78rem;
+    font-size: 0.86rem;
   }
 
   .jar-shake-button {
