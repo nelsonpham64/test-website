@@ -2154,6 +2154,7 @@ body::after {
 }
 
 .ending-wrap {
+  position: relative;
   width: min(980px, 100%);
   display: grid;
   justify-items: center;
@@ -6873,7 +6874,7 @@ body.is-letter-arriving #intro .letter-card {
   }
 }
 
-/* Center-stage physics Notes Jar */
+/* Legacy note physics helpers */
 .jar-chapter {
   align-items: start;
 }
@@ -7595,6 +7596,346 @@ body.is-letter-arriving #intro .letter-card {
   .sticky-line {
     opacity: 1;
     transform: none;
+    animation: none;
+  }
+}
+
+/* Bouquet P.S. love notes easter egg */
+.ps-love-trigger {
+  position: absolute;
+  left: min(calc(50% + 12rem), calc(100% - 6rem));
+  top: clamp(13.4rem, 29vw, 18.6rem);
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: clamp(4.4rem, 9vw, 5.7rem);
+  aspect-ratio: 1.18;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 14px 16px 13px 18px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.68), transparent 28%),
+    linear-gradient(135deg, #ff91cd, #8fd6ff);
+  color: #24304d;
+  cursor: pointer;
+  font-family: var(--font-bubbly);
+  font-size: clamp(1rem, 2vw, 1.28rem);
+  font-weight: 950;
+  box-shadow:
+    0 1.2rem 2.4rem rgba(176, 71, 135, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.76);
+  transform: rotate(9deg);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  animation: psTagPulse 2.8s ease-in-out infinite;
+}
+
+.ps-love-trigger::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 88%;
+  width: 1px;
+  height: clamp(1.8rem, 4vw, 2.7rem);
+  background: linear-gradient(180deg, rgba(53, 170, 112, 0.72), rgba(255, 255, 255, 0.2));
+  transform: translateX(-50%) rotate(-12deg);
+}
+
+.ps-love-trigger::after {
+  content: "";
+  position: absolute;
+  top: 0.45rem;
+  right: 0.55rem;
+  width: 0.58rem;
+  height: 0.58rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: inset 0 0 0 2px rgba(255, 112, 185, 0.18);
+}
+
+.ps-love-trigger:hover,
+.ps-love-trigger:focus-visible {
+  outline: none;
+  transform: translateY(-0.28rem) rotate(7deg) scale(1.04);
+  box-shadow:
+    0 1.5rem 2.8rem rgba(176, 71, 135, 0.34),
+    0 0 0 4px rgba(255, 255, 255, 0.48),
+    inset 0 1px 0 rgba(255, 255, 255, 0.76);
+}
+
+.ps-love-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 58;
+  display: grid;
+  place-items: center;
+  padding: 1.2rem;
+  opacity: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 48% 42%, rgba(255, 148, 207, 0.38), transparent 16rem),
+    radial-gradient(circle at 62% 58%, rgba(130, 209, 255, 0.28), transparent 18rem),
+    rgba(28, 19, 42, 0.68);
+  backdrop-filter: blur(12px);
+  transition: opacity 220ms ease;
+}
+
+.ps-love-transition.is-playing {
+  opacity: 1;
+}
+
+body.is-finding-ps .story-header,
+body.is-finding-ps .story-controls {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ps-love-transition-card {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  width: min(720px, 94vw);
+  padding: clamp(1.5rem, 4vw, 2.8rem);
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  border-radius: 28px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(255, 238, 248, 0.62)),
+    linear-gradient(135deg, rgba(255, 127, 195, 0.55), rgba(127, 205, 255, 0.42));
+  color: #24304d;
+  text-align: center;
+  box-shadow:
+    0 2.2rem 5rem rgba(62, 41, 72, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82);
+  transform: translateY(1rem) scale(0.94) rotate(-1deg);
+}
+
+.ps-love-transition.is-playing .ps-love-transition-card {
+  animation: psDiscoveryCard 2700ms cubic-bezier(0.16, 0.82, 0.2, 1) both;
+}
+
+.ps-love-badge {
+  display: inline-grid;
+  place-items: center;
+  width: 4.2rem;
+  aspect-ratio: 1;
+  margin-bottom: 0.55rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff78c7, #8ed8ff);
+  color: #fff;
+  font-family: var(--font-bubbly);
+  font-weight: 950;
+  box-shadow: 0 1rem 2rem rgba(207, 80, 150, 0.25);
+}
+
+.ps-love-transition-card h2 {
+  max-width: 100%;
+  margin: 0;
+  font-size: clamp(2.8rem, 8vw, 5.8rem);
+  line-height: 0.9;
+}
+
+.ps-love-transition-card p {
+  max-width: 36rem;
+  margin: 0.9rem auto 0;
+  color: rgba(36, 48, 77, 0.78);
+  font-size: clamp(1rem, 2vw, 1.18rem);
+  font-weight: 850;
+}
+
+.ps-love-notes {
+  position: fixed;
+  inset: 0;
+  z-index: 56;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 3vw, 2rem);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+}
+
+.ps-love-notes.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ps-love-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(28, 19, 42, 0.62);
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+}
+
+.ps-love-card {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  width: min(880px, 94vw);
+  max-height: min(88vh, 52rem);
+  overflow-y: auto;
+  padding: clamp(1.35rem, 3vw, 2.3rem);
+  border: 1px solid rgba(255, 255, 255, 0.64);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 20% 12%, rgba(255, 255, 255, 0.82), transparent 15rem),
+    linear-gradient(135deg, rgba(255, 218, 236, 0.9), rgba(224, 244, 255, 0.86));
+  color: #24304d;
+  text-align: center;
+  box-shadow:
+    0 2.2rem 5.4rem rgba(62, 41, 72, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.86);
+}
+
+.ps-love-card .eyebrow {
+  color: #f45fae;
+}
+
+.ps-love-card h2 {
+  max-width: 100%;
+  margin: 0;
+  font-size: clamp(3.2rem, 8vw, 6.2rem);
+  line-height: 0.9;
+}
+
+.ps-love-card p {
+  max-width: 36rem;
+  margin: 0.7rem auto 0;
+  color: rgba(36, 48, 77, 0.76);
+  font-weight: 850;
+}
+
+.ps-love-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid rgba(36, 48, 77, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.62);
+  color: #24304d;
+  cursor: pointer;
+  font-weight: 950;
+}
+
+.ps-notes-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(0.6rem, 2vw, 1.1rem);
+  width: min(100%, 42rem);
+  margin: clamp(1.2rem, 3vw, 2rem) auto 0;
+  padding: 0.8rem 0.4rem 0.4rem;
+}
+
+.ps-notes-cluster .paper-note {
+  position: relative;
+  left: auto;
+  top: auto;
+  flex: 0 0 auto;
+  width: clamp(5.1rem, 13vw, 6.8rem);
+  height: clamp(4.2rem, 10vw, 5.55rem);
+  transform: rotate(var(--ps-rotate, 0deg)) scale(0.98);
+  animation: psNoteFloat 4.8s ease-in-out infinite;
+  animation-delay: var(--ps-delay, 0ms);
+}
+
+.ps-notes-cluster .paper-note:hover,
+.ps-notes-cluster .paper-note:focus-visible {
+  transform: translateY(-0.38rem) rotate(var(--ps-rotate, 0deg)) scale(1.06);
+}
+
+.ps-notes-cluster .note-one {
+  --ps-rotate: -10deg;
+  --ps-delay: 0ms;
+}
+
+.ps-notes-cluster .note-two {
+  --ps-rotate: 8deg;
+  --ps-delay: 140ms;
+}
+
+.ps-notes-cluster .note-three {
+  --ps-rotate: -3deg;
+  --ps-delay: 280ms;
+}
+
+.ps-notes-cluster .note-four {
+  --ps-rotate: 11deg;
+  --ps-delay: 420ms;
+}
+
+.ps-notes-cluster .note-five {
+  --ps-rotate: -8deg;
+  --ps-delay: 560ms;
+}
+
+.ps-love-card .jar-message {
+  margin-top: clamp(1rem, 2vw, 1.4rem);
+  color: rgba(36, 48, 77, 0.72);
+}
+
+@keyframes psTagPulse {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+
+  50% {
+    filter: brightness(1.08) saturate(1.08);
+  }
+}
+
+@keyframes psDiscoveryCard {
+  0% {
+    opacity: 0;
+    transform: translateY(1.2rem) scale(0.9) rotate(-2deg);
+  }
+
+  18%,
+  78% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(-1deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-0.6rem) scale(0.98) rotate(1deg);
+  }
+}
+
+@keyframes psNoteFloat {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -0.28rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .ps-love-trigger {
+    left: min(calc(50% + 5.6rem), calc(100% - 5.5rem));
+    top: clamp(12.8rem, 52vw, 16.4rem);
+  }
+
+  .ps-love-card {
+    border-radius: 22px;
+  }
+
+  .ps-love-card h2,
+  .ps-love-transition-card h2 {
+    font-size: clamp(2.6rem, 14vw, 4.4rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ps-love-trigger,
+  .ps-notes-cluster .paper-note,
+  .ps-love-transition.is-playing .ps-love-transition-card {
     animation: none;
   }
 }

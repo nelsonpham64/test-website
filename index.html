@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       name="description"
-      content="A pink and blue interactive 1-year anniversary story with a heart lock, scrapbook, date quiz, notes jar, and blooming tulip ending."
+      content="A pink and blue interactive 1-year anniversary story with a heart lock, scrapbook, date quiz, hidden love notes, and blooming tulip ending."
     >
     <title>test Website</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -551,58 +551,6 @@
         </div>
       </section>
 
-      <section class="chapter jar-chapter" id="jar" data-chapter="jar" aria-labelledby="jar-title">
-        <div class="jar-experience">
-          <div class="jar-copy-center">
-            <p class="eyebrow">Notes jar</p>
-            <h2 id="jar-title">Notes Jar</h2>
-            <p class="lead">Shake the jar, pick a note, and open a little affirmation from me.</p>
-            <div class="jar-directions" aria-label="Notes jar directions">
-              <span>Shake the jar</span>
-              <span>Pick a note</span>
-              <span>Read a feeling</span>
-            </div>
-          </div>
-
-          <div class="jar-stage" id="jar-stage" aria-label="Interactive jar of rolled affirmation notes">
-            <div class="jar-aura" aria-hidden="true"></div>
-            <div class="jar-shell" id="jar-shell" tabindex="0" aria-label="Notes jar with interactive notes">
-              <div class="jar-lid" aria-hidden="true">
-                <span></span>
-              </div>
-              <div class="glass-jar" id="glass-jar">
-                <div class="jar-depth jar-depth-back" aria-hidden="true"></div>
-                <div class="jar-notes-layer" id="jar-notes-layer">
-                  <button class="paper-note note-one" type="button" data-note="first" aria-label="Open note: I knew I liked you when">
-                    <span></span>
-                  </button>
-                  <button class="paper-note note-two" type="button" data-note="laugh" aria-label="Open note: One thing I love about you">
-                    <span></span>
-                  </button>
-                  <button class="paper-note note-three" type="button" data-note="dinner" aria-label="Open note: You make me feel">
-                    <span></span>
-                  </button>
-                  <button class="paper-note note-four" type="button" data-note="drive" aria-label="Open note: Something you do that melts me">
-                    <span></span>
-                  </button>
-                  <button class="paper-note note-five" type="button" data-note="future" aria-label="Open note: One thing I hope you remember">
-                    <span></span>
-                  </button>
-                </div>
-                <div class="jar-depth jar-depth-front" aria-hidden="true"></div>
-                <div class="jar-shine" aria-hidden="true"></div>
-              </div>
-              <div class="jar-base" aria-hidden="true"></div>
-            </div>
-            <button class="jar-shake-button" id="jar-shake-button" type="button">Shake jar</button>
-          </div>
-
-          <div class="jar-message" id="jar-message" role="status" aria-live="polite">
-            The love notes are waiting inside.
-          </div>
-        </div>
-      </section>
-
       <section class="chapter" id="wrapped" data-chapter="wrapped" aria-labelledby="wrapped-title">
         <div class="wrapped-experience">
           <div class="wrapped-copy">
@@ -735,13 +683,13 @@
             <p class="eyebrow">Final reveal</p>
             <h2 id="final-title">You made it to the end.</h2>
             <p class="lead">
-              Rewind is unlocked now. Go back through the cards, replay the Notes Jar,
-              or start over and choose a different date mood.
+              Rewind is unlocked now. Go back through the cards, replay the scrapbook,
+              or look for one tiny P.S. tucked into the bouquet.
             </p>
             <div class="rewind-details" aria-label="Rewind unlocked details">
               <span>Back button unlocked</span>
               <span>Scrapbook replayable</span>
-              <span>Notes Jar still active</span>
+              <span>Hidden P.S. waiting</span>
             </div>
           </div>
           <div class="final-card final-action-card">
@@ -878,30 +826,53 @@
               </g>
             </svg>
           </div>
+          <button class="ps-love-trigger" id="ps-love-trigger" type="button" aria-label="Open hidden P.S. love notes">
+            <span>P.S.</span>
+          </button>
           <p class="eyebrow">One year together</p>
           <h2 id="ending-title">I love you so much, I can't wait to celebrate 1 year together!</h2>
         </div>
       </section>
     </main>
 
-    <div class="scrapbook-jar-transition" id="scrapbook-jar-transition" aria-hidden="true">
-      <div class="scrapbook-jar-transition-stage" aria-hidden="true">
-        <div class="memory-transition-book">
-          <span class="memory-transition-cover"></span>
-          <span class="memory-transition-left-page"></span>
-          <span class="memory-transition-right-page"></span>
-        </div>
-        <div class="memory-transition-note">
-          <span></span>
-          <span></span>
-        </div>
-        <div class="memory-transition-jar">
-          <span class="memory-transition-jar-lid"></span>
-          <span class="memory-transition-jar-glass"></span>
-          <span class="memory-transition-jar-note"></span>
-        </div>
-        <p>saving this page as a memory...</p>
+    <div class="ps-love-transition" id="ps-love-transition" aria-hidden="true">
+      <div class="ps-love-transition-card" aria-hidden="true">
+        <span class="ps-love-badge">P.S.</span>
+        <h2>Oh! You found me!!</h2>
+        <p>I just want to glaze you and show how much I love you. Take a look through some of these notes.</p>
       </div>
+    </div>
+
+    <div class="ps-love-notes" id="ps-love-notes" aria-hidden="true">
+      <button class="ps-love-backdrop" id="ps-love-backdrop" type="button" aria-label="Close P.S. love notes"></button>
+      <section class="ps-love-card" role="dialog" aria-labelledby="ps-love-title">
+        <button class="ps-love-close" id="ps-love-close" type="button" aria-label="Close P.S. love notes">Close</button>
+        <div class="ps-love-copy">
+          <p class="eyebrow">Secret P.S.</p>
+          <h2 id="ps-love-title">Love Notes</h2>
+          <p>Pick a color, open a note, and let me glaze you for a second.</p>
+        </div>
+        <div class="ps-notes-cluster" aria-label="Hidden P.S. love notes">
+          <button class="paper-note note-one" type="button" data-note="first" aria-label="Open note: I knew I liked you when">
+            <span></span>
+          </button>
+          <button class="paper-note note-two" type="button" data-note="laugh" aria-label="Open note: One thing I love about you">
+            <span></span>
+          </button>
+          <button class="paper-note note-three" type="button" data-note="dinner" aria-label="Open note: You make me feel">
+            <span></span>
+          </button>
+          <button class="paper-note note-four" type="button" data-note="drive" aria-label="Open note: Something you do that melts me">
+            <span></span>
+          </button>
+          <button class="paper-note note-five" type="button" data-note="future" aria-label="Open note: One thing I hope you remember">
+            <span></span>
+          </button>
+        </div>
+        <div class="jar-message" id="jar-message" role="status" aria-live="polite">
+          Pick any P.S. note from the bouquet.
+        </div>
+      </section>
     </div>
 
     <div class="note-modal" id="note-modal" aria-hidden="true" role="dialog" aria-labelledby="note-modal-title">

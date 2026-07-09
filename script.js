@@ -13,7 +13,11 @@ const scrapbookLetterLines = Array.from(document.querySelectorAll(".letter-line"
 const scrapbookLetterTexts = scrapbookLetterLines.map((line) =>
   line.textContent.replace(/\s+/g, " ").trim()
 );
-const scrapbookJarTransition = document.querySelector("#scrapbook-jar-transition");
+const psLoveTrigger = document.querySelector("#ps-love-trigger");
+const psLoveTransition = document.querySelector("#ps-love-transition");
+const psLoveNotes = document.querySelector("#ps-love-notes");
+const psLoveBackdrop = document.querySelector("#ps-love-backdrop");
+const psLoveClose = document.querySelector("#ps-love-close");
 const lockScreen = document.querySelector("#lock-screen");
 const heartLock = document.querySelector("#heart-lock");
 const loadingScreen = document.querySelector("#loading-screen");
@@ -38,7 +42,8 @@ const storyState = {
   scrapbookLetterReady: false,
   scrapbookTypingStarted: false,
   scrapbookTypingTimer: null,
-  transitioningToJar: false,
+  revealingPsNotes: false,
+  psNotesFound: false,
   enteringLetter: false
 };
 
@@ -79,8 +84,7 @@ const canUsePointerEffects =
 
 const chapterLabels = {
   intro: "Continue",
-  scrapbook: "Open jar",
-  jar: "Year wrapped",
+  scrapbook: "Year wrapped",
   wrapped: "Start quiz",
   quiz: "Finish quiz",
   result: "Final clue",
@@ -201,7 +205,7 @@ const results = {
     plan: [
       "Visit one place from your first year together.",
       "Recreate a photo, order a favorite, or replay a tiny tradition.",
-      "End by opening the Notes Jar and picking one note."
+      "End by looking for the hidden P.S. love notes in the bouquet."
     ]
   },
   chaotic: {
@@ -401,19 +405,7 @@ function setChapter(index) {
     clearScrapbookTyping();
   }
 
-  if (activeChapterKey === "jar") {
-    window.setTimeout(() => {
-      if (chapters[storyState.current].dataset.chapter !== "jar") {
-        return;
-      }
-
-      initializeJarPhysics();
-      startJarPhysics();
-      bumpJarNotes(0.12);
-    }, 120);
-  } else {
-    stopJarPhysics();
-  }
+  stopJarPhysics();
 }
 
 function getScrapbookSpreadCount() {
@@ -431,8 +423,7 @@ function updateStoryControls() {
   const shouldHideScrapbookNext =
     chapterKey === "scrapbook" &&
     (!storyState.scrapbookIntroComplete ||
-      !isOnFinalScrapbookPage() ||
-      storyState.transitioningToJar);
+      !isOnFinalScrapbookPage());
 
   counter.textContent = `Chapter ${storyState.current + 1} of ${chapters.length}`;
   storyProgressBar.style.width = `${progress}%`;
@@ -452,7 +443,7 @@ function updateStoryControls() {
   nextButton.textContent = chapterLabels[chapterKey] || "Next";
 
   const onQuiz = chapterKey === "quiz";
-  nextButton.disabled = storyState.transitioningToJar || (onQuiz && !storyState.quizComplete);
+  nextButton.disabled = onQuiz && !storyState.quizComplete;
 
   if (chapterKey === "ending") {
     nextButton.classList.remove("is-hidden");
@@ -464,6 +455,9 @@ function nextChapter() {
   const chapterKey = chapters[storyState.current].dataset.chapter;
 
   if (chapterKey === "ending") {
+    closePsLoveNotes();
+    closeNote();
+    storyState.psNotesFound = false;
     resetScrapbookIntro();
     setChapter(0);
     return;
@@ -474,16 +468,9 @@ function nextChapter() {
   }
 
   if (chapterKey === "scrapbook") {
-    if (
-      !storyState.scrapbookIntroComplete ||
-      !isOnFinalScrapbookPage() ||
-      storyState.transitioningToJar
-    ) {
+    if (!storyState.scrapbookIntroComplete || !isOnFinalScrapbookPage()) {
       return;
     }
-
-    playScrapbookJarTransition();
-    return;
   }
 
   setChapter(storyState.current + 1);
@@ -521,34 +508,51 @@ function previousChapter() {
   setChapter(storyState.current - 1);
 }
 
-function playScrapbookJarTransition() {
-  const jarChapterIndex = getChapterIndex("jar");
-
-  if (jarChapterIndex < 0 || storyState.transitioningToJar) {
+function openPsLoveNotes() {
+  if (!psLoveNotes) {
     return;
   }
 
-  if (prefersReducedMotion || !scrapbookJarTransition) {
-    setChapter(jarChapterIndex);
+  psLoveNotes.classList.add("is-open");
+  psLoveNotes.setAttribute("aria-hidden", "false");
+  document.querySelector("#jar-message").textContent = "Pick any P.S. note from the bouquet.";
+}
+
+function closePsLoveNotes() {
+  psLoveNotes?.classList.remove("is-open");
+  psLoveNotes?.setAttribute("aria-hidden", "true");
+  psLoveTransition?.classList.remove("is-playing");
+  psLoveTransition?.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("is-finding-ps");
+  storyState.revealingPsNotes = false;
+}
+
+function playPsLoveTransition() {
+  if (storyState.revealingPsNotes) {
     return;
   }
 
-  storyState.transitioningToJar = true;
-  updateStoryControls();
-  clearScrapbookHold();
-  document.body.classList.add("is-transitioning-to-jar");
-  scrapbookJarTransition.classList.remove("is-playing");
-  scrapbookJarTransition.setAttribute("aria-hidden", "false");
-  void scrapbookJarTransition.offsetWidth;
-  scrapbookJarTransition.classList.add("is-playing");
+  if (storyState.psNotesFound || prefersReducedMotion || !psLoveTransition) {
+    storyState.psNotesFound = true;
+    openPsLoveNotes();
+    return;
+  }
+
+  storyState.revealingPsNotes = true;
+  storyState.psNotesFound = true;
+  document.body.classList.add("is-finding-ps");
+  psLoveTransition.classList.remove("is-playing");
+  psLoveTransition.setAttribute("aria-hidden", "false");
+  void psLoveTransition.offsetWidth;
+  psLoveTransition.classList.add("is-playing");
 
   window.setTimeout(() => {
-    scrapbookJarTransition.classList.remove("is-playing");
-    scrapbookJarTransition.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("is-transitioning-to-jar");
-    storyState.transitioningToJar = false;
-    setChapter(jarChapterIndex);
-  }, 3100);
+    psLoveTransition.classList.remove("is-playing");
+    psLoveTransition.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("is-finding-ps");
+    storyState.revealingPsNotes = false;
+    openPsLoveNotes();
+  }, 2700);
 }
 
 function renderQuestion() {
@@ -1614,7 +1618,7 @@ document.querySelectorAll(".paper-note").forEach((note) => {
 jarShakeButton?.addEventListener("click", () => {
   startJarPhysics();
   bumpJarNotes(0.62);
-  document.querySelector("#jar-message").textContent = "Shuffled. Pick a love note from the jar.";
+  document.querySelector("#jar-message").textContent = "Shuffled. Pick a love note from the P.S.";
 });
 window.addEventListener("resize", () => {
   if (chapters[storyState.current].dataset.chapter === "jar") {
@@ -1632,6 +1636,9 @@ if (canUsePointerEffects) {
 }
 document.querySelector("#note-close").addEventListener("click", closeNote);
 document.querySelector("#note-backdrop").addEventListener("click", closeNote);
+psLoveTrigger?.addEventListener("click", playPsLoveTransition);
+psLoveBackdrop?.addEventListener("click", closePsLoveNotes);
+psLoveClose?.addEventListener("click", closePsLoveNotes);
 document.querySelector("#reveal-button").addEventListener("click", () => {
   setChapter(getChapterIndex("ending"));
 });
