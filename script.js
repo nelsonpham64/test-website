@@ -1089,7 +1089,12 @@ function revealScrapbookIntro() {
 function resetScrapbookIntro() {
   storyState.scrapbookIntroComplete = false;
   resetScrapbookLetterText();
-  syncScrapbookIntro();
+  scrapbookFeature?.classList.add("is-reading-letter");
+  scrapbookFeature?.classList.remove("is-scrapbook-revealed", "is-letter-ready");
+
+  if (chapters[storyState.current]?.dataset.chapter === "scrapbook") {
+    syncScrapbookIntro();
+  }
 }
 
 function advanceScrapbookLetter() {
