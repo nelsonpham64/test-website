@@ -15,7 +15,6 @@ const scrapbookLetterTexts = scrapbookLetterLines.map((line) =>
 );
 const psLoveTrigger = document.querySelector("#ps-love-trigger");
 const psLoveTransition = document.querySelector("#ps-love-transition");
-const wrappedTransition = document.querySelector("#wrapped-transition");
 const psLoveNotes = document.querySelector("#ps-love-notes");
 const psLoveBackdrop = document.querySelector("#ps-love-backdrop");
 const psLoveClose = document.querySelector("#ps-love-close");
@@ -45,8 +44,7 @@ const storyState = {
   scrapbookTypingTimer: null,
   revealingPsNotes: false,
   psNotesFound: false,
-  enteringLetter: false,
-  transitioningToWrapped: false
+  enteringLetter: false
 };
 
 const scrapbookHold = {
@@ -55,7 +53,6 @@ const scrapbookHold = {
   pageTimer: null,
   releaseTimer: null
 };
-let wrappedTransitionTimer = null;
 
 const jarPhysics = {
   initialized: false,
@@ -426,8 +423,7 @@ function updateStoryControls() {
   const shouldHideScrapbookNext =
     chapterKey === "scrapbook" &&
     (!storyState.scrapbookIntroComplete ||
-      !isOnFinalScrapbookPage() ||
-      storyState.transitioningToWrapped);
+      !isOnFinalScrapbookPage());
 
   counter.textContent = `Chapter ${storyState.current + 1} of ${chapters.length}`;
   storyProgressBar.style.width = `${progress}%`;
@@ -447,7 +443,7 @@ function updateStoryControls() {
   nextButton.textContent = chapterLabels[chapterKey] || "Next";
 
   const onQuiz = chapterKey === "quiz";
-  nextButton.disabled = storyState.transitioningToWrapped || (onQuiz && !storyState.quizComplete);
+  nextButton.disabled = onQuiz && !storyState.quizComplete;
 
   if (chapterKey === "ending") {
     nextButton.classList.remove("is-hidden");
@@ -459,7 +455,6 @@ function nextChapter() {
   const chapterKey = chapters[storyState.current].dataset.chapter;
 
   if (chapterKey === "ending") {
-    closeWrappedTransition();
     closePsLoveNotes();
     closeNote();
     storyState.psNotesFound = false;
@@ -476,9 +471,6 @@ function nextChapter() {
     if (!storyState.scrapbookIntroComplete || !isOnFinalScrapbookPage()) {
       return;
     }
-
-    playWrappedTransition();
-    return;
   }
 
   setChapter(storyState.current + 1);
@@ -514,52 +506,6 @@ function previousChapter() {
     return;
   }
   setChapter(storyState.current - 1);
-}
-
-function closeWrappedTransition() {
-  window.clearTimeout(wrappedTransitionTimer);
-  wrappedTransitionTimer = null;
-  wrappedTransition?.classList.remove("is-playing");
-  wrappedTransition?.setAttribute("aria-hidden", "true");
-  document.body.classList.remove("is-transitioning-to-wrapped");
-  storyState.transitioningToWrapped = false;
-
-  if (chapters[storyState.current]) {
-    updateStoryControls();
-  }
-}
-
-function playWrappedTransition() {
-  if (storyState.transitioningToWrapped) {
-    return;
-  }
-
-  const wrappedIndex = getChapterIndex("wrapped");
-
-  if (wrappedIndex < 0 || prefersReducedMotion || !wrappedTransition) {
-    setChapter(wrappedIndex >= 0 ? wrappedIndex : storyState.current + 1);
-    return;
-  }
-
-  storyState.transitioningToWrapped = true;
-  clearScrapbookHold();
-  updateStoryControls();
-
-  document.body.classList.add("is-transitioning-to-wrapped");
-  wrappedTransition.classList.remove("is-playing");
-  wrappedTransition.setAttribute("aria-hidden", "false");
-  void wrappedTransition.offsetWidth;
-  wrappedTransition.classList.add("is-playing");
-
-  window.clearTimeout(wrappedTransitionTimer);
-  wrappedTransitionTimer = window.setTimeout(() => {
-    wrappedTransition.classList.remove("is-playing");
-    wrappedTransition.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("is-transitioning-to-wrapped");
-    storyState.transitioningToWrapped = false;
-    wrappedTransitionTimer = null;
-    setChapter(wrappedIndex);
-  }, 8200);
 }
 
 function openPsLoveNotes() {
