@@ -16,6 +16,7 @@ const scrapbookLetterTexts = scrapbookLetterLines.map((line) =>
 const psLoveTrigger = document.querySelector("#ps-love-trigger");
 const psLoveTransition = document.querySelector("#ps-love-transition");
 const wrappedTransition = document.querySelector("#wrapped-transition");
+const wrappedTransitionNext = document.querySelector("#wrapped-transition-next");
 const psLoveNotes = document.querySelector("#ps-love-notes");
 const psLoveBackdrop = document.querySelector("#ps-love-backdrop");
 const psLoveClose = document.querySelector("#ps-love-close");
@@ -46,7 +47,8 @@ const storyState = {
   revealingPsNotes: false,
   psNotesFound: false,
   enteringLetter: false,
-  transitioningToWrapped: false
+  transitioningToWrapped: false,
+  wrappedTransitionReady: false
 };
 
 const scrapbookHold = {
@@ -519,14 +521,52 @@ function previousChapter() {
 function closeWrappedTransition() {
   window.clearTimeout(wrappedTransitionTimer);
   wrappedTransitionTimer = null;
-  wrappedTransition?.classList.remove("is-playing");
+  wrappedTransition?.classList.remove("is-playing", "is-ready", "is-finishing");
   wrappedTransition?.setAttribute("aria-hidden", "true");
   document.body.classList.remove("is-transitioning-to-wrapped");
   storyState.transitioningToWrapped = false;
+  storyState.wrappedTransitionReady = false;
+
+  if (wrappedTransitionNext) {
+    wrappedTransitionNext.hidden = true;
+    wrappedTransitionNext.disabled = true;
+  }
 
   if (chapters[storyState.current]) {
     updateStoryControls();
   }
+}
+
+function finishWrappedTransition() {
+  if (
+    !storyState.transitioningToWrapped ||
+    !storyState.wrappedTransitionReady ||
+    !wrappedTransition
+  ) {
+    return;
+  }
+
+  const wrappedIndex = getChapterIndex("wrapped");
+
+  storyState.wrappedTransitionReady = false;
+  if (wrappedTransitionNext) {
+    wrappedTransitionNext.disabled = true;
+  }
+  wrappedTransition.classList.remove("is-ready");
+  wrappedTransition.classList.add("is-finishing");
+  window.clearTimeout(wrappedTransitionTimer);
+
+  wrappedTransitionTimer = window.setTimeout(() => {
+    wrappedTransition.classList.remove("is-playing", "is-ready", "is-finishing");
+    wrappedTransition.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("is-transitioning-to-wrapped");
+    storyState.transitioningToWrapped = false;
+    wrappedTransitionTimer = null;
+    if (wrappedTransitionNext) {
+      wrappedTransitionNext.hidden = true;
+    }
+    setChapter(wrappedIndex >= 0 ? wrappedIndex : storyState.current + 1);
+  }, 1050);
 }
 
 function playWrappedTransition() {
@@ -542,24 +582,29 @@ function playWrappedTransition() {
   }
 
   storyState.transitioningToWrapped = true;
+  storyState.wrappedTransitionReady = false;
   clearScrapbookHold();
   updateStoryControls();
 
   document.body.classList.add("is-transitioning-to-wrapped");
-  wrappedTransition.classList.remove("is-playing");
+  wrappedTransition.classList.remove("is-playing", "is-ready", "is-finishing");
   wrappedTransition.setAttribute("aria-hidden", "false");
+  if (wrappedTransitionNext) {
+    wrappedTransitionNext.hidden = true;
+    wrappedTransitionNext.disabled = true;
+  }
   void wrappedTransition.offsetWidth;
   wrappedTransition.classList.add("is-playing");
 
   window.clearTimeout(wrappedTransitionTimer);
   wrappedTransitionTimer = window.setTimeout(() => {
-    wrappedTransition.classList.remove("is-playing");
-    wrappedTransition.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("is-transitioning-to-wrapped");
-    storyState.transitioningToWrapped = false;
-    wrappedTransitionTimer = null;
-    setChapter(wrappedIndex);
-  }, 8200);
+    storyState.wrappedTransitionReady = true;
+    if (wrappedTransitionNext) {
+      wrappedTransitionNext.hidden = false;
+      wrappedTransitionNext.disabled = false;
+    }
+    window.requestAnimationFrame(() => wrappedTransition.classList.add("is-ready"));
+  }, 7000);
 }
 
 function openPsLoveNotes() {
@@ -1644,6 +1689,7 @@ document.querySelectorAll(".era-index-item").forEach((item) => {
 });
 
 scrapbookLetterButton?.addEventListener("click", advanceScrapbookLetter);
+wrappedTransitionNext?.addEventListener("click", finishWrappedTransition);
 
 scrapbookBook.addEventListener("pointerdown", startScrapbookHold);
 scrapbookBook.addEventListener("pointerup", cancelScrapbookHold);
