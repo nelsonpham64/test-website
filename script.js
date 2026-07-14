@@ -90,9 +90,9 @@ const canUsePointerEffects =
 const chapterLabels = {
   intro: "Continue",
   scrapbook: "Year wrapped",
-  wrapped: "Start quiz",
-  quiz: "Finish quiz",
-  result: "Final clue",
+  wrapped: "Open ticket",
+  quiz: "Stamp clues",
+  result: "Final reveal",
   finale: "Reveal ending",
   ending: "Start over"
 };
@@ -105,127 +105,44 @@ chapters.forEach((_, index) => {
 
 const questions = [
   {
-    text: "Pick the opening scene.",
-    options: [
-      { label: "Soft lights", detail: "Dinner somewhere pretty and calm.", mood: "romantic" },
-      { label: "Neon night", detail: "Games, snacks, and a little chaos.", mood: "chaotic" },
-      { label: "Back to a favorite", detail: "A place that already means something.", mood: "nostalgia" },
-      { label: "Comfy and close", detail: "Low-pressure, cozy, and very us.", mood: "cozy" }
-    ]
+    text: "The day needs a bigger stage.",
+    detail: "Not just dinner. Not just dessert. Think gates opening, music playing, and us walking into a whole park together.",
+    stamp: "PARK DAY"
   },
   {
-    text: "Choose the restaurant lane.",
-    options: [
-      { label: "Sushi or steak", detail: "Dress up and make it sparkle.", mood: "fancy" },
-      { label: "Pasta and candles", detail: "Warm, romantic, and slow.", mood: "romantic" },
-      { label: "Ramen or pho", detail: "Comfort food with happy silence.", mood: "cozy" },
-      { label: "Food hall crawl", detail: "Many tiny decisions, all delicious.", mood: "chaotic" }
-    ]
+    text: "The dress code is cute but ready.",
+    detail: "A little main character, a little comfortable shoes, because this adventure is going to involve walking, laughing, and taking way too many pictures.",
+    stamp: "PARK-FIT"
   },
   {
-    text: "Pick a dessert rule.",
-    options: [
-      { label: "Share something chocolate", detail: "Classic for a reason.", mood: "romantic" },
-      { label: "Try the weirdest thing", detail: "For science, obviously.", mood: "chaotic" },
-      { label: "Go to our old spot", detail: "Nostalgia tastes better.", mood: "nostalgia" },
-      { label: "Ice cream walk", detail: "Simple, sweet, and easy.", mood: "cozy" }
-    ]
+    text: "The menu is snack-first.",
+    detail: "Theme park snacks count as a love language. We can share, we can compare, and we can absolutely overthink what to eat next.",
+    stamp: "SNACKS"
   },
   {
-    text: "Pick the photo energy.",
-    options: [
-      { label: "Main character", detail: "A real outfit and a real backdrop.", mood: "fancy" },
-      { label: "Photo booth", detail: "Silly faces are required.", mood: "chaotic" },
-      { label: "Recreate an old photo", detail: "Same pose, upgraded year.", mood: "nostalgia" },
-      { label: "Candid and cute", detail: "No pressure, just us.", mood: "cozy" }
-    ]
+    text: "The plan includes rides and shows.",
+    detail: "We are trading the usual dinner plan for screams, sets, surprises, and that kind of fun where the whole day feels like a side quest.",
+    stamp: "RIDES"
   },
   {
-    text: "Choose the soundtrack.",
-    options: [
-      { label: "Soft love songs", detail: "The romantic montage version.", mood: "romantic" },
-      { label: "Car karaoke", detail: "Volume up, dignity optional.", mood: "chaotic" },
-      { label: "Songs from year one", detail: "A tiny time capsule.", mood: "nostalgia" },
-      { label: "Smooth dinner playlist", detail: "A little polished, a little cinematic.", mood: "fancy" }
-    ]
-  },
-  {
-    text: "Pick the ending.",
-    options: [
-      { label: "A handwritten note", detail: "Quiet, sincere, and saved forever.", mood: "romantic" },
-      { label: "One more surprise stop", detail: "Because the night has a bonus level.", mood: "chaotic" },
-      { label: "Look through photos", detail: "A gentle replay of the year.", mood: "nostalgia" },
-      { label: "Movie and dessert", detail: "The soft landing.", mood: "cozy" }
-    ]
+    text: "The destination is ready.",
+    detail: "One final stamp unlocks the real ticket. This is not a hypothetical plan anymore.",
+    stamp: "SURPRISE"
   }
 ];
 
-const results = {
-  cozy: {
-    title: "Cozy Anniversary Mode",
-    tagline: "The night says soft hoodies, favorite bites, and a dessert that somehow fixes everything.",
-    restaurant: "Ramen, pho, pizza, or a comfort-food favorite",
-    theme: "Soft blue, blush pink, and close-to-home sweetness",
-    outfit: "Cute but comfy",
-    dessert: "Ice cream walk or bakery stop",
-    plan: [
-      "Start with a favorite comfort meal and no rushed timeline.",
-      "Add a low-key photo, a shared dessert, and a tiny handwritten note.",
-      "End with a movie, playlist, or a drive that feels like a reset button."
-    ]
-  },
-  fancy: {
-    title: "Fancy Main Character Mode",
-    tagline: "A polished date-night result with the kind of outfits that deserve too many photos.",
-    restaurant: "Sushi, steak, seafood, or a reservation-only spot",
-    theme: "Dress-up dinner with blue-pink sparkle",
-    outfit: "Sharp, romantic, camera-ready",
-    dessert: "Chocolate, mocktails, or rooftop sweets",
-    plan: [
-      "Book the dinner that feels a little more special than normal.",
-      "Take photos before or after, preferably somewhere with pretty lights.",
-      "End with dessert and a final toast to the first year."
-    ]
-  },
-  romantic: {
-    title: "Soft Romantic Mode",
-    tagline: "Candlelight energy, slow pacing, and one sincere moment saved for the end.",
-    restaurant: "Pasta, wine bar, bistro, or candlelit dinner",
-    theme: "Flowers, soft lights, and a note worth keeping",
-    outfit: "Romantic but relaxed",
-    dessert: "Chocolate, cheesecake, or a shared slice",
-    plan: [
-      "Start with flowers or a small keepsake before dinner.",
-      "Keep dinner slow, warm, and phone-light.",
-      "End with the note, the dessert, and a memory from the year."
-    ]
-  },
-  nostalgia: {
-    title: "Nostalgia Tour Mode",
-    tagline: "A little museum of year one, starring the places and moments that already belong to you two.",
-    restaurant: "First-date spot, favorite cafe, or meaningful restaurant",
-    theme: "Memory lane with upgraded anniversary energy",
-    outfit: "Something that matches an old photo or old date",
-    dessert: "A treat from a place you already love",
-    plan: [
-      "Visit one place from your first year together.",
-      "Recreate a photo, order a favorite, or replay a tiny tradition.",
-      "End by looking for the hidden P.S. love notes in the bouquet."
-    ]
-  },
-  chaotic: {
-    title: "Chaotic Fun Mode",
-    tagline: "The algorithm has chosen laughter, snacks, and at least one plan that sounds slightly ridiculous.",
-    restaurant: "Food hall, tacos, Korean BBQ, or shareable small plates",
-    theme: "Arcade tokens, photo booth faces, and dessert roulette",
-    outfit: "Cute enough for photos, practical enough for games",
-    dessert: "Whatever looks most fun in the moment",
-    plan: [
-      "Start with games, mini golf, bowling, an arcade, or a silly challenge.",
-      "Eat somewhere with lots of options and very low seriousness.",
-      "End with a random dessert stop and one final ridiculous photo."
-    ]
-  }
+const tripResult = {
+  title: "Surprise, we're going to Universal Studios Hollywood!",
+  tagline: "I wanted our next chapter to be bigger than a dinner plan, so I made this our anniversary adventure.",
+  restaurant: "Universal Studios Hollywood",
+  theme: "Amusement park trip with rides, shows, snacks, and cute pictures",
+  outfit: "Cute park-fit, comfy shoes, and main character energy",
+  dessert: "Theme park snacks, shared treats, and whatever looks too good to skip",
+  plan: [
+    "Bring the cute outfit, comfy shoes, and fully charged phones.",
+    "Spend the day chasing rides, shows, snacks, and photos together.",
+    "Make this the first big adventure of year two."
+  ]
 };
 
 const memoryNotes = {
@@ -277,21 +194,17 @@ const memoryNotes = {
 };
 
 const quizState = {
-  currentQuestion: 0,
-  scores: {
-    cozy: 0,
-    fancy: 0,
-    romantic: 0,
-    nostalgia: 0,
-    chaotic: 0
-  }
+  currentQuestion: 0
 };
 
 const questionTitle = document.querySelector("#question-title");
+const questionDetail = document.querySelector("#question-detail");
 const answerGrid = document.querySelector("#answer-grid");
 const quizProgress = document.querySelector("#quiz-progress");
 const questionProgressBar = document.querySelector("#question-progress-bar");
 const restartButton = document.querySelector("#restart-quiz");
+const stampTicketButton = document.querySelector("#stamp-ticket-button");
+const parkTicket = document.querySelector("#park-ticket");
 
 function normalizeDate(value) {
   return value.replace(/\D/g, "");
@@ -443,6 +356,7 @@ function updateStoryControls() {
   nextButton.classList.toggle(
     "is-hidden",
     chapterKey === "intro" ||
+      chapterKey === "quiz" ||
       chapterKey === "finale" ||
       shouldHideScrapbookNext
   );
@@ -655,45 +569,65 @@ function playPsLoveTransition() {
 }
 
 function renderQuestion() {
-  const question = questions[quizState.currentQuestion];
-  const questionNumber = quizState.currentQuestion + 1;
+  const questionIndex = Math.min(quizState.currentQuestion, questions.length - 1);
+  const question = questions[questionIndex];
+  const questionNumber = questionIndex + 1;
+  const stampedCount = storyState.quizComplete ? questions.length : questionIndex;
+  const progressCount = storyState.quizComplete ? questions.length : questionNumber;
 
-  quizProgress.textContent = `Question ${questionNumber} of ${questions.length}`;
-  questionProgressBar.style.width = `${(questionNumber / questions.length) * 100}%`;
-  questionTitle.textContent = question.text;
+  quizProgress.textContent = storyState.quizComplete
+    ? "Ticket complete"
+    : `Clue ${questionNumber} of ${questions.length}`;
+  questionProgressBar.style.width = `${(progressCount / questions.length) * 100}%`;
+  questionTitle.textContent = storyState.quizComplete
+    ? "The ticket is fully stamped."
+    : question.text;
+  questionDetail.textContent = storyState.quizComplete
+    ? "The destination is unlocked. Time to see where year two is taking us."
+    : question.detail;
+  parkTicket?.classList.toggle("is-complete", storyState.quizComplete);
   answerGrid.innerHTML = "";
 
-  question.options.forEach((option) => {
-    const button = document.createElement("button");
-    button.className = "answer-option";
-    button.type = "button";
-    button.innerHTML = `<strong>${option.label}</strong><span>${option.detail}</span>`;
-    button.addEventListener("click", () => chooseAnswer(option.mood));
-    answerGrid.appendChild(button);
+  questions.forEach((clue, index) => {
+    const stamp = document.createElement("span");
+    stamp.className = "ticket-stamp";
+    stamp.classList.toggle("is-stamped", index < stampedCount || storyState.quizComplete);
+    stamp.classList.toggle("is-current", index === questionIndex && !storyState.quizComplete);
+    stamp.textContent = clue.stamp;
+    answerGrid.appendChild(stamp);
   });
+
+  if (stampTicketButton) {
+    stampTicketButton.textContent =
+      questionNumber === questions.length ? "Stamp final clue" : "Stamp clue";
+    stampTicketButton.disabled = storyState.quizComplete;
+  }
 }
 
-function chooseAnswer(mood) {
-  quizState.scores[mood] += 1;
+function stampTicketClue() {
+  if (storyState.quizComplete) {
+    return;
+  }
 
   if (quizState.currentQuestion < questions.length - 1) {
     quizState.currentQuestion += 1;
+    document.querySelector("#quiz-lock-note").textContent = "Stamp added. Keep going.";
     renderQuestion();
     return;
   }
 
   storyState.quizComplete = true;
-  document.querySelector("#quiz-lock-note").textContent = "Result unlocked.";
+  document.querySelector("#quiz-lock-note").textContent = "Ticket unlocked.";
   showResult();
-  setChapter(getChapterIndex("result"));
-}
+  renderQuestion();
 
-function getWinningMood() {
-  return Object.entries(quizState.scores).sort((a, b) => b[1] - a[1])[0][0];
+  window.setTimeout(() => {
+    setChapter(getChapterIndex("result"));
+  }, prefersReducedMotion ? 0 : 900);
 }
 
 function showResult() {
-  const result = results[getWinningMood()];
+  const result = tripResult;
   document.querySelector("#result-title").textContent = result.title;
   document.querySelector("#result-tagline").textContent = result.tagline;
   document.querySelector("#result-restaurant").textContent = result.restaurant;
@@ -712,11 +646,9 @@ function showResult() {
 
 function restartQuiz() {
   quizState.currentQuestion = 0;
-  Object.keys(quizState.scores).forEach((key) => {
-    quizState.scores[key] = 0;
-  });
   storyState.quizComplete = false;
-  document.querySelector("#quiz-lock-note").textContent = "Finish the quiz to unlock the next chapter.";
+  parkTicket?.classList.remove("is-complete");
+  document.querySelector("#quiz-lock-note").textContent = "Stamp each clue to reveal where we are going.";
   renderQuestion();
   updateStoryControls();
 }
@@ -1746,6 +1678,7 @@ document.querySelector("#reveal-button").addEventListener("click", () => {
 nextButton.addEventListener("click", nextChapter);
 backButton.addEventListener("click", previousChapter);
 restartButton.addEventListener("click", restartQuiz);
+stampTicketButton?.addEventListener("click", stampTicketClue);
 
 renderQuestion();
 setScrapbookPage(0);

@@ -11,7 +11,7 @@ A GitHub Pages-ready anniversary website with:
 - Forward-only story navigation until the final reveal
 - A press-and-hold scrapbook with a realistic open-book look and 3D page turns
 - A Spotify-Wrapped-inspired year recap with animated stats and rankings
-- A six-question date mood quiz
+- A Universal Studios Hollywood ticket reveal
 - Result cards for restaurant/theme/outfit/dessert ideas
 - A memory jar with animated crumpled notes
 - A blooming pink and blue tulip ending
@@ -21,7 +21,7 @@ A GitHub Pages-ready anniversary website with:
 Edit these files:
 
 - `index.html` for the visible sections, memory cards, and final copy
-- `script.js` for quiz questions, date result plans, memory jar notes, and final clue
+- `script.js` for ticket clues, trip reveal details, love notes, and final clue
 - `styles.css` for colors and layout
 - `assets/anniversary-hero.png` for the hero image
 

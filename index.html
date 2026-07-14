@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       name="description"
-      content="A pink and blue interactive 1-year anniversary story with a heart lock, scrapbook, date quiz, hidden love notes, and blooming tulip ending."
+      content="A pink and blue interactive 1-year anniversary story with a heart lock, scrapbook, Spotify Wrapped, surprise trip reveal, hidden love notes, and blooming tulip ending."
     >
     <title>test Website</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -144,7 +144,7 @@
             <p class="eyebrow">A letter appeared</p>
             <h1 id="intro-title">Open this when you are ready.</h1>
             <p class="lead">
-              The whole date machine is sealed inside. Click the letter to start
+              The whole story machine is sealed inside. Click the letter to start
               the story, then follow the glow until the final clue unlocks.
             </p>
           </div>
@@ -558,7 +558,7 @@
             <h2 id="wrapped-title">Year One Wrapped.</h2>
             <p class="lead">
               A tiny recap of the first era: favorite moments, top moods,
-              date-night energy, and one very obvious favorite person.
+              next-adventure energy, and one very obvious favorite person.
             </p>
           </div>
 
@@ -581,7 +581,7 @@
             </article>
 
             <article class="wrapped-card" style="--wrapped-delay: 170ms">
-              <span>Top date genre</span>
+              <span>Top adventure genre</span>
               <strong>Dessert-first romance</strong>
               <p>Soft plans, sweet cravings, and probably one more bite.</p>
             </article>
@@ -627,49 +627,64 @@
       </section>
 
       <section class="chapter" id="quiz" data-chapter="quiz" aria-labelledby="quiz-title">
-        <div class="chapter-grid quiz-grid">
+        <div class="chapter-grid quiz-grid ticket-reveal-grid">
           <div class="chapter-copy">
-            <p class="eyebrow">Date mood quiz</p>
-            <h2 id="quiz-title">Choose the anniversary signal.</h2>
+            <p class="eyebrow">Surprise ticket reveal</p>
+            <h2 id="quiz-title">Stamp the adventure pass.</h2>
             <p class="lead">
-              The answers pick the restaurant lane, outfit mood, dessert rule,
-              and final anniversary theme.
+              Every clue adds another stamp onto the ticket. Once it is complete,
+              the real surprise unlocks.
             </p>
-            <p class="quiz-lock-note" id="quiz-lock-note">Finish the quiz to unlock the next chapter.</p>
+            <p class="quiz-lock-note" id="quiz-lock-note">Stamp each clue to reveal where we are going.</p>
           </div>
 
-          <div class="quiz-panel" aria-live="polite">
+          <div class="quiz-panel ticket-panel" aria-live="polite">
             <div class="quiz-topline">
-              <span id="quiz-progress">Question 1 of 6</span>
-              <button class="small-button" id="restart-quiz" type="button">Reset</button>
+              <span id="quiz-progress">Clue 1 of 5</span>
+              <button class="small-button" id="restart-quiz" type="button">Restamp</button>
             </div>
             <span class="question-progress"><span id="question-progress-bar"></span></span>
-            <h3 id="question-title"></h3>
-            <div class="answer-grid" id="answer-grid"></div>
+            <div class="park-ticket" id="park-ticket">
+              <div class="ticket-stub-row">
+                <span>Anniversary adventure pass</span>
+                <em>Admit two</em>
+              </div>
+              <h3 id="question-title"></h3>
+              <p class="ticket-clue-copy" id="question-detail"></p>
+              <div class="answer-grid ticket-stamp-grid" id="answer-grid" aria-label="Ticket clue stamps"></div>
+              <button class="button button-primary ticket-stamp-button" id="stamp-ticket-button" type="button">
+                Stamp clue
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
       <section class="chapter" id="result" data-chapter="result" aria-labelledby="result-title">
-        <div class="chapter-copy wide-copy">
-          <p class="eyebrow">Date machine result</p>
+        <div class="chapter-copy wide-copy trip-result-copy">
+          <p class="eyebrow">Ticket unlocked</p>
           <h2 id="result-title">Your result is waiting.</h2>
-          <p class="lead" id="result-tagline">Finish the quiz to reveal it.</p>
+          <p class="lead" id="result-tagline">Stamp the ticket to reveal it.</p>
+          <div class="trip-ticket-result" aria-hidden="true">
+            <span>Universal Studios Hollywood</span>
+            <strong>Anniversary Adventure Pass</strong>
+            <em>Nelson + Bella</em>
+          </div>
           <div class="result-grid">
             <article class="result-card">
-              <span>Restaurant lane</span>
+              <span>Destination</span>
               <strong id="result-restaurant">Locked</strong>
             </article>
             <article class="result-card">
-              <span>Theme</span>
+              <span>Adventure type</span>
               <strong id="result-theme">Locked</strong>
             </article>
             <article class="result-card">
-              <span>Outfit vibe</span>
+              <span>Park-fit</span>
               <strong id="result-outfit">Locked</strong>
             </article>
             <article class="result-card">
-              <span>Dessert rule</span>
+              <span>Snack rule</span>
               <strong id="result-dessert">Locked</strong>
             </article>
           </div>
