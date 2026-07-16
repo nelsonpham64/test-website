@@ -17,6 +17,7 @@ const psLoveTrigger = document.querySelector("#ps-love-trigger");
 const psLoveTransition = document.querySelector("#ps-love-transition");
 const wrappedTransition = document.querySelector("#wrapped-transition");
 const wrappedTransitionNext = document.querySelector("#wrapped-transition-next");
+const clawTransition = document.querySelector("#claw-transition");
 const psLoveNotes = document.querySelector("#ps-love-notes");
 const psLoveBackdrop = document.querySelector("#ps-love-backdrop");
 const psLoveClose = document.querySelector("#ps-love-close");
@@ -48,7 +49,8 @@ const storyState = {
   psNotesFound: false,
   enteringLetter: false,
   transitioningToWrapped: false,
-  wrappedTransitionReady: false
+  wrappedTransitionReady: false,
+  transitioningToClaw: false
 };
 
 const scrapbookHold = {
@@ -58,6 +60,13 @@ const scrapbookHold = {
   releaseTimer: null
 };
 let wrappedTransitionTimer = null;
+let clawTransitionTimer = null;
+
+const clawState = {
+  position: 50,
+  isDropping: false,
+  hasCapsule: false
+};
 
 const jarPhysics = {
   initialized: false,
@@ -90,8 +99,8 @@ const canUsePointerEffects =
 const chapterLabels = {
   intro: "Continue",
   scrapbook: "Year wrapped",
-  wrapped: "Open ticket",
-  quiz: "Stamp clues",
+  wrapped: "Play machine",
+  quiz: "Win prize",
   result: "Final reveal",
   finale: "Reveal ending",
   ending: "Start over"
@@ -102,34 +111,6 @@ chapters.forEach((_, index) => {
   dot.dataset.index = String(index);
   dotsWrap.appendChild(dot);
 });
-
-const questions = [
-  {
-    text: "The day needs a bigger stage.",
-    detail: "Not just dinner. Not just dessert. Think gates opening, music playing, and us walking into a whole park together.",
-    stamp: "PARK DAY"
-  },
-  {
-    text: "The dress code is cute but ready.",
-    detail: "A little main character, a little comfortable shoes, because this adventure is going to involve walking, laughing, and taking way too many pictures.",
-    stamp: "PARK-FIT"
-  },
-  {
-    text: "The menu is snack-first.",
-    detail: "Theme park snacks count as a love language. We can share, we can compare, and we can absolutely overthink what to eat next.",
-    stamp: "SNACKS"
-  },
-  {
-    text: "The plan includes rides and shows.",
-    detail: "We are trading the usual dinner plan for screams, sets, surprises, and that kind of fun where the whole day feels like a side quest.",
-    stamp: "RIDES"
-  },
-  {
-    text: "The destination is ready.",
-    detail: "One final stamp unlocks the real ticket. This is not a hypothetical plan anymore.",
-    stamp: "SURPRISE"
-  }
-];
 
 const tripResult = {
   title: "Surprise, we're going to Universal Studios Hollywood!",
@@ -193,18 +174,15 @@ const memoryNotes = {
   }
 };
 
-const quizState = {
-  currentQuestion: 0
-};
-
-const questionTitle = document.querySelector("#question-title");
 const questionDetail = document.querySelector("#question-detail");
-const answerGrid = document.querySelector("#answer-grid");
 const quizProgress = document.querySelector("#quiz-progress");
 const questionProgressBar = document.querySelector("#question-progress-bar");
 const restartButton = document.querySelector("#restart-quiz");
-const stampTicketButton = document.querySelector("#stamp-ticket-button");
-const parkTicket = document.querySelector("#park-ticket");
+const clawDropButton = document.querySelector("#claw-drop-button");
+const clawMachine = document.querySelector("#claw-machine");
+const mysteryCapsule = document.querySelector("#mystery-capsule");
+const clawLeftButton = document.querySelector("#claw-left-button");
+const clawRightButton = document.querySelector("#claw-right-button");
 
 function normalizeDate(value) {
   return value.replace(/\D/g, "");
@@ -323,6 +301,10 @@ function setChapter(index) {
     clearScrapbookTyping();
   }
 
+  if (activeChapterKey === "quiz") {
+    renderClawMachine();
+  }
+
   stopJarPhysics();
 }
 
@@ -342,7 +324,8 @@ function updateStoryControls() {
     chapterKey === "scrapbook" &&
     (!storyState.scrapbookIntroComplete ||
       !isOnFinalScrapbookPage() ||
-      storyState.transitioningToWrapped);
+      storyState.transitioningToWrapped ||
+      storyState.transitioningToClaw);
 
   counter.textContent = `Chapter ${storyState.current + 1} of ${chapters.length}`;
   storyProgressBar.style.width = `${progress}%`;
@@ -363,7 +346,10 @@ function updateStoryControls() {
   nextButton.textContent = chapterLabels[chapterKey] || "Next";
 
   const onQuiz = chapterKey === "quiz";
-  nextButton.disabled = storyState.transitioningToWrapped || (onQuiz && !storyState.quizComplete);
+  nextButton.disabled =
+    storyState.transitioningToWrapped ||
+    storyState.transitioningToClaw ||
+    (onQuiz && !storyState.quizComplete);
 
   if (chapterKey === "ending") {
     nextButton.classList.remove("is-hidden");
@@ -376,9 +362,11 @@ function nextChapter() {
 
   if (chapterKey === "ending") {
     closeWrappedTransition();
+    closeClawTransition();
     closePsLoveNotes();
     closeNote();
     storyState.psNotesFound = false;
+    restartQuiz();
     resetScrapbookIntro();
     setChapter(0);
     return;
@@ -394,6 +382,11 @@ function nextChapter() {
     }
 
     playWrappedTransition();
+    return;
+  }
+
+  if (chapterKey === "wrapped") {
+    playClawTransition();
     return;
   }
 
@@ -521,6 +514,50 @@ function playWrappedTransition() {
   }, 7000);
 }
 
+function closeClawTransition() {
+  window.clearTimeout(clawTransitionTimer);
+  clawTransitionTimer = null;
+  clawTransition?.classList.remove("is-playing");
+  clawTransition?.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("is-transitioning-to-claw");
+  storyState.transitioningToClaw = false;
+
+  if (chapters[storyState.current]) {
+    updateStoryControls();
+  }
+}
+
+function playClawTransition() {
+  if (storyState.transitioningToClaw) {
+    return;
+  }
+
+  const clawIndex = getChapterIndex("quiz");
+
+  if (clawIndex < 0 || prefersReducedMotion || !clawTransition) {
+    setChapter(clawIndex >= 0 ? clawIndex : storyState.current + 1);
+    return;
+  }
+
+  storyState.transitioningToClaw = true;
+  updateStoryControls();
+  document.body.classList.add("is-transitioning-to-claw");
+  clawTransition.classList.remove("is-playing");
+  clawTransition.setAttribute("aria-hidden", "false");
+  void clawTransition.offsetWidth;
+  clawTransition.classList.add("is-playing");
+
+  window.clearTimeout(clawTransitionTimer);
+  clawTransitionTimer = window.setTimeout(() => {
+    clawTransition.classList.remove("is-playing");
+    clawTransition.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("is-transitioning-to-claw");
+    storyState.transitioningToClaw = false;
+    clawTransitionTimer = null;
+    setChapter(clawIndex);
+  }, 2600);
+}
+
 function openPsLoveNotes() {
   if (!psLoveNotes) {
     return;
@@ -568,62 +605,87 @@ function playPsLoveTransition() {
   }, 2700);
 }
 
-function renderQuestion() {
-  const questionIndex = Math.min(quizState.currentQuestion, questions.length - 1);
-  const question = questions[questionIndex];
-  const questionNumber = questionIndex + 1;
-  const stampedCount = storyState.quizComplete ? questions.length : questionIndex;
-  const progressCount = storyState.quizComplete ? questions.length : questionNumber;
+function renderClawMachine() {
+  const progress = storyState.quizComplete ? 100 : clawState.hasCapsule ? 72 : 34;
+
+  if (clawMachine) {
+    clawMachine.style.setProperty("--claw-x", clawState.position);
+    clawMachine.classList.toggle("is-dropping", clawState.isDropping);
+    clawMachine.classList.toggle("is-captured", clawState.hasCapsule);
+    clawMachine.classList.toggle("is-unlocked", storyState.quizComplete);
+  }
 
   quizProgress.textContent = storyState.quizComplete
-    ? "Ticket complete"
-    : `Clue ${questionNumber} of ${questions.length}`;
-  questionProgressBar.style.width = `${(progressCount / questions.length) * 100}%`;
-  questionTitle.textContent = storyState.quizComplete
-    ? "The ticket is fully stamped."
-    : question.text;
+    ? "Prize unlocked"
+    : clawState.hasCapsule
+      ? "Capsule won"
+      : "Prize waiting";
+  questionProgressBar.style.width = `${progress}%`;
   questionDetail.textContent = storyState.quizComplete
-    ? "The destination is unlocked. Time to see where year two is taking us."
-    : question.detail;
-  parkTicket?.classList.toggle("is-complete", storyState.quizComplete);
-  answerGrid.innerHTML = "";
+    ? "Prize opened. Your next adventure is waiting."
+    : clawState.hasCapsule
+      ? "Nice catch. Open the capsule to see what you won."
+      : "Move the claw, drop it, and win the mystery capsule.";
 
-  questions.forEach((clue, index) => {
-    const stamp = document.createElement("span");
-    stamp.className = "ticket-stamp";
-    stamp.classList.toggle("is-stamped", index < stampedCount || storyState.quizComplete);
-    stamp.classList.toggle("is-current", index === questionIndex && !storyState.quizComplete);
-    stamp.textContent = clue.stamp;
-    answerGrid.appendChild(stamp);
-  });
-
-  if (stampTicketButton) {
-    stampTicketButton.textContent =
-      questionNumber === questions.length ? "Stamp final clue" : "Stamp clue";
-    stampTicketButton.disabled = storyState.quizComplete;
+  if (clawDropButton) {
+    clawDropButton.textContent = clawState.hasCapsule ? "Open capsule" : "Drop claw";
+    clawDropButton.disabled = clawState.isDropping || storyState.quizComplete;
   }
+
+  if (mysteryCapsule) {
+    mysteryCapsule.disabled = !clawState.hasCapsule || storyState.quizComplete;
+    mysteryCapsule.setAttribute(
+      "aria-label",
+      clawState.hasCapsule ? "Open mystery capsule" : "Mystery capsule is still inside the machine"
+    );
+  }
+
+  [clawLeftButton, clawRightButton].forEach((button) => {
+    if (button) {
+      button.disabled = clawState.isDropping || clawState.hasCapsule || storyState.quizComplete;
+    }
+  });
 }
 
-function stampTicketClue() {
-  if (storyState.quizComplete) {
+function moveClaw(direction) {
+  if (clawState.isDropping || clawState.hasCapsule || storyState.quizComplete) {
     return;
   }
 
-  if (quizState.currentQuestion < questions.length - 1) {
-    quizState.currentQuestion += 1;
-    document.querySelector("#quiz-lock-note").textContent = "Stamp added. Keep going.";
-    renderQuestion();
+  clawState.position = Math.max(18, Math.min(82, clawState.position + direction * 12));
+  renderClawMachine();
+}
+
+function dropClaw() {
+  if (clawState.isDropping || clawState.hasCapsule || storyState.quizComplete) {
+    return;
+  }
+
+  clawState.isDropping = true;
+  document.querySelector("#quiz-lock-note").textContent = "The claw is dropping...";
+  renderClawMachine();
+
+  window.setTimeout(() => {
+    clawState.isDropping = false;
+    clawState.hasCapsule = true;
+    document.querySelector("#quiz-lock-note").textContent = "Capsule won. Open it.";
+    renderClawMachine();
+  }, prefersReducedMotion ? 120 : 960);
+}
+
+function openCapsulePrize() {
+  if (!clawState.hasCapsule || storyState.quizComplete) {
     return;
   }
 
   storyState.quizComplete = true;
-  document.querySelector("#quiz-lock-note").textContent = "Ticket unlocked.";
+  document.querySelector("#quiz-lock-note").textContent = "Prize unlocked.";
   showResult();
-  renderQuestion();
+  renderClawMachine();
 
   window.setTimeout(() => {
     setChapter(getChapterIndex("result"));
-  }, prefersReducedMotion ? 0 : 900);
+  }, prefersReducedMotion ? 0 : 1050);
 }
 
 function showResult() {
@@ -645,11 +707,12 @@ function showResult() {
 }
 
 function restartQuiz() {
-  quizState.currentQuestion = 0;
   storyState.quizComplete = false;
-  parkTicket?.classList.remove("is-complete");
-  document.querySelector("#quiz-lock-note").textContent = "Stamp each clue to reveal where we are going.";
-  renderQuestion();
+  clawState.position = 50;
+  clawState.isDropping = false;
+  clawState.hasCapsule = false;
+  document.querySelector("#quiz-lock-note").textContent = "Move the claw and grab the mystery capsule.";
+  renderClawMachine();
   updateStoryControls();
 }
 
@@ -1678,8 +1741,18 @@ document.querySelector("#reveal-button").addEventListener("click", () => {
 nextButton.addEventListener("click", nextChapter);
 backButton.addEventListener("click", previousChapter);
 restartButton.addEventListener("click", restartQuiz);
-stampTicketButton?.addEventListener("click", stampTicketClue);
+clawDropButton?.addEventListener("click", () => {
+  if (clawState.hasCapsule) {
+    openCapsulePrize();
+    return;
+  }
 
-renderQuestion();
+  dropClaw();
+});
+clawLeftButton?.addEventListener("click", () => moveClaw(-1));
+clawRightButton?.addEventListener("click", () => moveClaw(1));
+mysteryCapsule?.addEventListener("click", openCapsulePrize);
+
+renderClawMachine();
 setScrapbookPage(0);
 setChapter(0);

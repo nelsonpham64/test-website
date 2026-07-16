@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       name="description"
-      content="A pink and blue interactive 1-year anniversary story with a heart lock, scrapbook, Spotify Wrapped, surprise trip reveal, hidden love notes, and blooming tulip ending."
+      content="A pink and blue interactive 1-year anniversary story with a heart lock, scrapbook, Spotify Wrapped, mystery claw machine reveal, hidden love notes, and blooming tulip ending."
     >
     <title>test Website</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -627,34 +627,52 @@
       </section>
 
       <section class="chapter" id="quiz" data-chapter="quiz" aria-labelledby="quiz-title">
-        <div class="chapter-grid quiz-grid ticket-reveal-grid">
+        <div class="chapter-grid quiz-grid claw-reveal-grid">
           <div class="chapter-copy">
-            <p class="eyebrow">Surprise ticket reveal</p>
-            <h2 id="quiz-title">Stamp the adventure pass.</h2>
+            <p class="eyebrow">Mystery prize</p>
+            <h2 id="quiz-title">Win your next adventure.</h2>
             <p class="lead">
-              Every clue adds another stamp onto the ticket. Once it is complete,
-              the real surprise unlocks.
+              Move the claw, grab the capsule, and open the prize when it drops.
+              The surprise stays hidden until you win it.
             </p>
-            <p class="quiz-lock-note" id="quiz-lock-note">Stamp each clue to reveal where we are going.</p>
+            <p class="quiz-lock-note" id="quiz-lock-note">Move the claw and grab the mystery capsule.</p>
           </div>
 
-          <div class="quiz-panel ticket-panel" aria-live="polite">
+          <div class="quiz-panel claw-panel" aria-live="polite">
             <div class="quiz-topline">
-              <span id="quiz-progress">Clue 1 of 5</span>
-              <button class="small-button" id="restart-quiz" type="button">Restamp</button>
+              <span id="quiz-progress">Prize waiting</span>
+              <button class="small-button" id="restart-quiz" type="button">Reset</button>
             </div>
             <span class="question-progress"><span id="question-progress-bar"></span></span>
-            <div class="park-ticket" id="park-ticket">
-              <div class="ticket-stub-row">
-                <span>Anniversary adventure pass</span>
-                <em>Admit two</em>
+            <div class="claw-machine" id="claw-machine" style="--claw-x: 50">
+              <div class="claw-marquee">
+                <span>Anniversary Arcade</span>
+                <strong>Prize inside</strong>
               </div>
-              <h3 id="question-title"></h3>
-              <p class="ticket-clue-copy" id="question-detail"></p>
-              <div class="answer-grid ticket-stamp-grid" id="answer-grid" aria-label="Ticket clue stamps"></div>
-              <button class="button button-primary ticket-stamp-button" id="stamp-ticket-button" type="button">
-                Stamp clue
-              </button>
+              <div class="claw-glass">
+                <div class="claw-track" aria-hidden="true"></div>
+                <div class="claw-carriage" id="claw-carriage" aria-hidden="true">
+                  <span class="claw-cable"></span>
+                  <span class="claw-head">
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                  </span>
+                </div>
+                <div class="capsule capsule-one" aria-hidden="true"></div>
+                <div class="capsule capsule-two" aria-hidden="true"></div>
+                <div class="capsule capsule-three" aria-hidden="true"></div>
+                <button class="mystery-capsule" id="mystery-capsule" type="button" aria-label="Open mystery capsule" disabled>
+                  <span></span>
+                </button>
+                <div class="prize-chute" aria-hidden="true"></div>
+              </div>
+              <p class="claw-message" id="question-detail">Line up the claw, drop it, and win the mystery capsule.</p>
+              <div class="claw-controls" aria-label="Claw machine controls">
+                <button class="small-button claw-control" id="claw-left-button" type="button">Left</button>
+                <button class="button button-primary claw-drop-button" id="claw-drop-button" type="button">Drop claw</button>
+                <button class="small-button claw-control" id="claw-right-button" type="button">Right</button>
+              </div>
             </div>
           </div>
         </div>
@@ -662,12 +680,12 @@
 
       <section class="chapter" id="result" data-chapter="result" aria-labelledby="result-title">
         <div class="chapter-copy wide-copy trip-result-copy">
-          <p class="eyebrow">Ticket unlocked</p>
-          <h2 id="result-title">Your result is waiting.</h2>
-          <p class="lead" id="result-tagline">Stamp the ticket to reveal it.</p>
-          <div class="trip-ticket-result" aria-hidden="true">
+          <p class="eyebrow">Prize unlocked</p>
+          <h2 id="result-title">Your prize is waiting.</h2>
+          <p class="lead" id="result-tagline">Win the capsule to reveal it.</p>
+          <div class="trip-prize-result" aria-hidden="true">
             <span>Universal Studios Hollywood</span>
-            <strong>Anniversary Adventure Pass</strong>
+            <strong>Two adventure passes</strong>
             <em>Nelson + Bella</em>
           </div>
           <div class="result-grid">
@@ -895,6 +913,15 @@
         <button class="wrapped-transition-next" id="wrapped-transition-next" type="button" hidden>
           Continue
         </button>
+      </div>
+    </div>
+
+    <div class="claw-transition" id="claw-transition" aria-hidden="true">
+      <div class="claw-transition-card" aria-hidden="true">
+        <span class="claw-transition-token"></span>
+        <p class="eyebrow">One more prize</p>
+        <h2>Win your next adventure.</h2>
+        <p>A mystery capsule is waiting. Play the machine to see what you won.</p>
       </div>
     </div>
 

@@ -386,7 +386,6 @@ h3 {
 .counter,
 #scrap-count,
 .quiz-topline,
-.answer-option strong,
 .result-card span,
 .result-card strong,
 .stat-card strong,
@@ -946,224 +945,293 @@ h3 {
   font-size: clamp(1.6rem, 3vw, 2.3rem);
 }
 
-.answer-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.8rem;
-  margin-top: 1.2rem;
-}
-
-.answer-option {
-  min-height: 7rem;
-  padding: 1rem;
-  color: var(--ink);
-  text-align: left;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  cursor: pointer;
-  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-}
-
-.answer-option strong {
-  display: block;
-  font-size: 1.02rem;
-}
-
-.answer-option span {
-  display: block;
-  margin-top: 0.35rem;
-  color: var(--muted);
-  font-size: 0.92rem;
-}
-
-.answer-option:hover,
-.answer-option:focus-visible {
-  transform: translateY(-3px);
-  background: rgba(255, 120, 199, 0.14);
-  border-color: rgba(255, 120, 199, 0.68);
-  outline: none;
-}
-
-.ticket-reveal-grid {
+.claw-reveal-grid {
   grid-template-columns: minmax(0, 0.72fr) minmax(420px, 1.28fr);
 }
 
-.ticket-panel {
+.claw-panel {
   position: relative;
   overflow: hidden;
   isolation: isolate;
 }
 
-.ticket-panel::before {
+.claw-panel::before {
   content: "";
   position: absolute;
-  inset: -30%;
+  inset: -24%;
   z-index: -1;
   background:
-    radial-gradient(circle at 28% 20%, rgba(255, 105, 184, 0.2), transparent 12rem),
-    radial-gradient(circle at 76% 74%, rgba(121, 204, 255, 0.18), transparent 14rem);
-  animation: softPulse 5.8s ease-in-out infinite alternate;
+    radial-gradient(circle at 26% 20%, rgba(255, 105, 184, 0.18), transparent 12rem),
+    radial-gradient(circle at 78% 74%, rgba(121, 204, 255, 0.17), transparent 14rem);
 }
 
-.park-ticket {
+.claw-machine {
+  --claw-x: 50;
   position: relative;
   display: grid;
-  gap: 0.9rem;
-  min-height: clamp(25rem, 50vw, 34rem);
-  padding: clamp(1.05rem, 2.4vw, 1.55rem);
+  gap: 0.85rem;
+  min-height: clamp(29rem, 55vw, 38rem);
+  padding: clamp(0.92rem, 2vw, 1.25rem);
   border: 1px solid rgba(255, 255, 255, 0.72);
-  border-radius: 24px;
+  border-radius: 26px;
   overflow: hidden;
   color: #26304e;
   background:
-    radial-gradient(circle at 0 50%, transparent 0 1.05rem, rgba(255, 255, 255, 0.94) 1.08rem),
-    radial-gradient(circle at 100% 50%, transparent 0 1.05rem, rgba(255, 255, 255, 0.94) 1.08rem),
-    linear-gradient(135deg, rgba(255, 244, 250, 0.96), rgba(255, 210, 234, 0.94) 48%, rgba(219, 242, 255, 0.96));
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.76), transparent 7rem),
+    linear-gradient(145deg, rgba(255, 216, 239, 0.96), rgba(234, 225, 255, 0.92) 48%, rgba(217, 242, 255, 0.96));
   box-shadow:
     0 1.8rem 3rem rgba(139, 75, 126, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.86);
-  transform-style: preserve-3d;
 }
 
-.park-ticket::before,
-.park-ticket::after {
-  content: "";
-  position: absolute;
-  pointer-events: none;
-}
-
-.park-ticket::before {
-  inset: 0;
-  background:
-    linear-gradient(90deg, transparent 0 17%, rgba(255, 255, 255, 0.44) 17.2% 17.6%, transparent 17.8%),
-    repeating-linear-gradient(90deg, transparent 0 0.72rem, rgba(255, 255, 255, 0.28) 0.72rem 0.84rem);
-  opacity: 0.62;
-}
-
-.park-ticket::after {
-  right: -4rem;
-  bottom: -4.5rem;
-  width: 14rem;
-  height: 14rem;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at center, rgba(38, 48, 78, 0.76) 0 18%, transparent 19%),
-    conic-gradient(from 120deg, rgba(255, 255, 255, 0.78), rgba(255, 147, 206, 0.34), rgba(121, 204, 255, 0.46), rgba(255, 255, 255, 0.78));
-  opacity: 0.38;
-}
-
-.park-ticket.is-complete {
-  animation: ticketUnlockFlip 900ms cubic-bezier(0.16, 0.82, 0.2, 1) both;
-}
-
-.ticket-stub-row,
-.ticket-clue-copy,
-.ticket-stamp-grid,
-.ticket-stamp-button,
-.park-ticket h3 {
+.claw-marquee {
   position: relative;
-  z-index: 1;
-}
-
-.ticket-stub-row {
+  z-index: 3;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.8rem;
-  color: rgba(38, 48, 78, 0.64);
-  font-size: 0.78rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255, 112, 188, 0.9), rgba(121, 204, 255, 0.88));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.68);
+}
+
+.claw-marquee span,
+.claw-marquee strong {
+  color: #fff8fd;
   font-weight: 1000;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
-.ticket-stub-row em {
-  padding: 0.4rem 0.65rem;
-  border: 1px dashed rgba(240, 97, 173, 0.48);
+.claw-marquee strong {
+  color: #26304e;
+  font-size: 0.8rem;
+}
+
+.claw-glass {
+  position: relative;
+  min-height: clamp(17rem, 36vw, 24rem);
+  border: 2px solid rgba(255, 255, 255, 0.56);
+  border-radius: 22px;
+  overflow: hidden;
+  background:
+    linear-gradient(110deg, rgba(255, 255, 255, 0.48), transparent 18% 74%, rgba(255, 255, 255, 0.28)),
+    radial-gradient(circle at 18% 80%, rgba(255, 123, 194, 0.24), transparent 9rem),
+    radial-gradient(circle at 82% 78%, rgba(121, 204, 255, 0.28), transparent 10rem),
+    rgba(255, 255, 255, 0.38);
+  box-shadow:
+    inset 0 0 1.8rem rgba(255, 255, 255, 0.28),
+    inset 0 -2.6rem 3.4rem rgba(250, 139, 202, 0.12);
+}
+
+.claw-track {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 2.2rem;
+  height: 0.55rem;
   border-radius: 999px;
-  color: #f061ad;
-  font-style: normal;
-  background: rgba(255, 255, 255, 0.42);
+  background: rgba(38, 48, 78, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.58);
 }
 
-.park-ticket h3 {
-  max-width: 12ch;
-  margin: 0.35rem 0 0;
-  color: #f061ad;
-  font-family: var(--font-bubbly);
-  font-size: clamp(2.25rem, 5.5vw, 4.2rem);
-  line-height: 0.95;
-  text-shadow: 0 0.06em 0 #fff;
+.claw-carriage {
+  position: absolute;
+  left: calc(var(--claw-x, 50) * 1%);
+  top: 1.55rem;
+  z-index: 6;
+  width: 3.6rem;
+  height: 9rem;
+  transform: translateX(-50%);
+  transition: left 220ms ease;
 }
 
-.ticket-clue-copy {
-  max-width: 34rem;
+.claw-cable {
+  position: absolute;
+  left: 50%;
+  top: 1rem;
+  width: 0.28rem;
+  height: 4.4rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(38, 48, 78, 0.42), rgba(38, 48, 78, 0.12));
+  transform: translateX(-50%);
+  transition: height 520ms cubic-bezier(0.16, 0.82, 0.2, 1);
+}
+
+.claw-head {
+  position: absolute;
+  left: 50%;
+  top: 5rem;
+  width: 3.2rem;
+  height: 2rem;
+  border-radius: 999px 999px 14px 14px;
+  background: linear-gradient(135deg, #f36ab3, #87d2ff);
+  box-shadow:
+    0 0.8rem 1.2rem rgba(87, 57, 111, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.66);
+  transform: translateX(-50%);
+  transition: transform 520ms cubic-bezier(0.16, 0.82, 0.2, 1);
+}
+
+.claw-head i {
+  position: absolute;
+  top: 1.45rem;
+  width: 0.42rem;
+  height: 2.6rem;
+  border-radius: 999px;
+  background: rgba(38, 48, 78, 0.72);
+  transform-origin: top center;
+}
+
+.claw-head i:nth-child(1) {
+  left: 0.55rem;
+  transform: rotate(22deg);
+}
+
+.claw-head i:nth-child(2) {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.claw-head i:nth-child(3) {
+  right: 0.55rem;
+  transform: rotate(-22deg);
+}
+
+.claw-machine.is-dropping .claw-cable {
+  height: 11.4rem;
+}
+
+.claw-machine.is-dropping .claw-head {
+  transform: translateX(-50%) translateY(7rem);
+}
+
+.capsule,
+.mystery-capsule {
+  position: absolute;
+  border: 0;
+  border-radius: 999px;
+  box-shadow:
+    0 0.9rem 1.4rem rgba(82, 54, 112, 0.16),
+    inset 0 0.36rem 0.8rem rgba(255, 255, 255, 0.36);
+}
+
+.capsule {
+  width: 4.2rem;
+  height: 3.1rem;
+  opacity: 0.72;
+}
+
+.capsule-one {
+  left: 14%;
+  bottom: 2.9rem;
+  background: linear-gradient(135deg, #ff8fc8 0 49%, #fff6fb 50% 52%, #81d2ff 53%);
+  transform: rotate(-12deg);
+}
+
+.capsule-two {
+  right: 13%;
+  bottom: 3.35rem;
+  background: linear-gradient(135deg, #c9f7d8 0 49%, #fff6fb 50% 52%, #f0d2ff 53%);
+  transform: rotate(10deg);
+}
+
+.capsule-three {
+  left: 34%;
+  bottom: 1.9rem;
+  background: linear-gradient(135deg, #ffef8f 0 49%, #fff6fb 50% 52%, #ff9bd1 53%);
+  transform: rotate(5deg);
+}
+
+.mystery-capsule {
+  left: 52%;
+  bottom: 3.15rem;
+  z-index: 4;
+  width: 5rem;
+  height: 3.75rem;
+  cursor: default;
+  background: linear-gradient(135deg, #f36ab3 0 49%, #fff6fb 50% 52%, #79ccff 53%);
+  transform: translateX(-50%) rotate(-5deg);
+  transition:
+    left 760ms cubic-bezier(0.16, 0.82, 0.2, 1),
+    bottom 760ms cubic-bezier(0.16, 0.82, 0.2, 1),
+    transform 760ms cubic-bezier(0.16, 0.82, 0.2, 1),
+    box-shadow 220ms ease;
+}
+
+.mystery-capsule span {
+  position: absolute;
+  inset: 0.72rem;
+  border-radius: inherit;
+  background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.78), transparent 28%);
+}
+
+.mystery-capsule:enabled {
+  cursor: pointer;
+}
+
+.mystery-capsule:enabled:hover,
+.mystery-capsule:enabled:focus-visible {
+  outline: none;
+  box-shadow:
+    0 1.1rem 1.7rem rgba(82, 54, 112, 0.22),
+    0 0 0 5px rgba(255, 255, 255, 0.38),
+    inset 0 0.36rem 0.8rem rgba(255, 255, 255, 0.42);
+}
+
+.claw-machine.is-captured .mystery-capsule {
+  left: 78%;
+  bottom: 0.8rem;
+  transform: translateX(-50%) rotate(7deg) scale(1.04);
+}
+
+.claw-machine.is-unlocked .mystery-capsule {
+  transform: translateX(-50%) rotate(7deg) scale(0.96);
+  opacity: 0.58;
+}
+
+.prize-chute {
+  position: absolute;
+  right: 5%;
+  bottom: 0.55rem;
+  width: clamp(7rem, 22vw, 10rem);
+  height: 3.2rem;
+  border-radius: 22px 22px 12px 12px;
+  background: rgba(38, 48, 78, 0.16);
+  box-shadow:
+    inset 0 0.35rem 0.9rem rgba(38, 48, 78, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.38);
+}
+
+.claw-message {
   margin: 0;
   color: rgba(38, 48, 78, 0.72);
-  font-size: clamp(1rem, 2vw, 1.16rem);
+  font-size: clamp(0.98rem, 1.8vw, 1.08rem);
   font-weight: 850;
-  line-height: 1.55;
+  line-height: 1.45;
 }
 
-.ticket-stamp-grid {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: clamp(0.45rem, 1.2vw, 0.72rem);
-  margin-top: 0.2rem;
-}
-
-.ticket-stamp {
+.claw-controls {
   display: grid;
-  place-items: center;
-  min-height: clamp(3.2rem, 8vw, 4.4rem);
-  border: 2px dashed rgba(38, 48, 78, 0.16);
-  border-radius: 14px;
-  color: rgba(38, 48, 78, 0.34);
-  font-size: clamp(0.64rem, 1.4vw, 0.82rem);
-  font-weight: 1000;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background: rgba(255, 255, 255, 0.34);
-  transform: rotate(-1.5deg);
-  transition: transform 220ms ease, color 220ms ease, border-color 220ms ease, background 220ms ease;
+  grid-template-columns: 1fr minmax(9.5rem, 1.2fr) 1fr;
+  gap: 0.7rem;
 }
 
-.ticket-stamp:nth-child(even) {
-  transform: rotate(1.4deg);
+.claw-control,
+.claw-drop-button {
+  width: 100%;
 }
 
-.ticket-stamp.is-current {
-  color: rgba(38, 48, 78, 0.58);
-  border-color: rgba(121, 204, 255, 0.58);
-  background: rgba(232, 246, 255, 0.52);
-}
-
-.ticket-stamp.is-stamped {
-  color: #f061ad;
-  border-color: rgba(240, 97, 173, 0.72);
-  background:
-    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.54), transparent 40%),
-    rgba(255, 228, 243, 0.72);
-  box-shadow: 0 0.65rem 1.2rem rgba(240, 97, 173, 0.12);
-  transform: rotate(-6deg) scale(1.02);
-}
-
-.ticket-stamp.is-stamped:nth-child(even) {
-  transform: rotate(5deg) scale(1.02);
-}
-
-.ticket-stamp-button {
-  justify-self: start;
-  margin-top: 0.15rem;
-}
-
-.ticket-stamp-button:disabled {
+.claw-control:disabled,
+.claw-drop-button:disabled {
   opacity: 0.58;
   cursor: default;
 }
 
-.trip-ticket-result {
+.trip-prize-result {
   position: relative;
   display: grid;
   gap: 0.35rem;
@@ -1181,17 +1249,22 @@ h3 {
     inset 0 1px 0 rgba(255, 255, 255, 0.76);
 }
 
-.trip-ticket-result::after {
+.trip-prize-result::after {
   content: "";
   position: absolute;
   top: 0;
   bottom: 0;
   left: 21%;
-  width: 1px;
-  border-left: 2px dashed rgba(255, 255, 255, 0.54);
+  width: 5rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, rgba(38, 48, 78, 0.76) 0 18%, transparent 19%),
+    conic-gradient(from 120deg, rgba(255, 255, 255, 0.82), rgba(255, 147, 206, 0.42), rgba(121, 204, 255, 0.54), rgba(255, 255, 255, 0.82));
+  opacity: 0.52;
+  transform: translateX(-50%);
 }
 
-.trip-ticket-result span {
+.trip-prize-result span {
   color: rgba(38, 48, 78, 0.74);
   font-size: 0.82rem;
   font-weight: 1000;
@@ -1199,7 +1272,7 @@ h3 {
   letter-spacing: 0.08em;
 }
 
-.trip-ticket-result strong {
+.trip-prize-result strong {
   color: #fff8fd;
   font-family: var(--font-bubbly);
   font-size: clamp(2rem, 5vw, 3.55rem);
@@ -1207,7 +1280,7 @@ h3 {
   text-shadow: 0 0.08em 0 rgba(38, 48, 78, 0.16);
 }
 
-.trip-ticket-result em {
+.trip-prize-result em {
   color: rgba(38, 48, 78, 0.72);
   font-style: normal;
   font-weight: 950;
@@ -1218,47 +1291,32 @@ h3 {
   font-size: clamp(3.15rem, 7vw, 5.1rem);
 }
 
-@keyframes ticketUnlockFlip {
-  0% {
-    transform: rotateX(0deg) scale(1);
-  }
-
-  45% {
-    transform: rotateX(9deg) scale(1.02);
-  }
-
-  100% {
-    transform: rotateX(0deg) scale(1);
-  }
-}
-
 @media (max-width: 760px) {
-  .ticket-reveal-grid {
+  .claw-reveal-grid {
     gap: 1rem;
   }
 
-  .park-ticket {
-    min-height: 29rem;
+  .claw-machine {
+    min-height: 33rem;
   }
 
-  .park-ticket h3 {
-    max-width: 11ch;
-    font-size: clamp(2.15rem, 10vw, 3.25rem);
+  .claw-glass {
+    min-height: 20rem;
   }
 
-  .ticket-stamp-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .claw-controls {
+    grid-template-columns: 1fr;
   }
 
-  .ticket-stamp:last-child {
-    grid-column: 1 / -1;
+  .claw-machine.is-captured .mystery-capsule {
+    left: 72%;
   }
 
   .trip-result-copy h2 {
     font-size: clamp(2.65rem, 12vw, 3.4rem);
   }
 
-  .trip-ticket-result strong {
+  .trip-prize-result strong {
     font-size: clamp(1.85rem, 9vw, 2.6rem);
   }
 }
@@ -1893,7 +1951,6 @@ h3 {
     min-height: 205px;
   }
 
-  .answer-grid,
   .stat-grid,
   .result-grid {
     grid-template-columns: 1fr;
@@ -7334,6 +7391,125 @@ body.is-transitioning-to-wrapped .story-controls {
   .music-wave,
   .music-wave span,
   .playlist-card-transition {
+    animation: none;
+    transition: none;
+  }
+}
+
+.claw-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  background:
+    radial-gradient(circle at 44% 42%, rgba(255, 127, 196, 0.36), transparent 18rem),
+    radial-gradient(circle at 70% 68%, rgba(121, 204, 255, 0.28), transparent 20rem),
+    rgba(35, 23, 50, 0.5);
+  backdrop-filter: blur(12px);
+  transition: opacity 220ms ease, visibility 220ms ease;
+}
+
+.claw-transition.is-playing {
+  opacity: 1;
+  visibility: visible;
+}
+
+body.is-transitioning-to-claw .story-header,
+body.is-transitioning-to-claw .story-controls {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.claw-transition-card {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.55rem;
+  width: min(580px, 88vw);
+  padding: clamp(1.35rem, 4vw, 2.2rem);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 28px;
+  color: #26304e;
+  text-align: center;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.76), transparent 7rem),
+    linear-gradient(145deg, rgba(255, 244, 250, 0.96), rgba(255, 213, 236, 0.92) 52%, rgba(220, 243, 255, 0.96));
+  box-shadow:
+    0 1.8rem 3.4rem rgba(74, 45, 98, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.86);
+  transform: translateY(1rem) scale(0.94);
+}
+
+.claw-transition.is-playing .claw-transition-card {
+  animation: clawTransitionCardIn 2600ms cubic-bezier(0.16, 0.82, 0.2, 1) both;
+}
+
+.claw-transition-token {
+  position: relative;
+  width: clamp(4.4rem, 12vw, 6.2rem);
+  height: clamp(4.4rem, 12vw, 6.2rem);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, rgba(38, 48, 78, 0.78) 0 17%, transparent 18%),
+    conic-gradient(from 120deg, #fff8fd, #ff87c8, #8bd6ff, #fff8fd);
+  box-shadow:
+    0 1.1rem 1.8rem rgba(102, 62, 127, 0.22),
+    inset 0 0 0 0.52rem rgba(255, 255, 255, 0.36);
+}
+
+.claw-transition-token::after {
+  content: "";
+  position: absolute;
+  inset: 1.15rem;
+  border-radius: inherit;
+  border: 2px dashed rgba(38, 48, 78, 0.24);
+}
+
+.claw-transition-card h2 {
+  max-width: min(100%, 13ch);
+  margin: 0;
+  color: #f061ad;
+  font-size: clamp(2.4rem, 7vw, 4.6rem);
+}
+
+.claw-transition-card p:last-child {
+  max-width: 31rem;
+  margin: 0;
+  color: rgba(38, 48, 78, 0.72);
+  font-weight: 850;
+  line-height: 1.45;
+}
+
+@keyframes clawTransitionCardIn {
+  0% {
+    opacity: 0;
+    transform: translateY(1.2rem) scale(0.9) rotate(-1deg);
+  }
+
+  22%,
+  78% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-0.8rem) scale(0.96) rotate(1deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .claw-transition,
+  .claw-transition-card,
+  .claw-carriage,
+  .claw-cable,
+  .claw-head,
+  .mystery-capsule {
     animation: none;
     transition: none;
   }
