@@ -65,8 +65,19 @@ let clawTransitionTimer = null;
 const clawState = {
   position: 50,
   isDropping: false,
-  hasCapsule: false
+  hasCapsule: false,
+  missCount: 0,
+  lastOutcome: null,
+  lastMissed: null,
+  dropToken: 0
 };
+
+const clawCapsules = [
+  { id: "one", position: 26, isPrize: false },
+  { id: "three", position: 38, isPrize: false },
+  { id: "two", position: 62, isPrize: false },
+  { id: "mystery", position: 74, isPrize: true }
+];
 
 const jarPhysics = {
   initialized: false,
@@ -183,6 +194,7 @@ const clawMachine = document.querySelector("#claw-machine");
 const mysteryCapsule = document.querySelector("#mystery-capsule");
 const clawLeftButton = document.querySelector("#claw-left-button");
 const clawRightButton = document.querySelector("#claw-right-button");
+const quizLockNote = document.querySelector("#quiz-lock-note");
 
 function normalizeDate(value) {
   return value.replace(/\D/g, "");
@@ -605,27 +617,58 @@ function playPsLoveTransition() {
   }, 2700);
 }
 
+function setQuizNote(message) {
+  if (quizLockNote) {
+    quizLockNote.textContent = message;
+  }
+}
+
+function getNearestClawCapsule() {
+  return clawCapsules.reduce((nearest, capsule) => {
+    const nearestDistance = Math.abs(clawState.position - nearest.position);
+    const capsuleDistance = Math.abs(clawState.position - capsule.position);
+    return capsuleDistance < nearestDistance ? capsule : nearest;
+  }, clawCapsules[0]);
+}
+
+function isWinningClawDrop(capsule) {
+  return Boolean(capsule?.isPrize && Math.abs(clawState.position - capsule.position) <= 7);
+}
+
 function renderClawMachine() {
-  const progress = storyState.quizComplete ? 100 : clawState.hasCapsule ? 72 : 34;
+  const progress = storyState.quizComplete
+    ? 100
+    : clawState.hasCapsule
+      ? 72
+      : clawState.lastOutcome === "miss"
+        ? Math.min(62, 38 + clawState.missCount * 8)
+        : 30;
 
   if (clawMachine) {
     clawMachine.style.setProperty("--claw-x", clawState.position);
     clawMachine.classList.toggle("is-dropping", clawState.isDropping);
     clawMachine.classList.toggle("is-captured", clawState.hasCapsule);
     clawMachine.classList.toggle("is-unlocked", storyState.quizComplete);
+    clawCapsules.forEach((capsule) => {
+      clawMachine.classList.toggle(`missed-capsule-${capsule.id}`, clawState.lastMissed === capsule.id);
+    });
   }
 
   quizProgress.textContent = storyState.quizComplete
     ? "Prize unlocked"
     : clawState.hasCapsule
       ? "Capsule won"
-      : "Prize waiting";
+      : clawState.lastOutcome === "miss"
+        ? "Try again"
+        : "Prize waiting";
   questionProgressBar.style.width = `${progress}%`;
   questionDetail.textContent = storyState.quizComplete
     ? "Prize opened. Your next adventure is waiting."
     : clawState.hasCapsule
       ? "Nice catch. Open the capsule to see what you won."
-      : "Move the claw, drop it, and win the mystery capsule.";
+      : clawState.lastOutcome === "miss"
+        ? "That capsule was empty. Move the claw and try another one."
+        : "Line up the claw, drop it, and test a capsule.";
 
   if (clawDropButton) {
     clawDropButton.textContent = clawState.hasCapsule ? "Open capsule" : "Drop claw";
@@ -652,6 +695,9 @@ function moveClaw(direction) {
     return;
   }
 
+  clawState.lastOutcome = null;
+  clawState.lastMissed = null;
+  setQuizNote("Move the claw and try a capsule.");
   clawState.position = Math.max(18, Math.min(82, clawState.position + direction * 12));
   renderClawMachine();
 }
@@ -661,15 +707,42 @@ function dropClaw() {
     return;
   }
 
+  const capsule = getNearestClawCapsule();
+  const dropToken = clawState.dropToken + 1;
+
+  clawState.dropToken = dropToken;
   clawState.isDropping = true;
-  document.querySelector("#quiz-lock-note").textContent = "The claw is dropping...";
+  clawState.lastOutcome = null;
+  clawState.lastMissed = null;
+  setQuizNote("The claw is dropping...");
   renderClawMachine();
 
   window.setTimeout(() => {
+    if (dropToken !== clawState.dropToken) {
+      return;
+    }
+
     clawState.isDropping = false;
-    clawState.hasCapsule = true;
-    document.querySelector("#quiz-lock-note").textContent = "Capsule won. Open it.";
+    if (isWinningClawDrop(capsule)) {
+      clawState.hasCapsule = true;
+      clawState.lastOutcome = "hit";
+      setQuizNote("Capsule won. Open it.");
+      renderClawMachine();
+      return;
+    }
+
+    clawState.missCount += 1;
+    clawState.lastOutcome = "miss";
+    clawState.lastMissed = capsule.id;
+    setQuizNote("Not that one. Try another capsule.");
     renderClawMachine();
+
+    window.setTimeout(() => {
+      if (clawState.lastMissed === capsule.id && !clawState.isDropping) {
+        clawState.lastMissed = null;
+        renderClawMachine();
+      }
+    }, prefersReducedMotion ? 120 : 720);
   }, prefersReducedMotion ? 120 : 960);
 }
 
@@ -679,7 +752,8 @@ function openCapsulePrize() {
   }
 
   storyState.quizComplete = true;
-  document.querySelector("#quiz-lock-note").textContent = "Prize unlocked.";
+  setQuizNote("Prize unlocked.");
+  document.querySelector("#result")?.classList.add("is-prize-revealed");
   showResult();
   renderClawMachine();
 
@@ -711,7 +785,12 @@ function restartQuiz() {
   clawState.position = 50;
   clawState.isDropping = false;
   clawState.hasCapsule = false;
-  document.querySelector("#quiz-lock-note").textContent = "Move the claw and grab the mystery capsule.";
+  clawState.missCount = 0;
+  clawState.lastOutcome = null;
+  clawState.lastMissed = null;
+  clawState.dropToken += 1;
+  document.querySelector("#result")?.classList.remove("is-prize-revealed");
+  setQuizNote("Move the claw and try a capsule.");
   renderClawMachine();
   updateStoryControls();
 }

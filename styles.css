@@ -1109,52 +1109,69 @@ h3 {
   transform: translateX(-50%) translateY(7rem);
 }
 
+.claw-machine.is-dropping .claw-head i:nth-child(1) {
+  transform: rotate(12deg);
+}
+
+.claw-machine.is-dropping .claw-head i:nth-child(3) {
+  transform: rotate(-12deg);
+}
+
 .capsule,
 .mystery-capsule {
   position: absolute;
+  width: 4.35rem;
+  height: 3.18rem;
   border: 0;
   border-radius: 999px;
+  opacity: 0.78;
   box-shadow:
     0 0.9rem 1.4rem rgba(82, 54, 112, 0.16),
     inset 0 0.36rem 0.8rem rgba(255, 255, 255, 0.36);
 }
 
 .capsule {
-  width: 4.2rem;
-  height: 3.1rem;
-  opacity: 0.72;
+  overflow: hidden;
+}
+
+.capsule::after {
+  content: "";
+  position: absolute;
+  inset: 0.68rem;
+  border-radius: inherit;
+  background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.72), transparent 28%);
 }
 
 .capsule-one {
-  left: 14%;
+  left: 26%;
   bottom: 2.9rem;
   background: linear-gradient(135deg, #ff8fc8 0 49%, #fff6fb 50% 52%, #81d2ff 53%);
-  transform: rotate(-12deg);
+  transform: translateX(-50%) rotate(-12deg);
 }
 
 .capsule-two {
-  right: 13%;
+  left: 62%;
   bottom: 3.35rem;
   background: linear-gradient(135deg, #c9f7d8 0 49%, #fff6fb 50% 52%, #f0d2ff 53%);
-  transform: rotate(10deg);
+  transform: translateX(-50%) rotate(10deg);
 }
 
 .capsule-three {
-  left: 34%;
+  left: 38%;
   bottom: 1.9rem;
   background: linear-gradient(135deg, #ffef8f 0 49%, #fff6fb 50% 52%, #ff9bd1 53%);
-  transform: rotate(5deg);
+  transform: translateX(-50%) rotate(5deg);
 }
 
 .mystery-capsule {
-  left: 52%;
-  bottom: 3.15rem;
+  appearance: none;
+  left: 74%;
+  bottom: 2.82rem;
   z-index: 4;
-  width: 5rem;
-  height: 3.75rem;
+  padding: 0;
   cursor: default;
   background: linear-gradient(135deg, #f36ab3 0 49%, #fff6fb 50% 52%, #79ccff 53%);
-  transform: translateX(-50%) rotate(-5deg);
+  transform: translateX(-50%) rotate(-7deg);
   transition:
     left 760ms cubic-bezier(0.16, 0.82, 0.2, 1),
     bottom 760ms cubic-bezier(0.16, 0.82, 0.2, 1),
@@ -1171,6 +1188,10 @@ h3 {
 
 .mystery-capsule:enabled {
   cursor: pointer;
+}
+
+.mystery-capsule:disabled {
+  opacity: 0.78;
 }
 
 .mystery-capsule:enabled:hover,
@@ -1191,6 +1212,38 @@ h3 {
 .claw-machine.is-unlocked .mystery-capsule {
   transform: translateX(-50%) rotate(7deg) scale(0.96);
   opacity: 0.58;
+}
+
+.claw-machine.missed-capsule-one .capsule-one,
+.claw-machine.missed-capsule-two .capsule-two,
+.claw-machine.missed-capsule-three .capsule-three,
+.claw-machine.missed-capsule-mystery .mystery-capsule {
+  animation: capsuleMissShake 620ms ease both;
+}
+
+@keyframes capsuleMissShake {
+  0%,
+  100% {
+    filter: saturate(1);
+    translate: 0 0;
+  }
+
+  18% {
+    filter: saturate(1.12);
+    translate: -0.28rem 0;
+  }
+
+  38% {
+    translate: 0.28rem 0;
+  }
+
+  58% {
+    translate: -0.16rem 0;
+  }
+
+  78% {
+    translate: 0.12rem 0;
+  }
 }
 
 .prize-chute {
@@ -1231,40 +1284,101 @@ h3 {
   cursor: default;
 }
 
+.trip-result-copy {
+  position: relative;
+}
+
+.prize-confetti {
+  position: absolute;
+  inset: -2.4rem -1rem auto;
+  z-index: 5;
+  height: 15rem;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.prize-confetti span {
+  --drift: 0rem;
+  --fall: 10rem;
+  --delay: 0ms;
+  position: absolute;
+  top: 3.2rem;
+  left: 50%;
+  width: 0.55rem;
+  height: 0.95rem;
+  border-radius: 999px;
+  opacity: 0;
+  background: linear-gradient(180deg, #ff68b5, #86d3ff);
+  box-shadow: 0 0.5rem 0.9rem rgba(103, 75, 137, 0.16);
+}
+
+.prize-confetti span:nth-child(1) { --drift: -16rem; --fall: 8rem; --delay: 80ms; left: 34%; background: #ff68b5; }
+.prize-confetti span:nth-child(2) { --drift: -10rem; --fall: 11rem; --delay: 140ms; left: 42%; background: #86d3ff; }
+.prize-confetti span:nth-child(3) { --drift: -5rem; --fall: 9rem; --delay: 20ms; left: 48%; background: #fff2a1; }
+.prize-confetti span:nth-child(4) { --drift: 4rem; --fall: 10rem; --delay: 180ms; left: 52%; background: #bda7ff; }
+.prize-confetti span:nth-child(5) { --drift: 11rem; --fall: 8.5rem; --delay: 70ms; left: 58%; background: #ff9bd1; }
+.prize-confetti span:nth-child(6) { --drift: 17rem; --fall: 11rem; --delay: 130ms; left: 62%; background: #8df0c8; }
+.prize-confetti span:nth-child(7) { --drift: -13rem; --fall: 12rem; --delay: 250ms; left: 46%; background: #ffc6e5; }
+.prize-confetti span:nth-child(8) { --drift: 14rem; --fall: 12.5rem; --delay: 240ms; left: 54%; background: #7ed0ff; }
+.prize-confetti span:nth-child(9) { --drift: -21rem; --fall: 10.5rem; --delay: 210ms; left: 39%; background: #f6d3ff; }
+.prize-confetti span:nth-child(10) { --drift: 21rem; --fall: 10rem; --delay: 190ms; left: 57%; background: #ff77bd; }
+.prize-confetti span:nth-child(11) { --drift: -2rem; --fall: 13rem; --delay: 310ms; left: 50%; background: #fff7bb; }
+.prize-confetti span:nth-child(12) { --drift: 7rem; --fall: 13.5rem; --delay: 330ms; left: 51%; background: #a2dcff; }
+
+.chapter.is-active.is-prize-revealed .prize-confetti span {
+  animation: prizeConfetti 1450ms cubic-bezier(0.16, 0.82, 0.2, 1) var(--delay) both;
+}
+
 .trip-prize-result {
   position: relative;
+  isolation: isolate;
   display: grid;
   gap: 0.35rem;
   width: min(42rem, 100%);
   margin: 1rem 0 1.2rem;
-  padding: clamp(1rem, 2.2vw, 1.45rem);
+  padding: clamp(1.1rem, 2.4vw, 1.55rem) clamp(1.35rem, 2.8vw, 1.9rem);
   border: 1px solid rgba(255, 255, 255, 0.68);
-  border-radius: 24px;
+  border-radius: 22px;
   overflow: hidden;
   background:
-    radial-gradient(circle at 12% 20%, rgba(255, 255, 255, 0.72), transparent 5rem),
-    linear-gradient(135deg, rgba(255, 111, 180, 0.92), rgba(177, 174, 244, 0.9) 52%, rgba(121, 204, 255, 0.94));
+    linear-gradient(90deg, rgba(255, 255, 255, 0.18) 0 0.2rem, transparent 0.2rem 1.1rem),
+    linear-gradient(135deg, rgba(255, 111, 180, 0.94), rgba(178, 174, 244, 0.92) 52%, rgba(121, 204, 255, 0.94));
+  background-size: auto, 100% 100%;
   box-shadow:
     0 1.2rem 2.6rem rgba(103, 75, 137, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.76);
 }
 
+.trip-prize-result::before {
+  content: "";
+  position: absolute;
+  inset: 0.58rem;
+  z-index: 0;
+  border: 1px dashed rgba(255, 255, 255, 0.62);
+  border-radius: 16px;
+  opacity: 0.78;
+  pointer-events: none;
+}
+
 .trip-prize-result::after {
   content: "";
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 21%;
-  width: 5rem;
-  border-radius: 50%;
+  inset: 0;
+  z-index: 0;
   background:
-    radial-gradient(circle at center, rgba(38, 48, 78, 0.76) 0 18%, transparent 19%),
-    conic-gradient(from 120deg, rgba(255, 255, 255, 0.82), rgba(255, 147, 206, 0.42), rgba(121, 204, 255, 0.54), rgba(255, 255, 255, 0.82));
-  opacity: 0.52;
-  transform: translateX(-50%);
+    radial-gradient(circle at 0 50%, rgba(255, 228, 242, 0.98) 0 1.1rem, transparent 1.16rem),
+    radial-gradient(circle at 100% 50%, rgba(222, 244, 255, 0.98) 0 1.1rem, transparent 1.16rem);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.chapter.is-active.is-prize-revealed .trip-prize-result {
+  animation: prizeTicketPop 820ms cubic-bezier(0.16, 0.82, 0.2, 1) both;
 }
 
 .trip-prize-result span {
+  position: relative;
+  z-index: 1;
   color: rgba(38, 48, 78, 0.74);
   font-size: 0.82rem;
   font-weight: 1000;
@@ -1273,6 +1387,8 @@ h3 {
 }
 
 .trip-prize-result strong {
+  position: relative;
+  z-index: 1;
   color: #fff8fd;
   font-family: var(--font-bubbly);
   font-size: clamp(2rem, 5vw, 3.55rem);
@@ -1281,9 +1397,44 @@ h3 {
 }
 
 .trip-prize-result em {
+  position: relative;
+  z-index: 1;
   color: rgba(38, 48, 78, 0.72);
   font-style: normal;
   font-weight: 950;
+}
+
+@keyframes prizeConfetti {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(0.5);
+  }
+
+  16% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--drift), var(--fall), 0) rotate(540deg) scale(1);
+  }
+}
+
+@keyframes prizeTicketPop {
+  0% {
+    opacity: 0;
+    transform: translateY(1rem) scale(0.94) rotate(-1.2deg);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(-0.2rem) scale(1.025) rotate(0.4deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
 }
 
 .trip-result-copy h2 {
@@ -7509,6 +7660,9 @@ body.is-transitioning-to-claw .story-controls {
   .claw-carriage,
   .claw-cable,
   .claw-head,
+  .capsule,
+  .prize-confetti span,
+  .trip-prize-result,
   .mystery-capsule {
     animation: none;
     transition: none;
