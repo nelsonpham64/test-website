@@ -18,6 +18,7 @@ const psLoveTransition = document.querySelector("#ps-love-transition");
 const wrappedTransition = document.querySelector("#wrapped-transition");
 const wrappedTransitionNext = document.querySelector("#wrapped-transition-next");
 const clawTransition = document.querySelector("#claw-transition");
+const ticketRevealTransition = document.querySelector("#ticket-reveal-transition");
 const psLoveNotes = document.querySelector("#ps-love-notes");
 const psLoveBackdrop = document.querySelector("#ps-love-backdrop");
 const psLoveClose = document.querySelector("#ps-love-close");
@@ -50,7 +51,8 @@ const storyState = {
   enteringLetter: false,
   transitioningToWrapped: false,
   wrappedTransitionReady: false,
-  transitioningToClaw: false
+  transitioningToClaw: false,
+  revealingTicket: false
 };
 
 const scrapbookHold = {
@@ -61,6 +63,7 @@ const scrapbookHold = {
 };
 let wrappedTransitionTimer = null;
 let clawTransitionTimer = null;
+let ticketRevealTimer = null;
 
 const clawState = {
   position: 50,
@@ -337,7 +340,8 @@ function updateStoryControls() {
     (!storyState.scrapbookIntroComplete ||
       !isOnFinalScrapbookPage() ||
       storyState.transitioningToWrapped ||
-      storyState.transitioningToClaw);
+      storyState.transitioningToClaw ||
+      storyState.revealingTicket);
 
   counter.textContent = `Chapter ${storyState.current + 1} of ${chapters.length}`;
   storyProgressBar.style.width = `${progress}%`;
@@ -361,6 +365,7 @@ function updateStoryControls() {
   nextButton.disabled =
     storyState.transitioningToWrapped ||
     storyState.transitioningToClaw ||
+    storyState.revealingTicket ||
     (onQuiz && !storyState.quizComplete);
 
   if (chapterKey === "ending") {
@@ -375,6 +380,7 @@ function nextChapter() {
   if (chapterKey === "ending") {
     closeWrappedTransition();
     closeClawTransition();
+    closeTicketRevealTransition();
     closePsLoveNotes();
     closeNote();
     storyState.psNotesFound = false;
@@ -570,6 +576,52 @@ function playClawTransition() {
   }, 2600);
 }
 
+function closeTicketRevealTransition() {
+  window.clearTimeout(ticketRevealTimer);
+  ticketRevealTimer = null;
+  ticketRevealTransition?.classList.remove("is-playing");
+  ticketRevealTransition?.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("is-ticket-revealing");
+  storyState.revealingTicket = false;
+
+  if (chapters[storyState.current]) {
+    updateStoryControls();
+  }
+}
+
+function playTicketRevealTransition() {
+  const resultIndex = getChapterIndex("result");
+
+  if (resultIndex < 0) {
+    return;
+  }
+
+  if (prefersReducedMotion || !ticketRevealTransition) {
+    document.querySelector("#result")?.classList.add("is-prize-revealed");
+    setChapter(resultIndex);
+    return;
+  }
+
+  storyState.revealingTicket = true;
+  updateStoryControls();
+  document.body.classList.add("is-ticket-revealing");
+  ticketRevealTransition.classList.remove("is-playing");
+  ticketRevealTransition.setAttribute("aria-hidden", "false");
+  void ticketRevealTransition.offsetWidth;
+  ticketRevealTransition.classList.add("is-playing");
+
+  window.clearTimeout(ticketRevealTimer);
+  ticketRevealTimer = window.setTimeout(() => {
+    ticketRevealTransition.classList.remove("is-playing");
+    ticketRevealTransition.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("is-ticket-revealing");
+    storyState.revealingTicket = false;
+    ticketRevealTimer = null;
+    document.querySelector("#result")?.classList.add("is-prize-revealed");
+    setChapter(resultIndex);
+  }, 3150);
+}
+
 function openPsLoveNotes() {
   if (!psLoveNotes) {
     return;
@@ -753,13 +805,9 @@ function openCapsulePrize() {
 
   storyState.quizComplete = true;
   setQuizNote("Prize unlocked.");
-  document.querySelector("#result")?.classList.add("is-prize-revealed");
   showResult();
   renderClawMachine();
-
-  window.setTimeout(() => {
-    setChapter(getChapterIndex("result"));
-  }, prefersReducedMotion ? 0 : 1050);
+  playTicketRevealTransition();
 }
 
 function showResult() {
@@ -789,6 +837,7 @@ function restartQuiz() {
   clawState.lastOutcome = null;
   clawState.lastMissed = null;
   clawState.dropToken += 1;
+  closeTicketRevealTransition();
   document.querySelector("#result")?.classList.remove("is-prize-revealed");
   setQuizNote("Move the claw and try a capsule.");
   renderClawMachine();

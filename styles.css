@@ -1343,7 +1343,8 @@ h3 {
   background:
     linear-gradient(90deg, rgba(255, 255, 255, 0.18) 0 0.2rem, transparent 0.2rem 1.1rem),
     linear-gradient(135deg, rgba(255, 111, 180, 0.94), rgba(178, 174, 244, 0.92) 52%, rgba(121, 204, 255, 0.94));
-  background-size: auto, 100% 100%;
+  background-size: 1.1rem 100%, 145% 100%;
+  background-position: 0 0, 0 0;
   box-shadow:
     0 1.2rem 2.6rem rgba(103, 75, 137, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.76);
@@ -1373,7 +1374,9 @@ h3 {
 }
 
 .chapter.is-active.is-prize-revealed .trip-prize-result {
-  animation: prizeTicketPop 820ms cubic-bezier(0.16, 0.82, 0.2, 1) both;
+  animation:
+    prizeTicketPop 1120ms cubic-bezier(0.16, 0.82, 0.2, 1) both,
+    prizeTicketGlow 1900ms ease 240ms both;
 }
 
 .trip-prize-result span {
@@ -1394,6 +1397,10 @@ h3 {
   font-size: clamp(2rem, 5vw, 3.55rem);
   line-height: 0.95;
   text-shadow: 0 0.08em 0 rgba(38, 48, 78, 0.16);
+}
+
+.chapter.is-active.is-prize-revealed .trip-prize-result strong {
+  animation: prizeTicketWords 900ms cubic-bezier(0.16, 0.82, 0.2, 1) 260ms both;
 }
 
 .trip-prize-result em {
@@ -1423,17 +1430,60 @@ h3 {
 @keyframes prizeTicketPop {
   0% {
     opacity: 0;
-    transform: translateY(1rem) scale(0.94) rotate(-1.2deg);
+    transform: translateY(3rem) scale(0.86) rotateX(24deg) rotate(-2.2deg);
   }
 
   60% {
     opacity: 1;
-    transform: translateY(-0.2rem) scale(1.025) rotate(0.4deg);
+    transform: translateY(-0.45rem) scale(1.045) rotateX(0deg) rotate(0.7deg);
   }
 
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1) rotate(0deg);
+    transform: translateY(0) scale(1) rotateX(0deg) rotate(0deg);
+  }
+}
+
+@keyframes prizeTicketGlow {
+  0% {
+    background-position: 0 0, 0 0;
+    box-shadow:
+      0 1.2rem 2.6rem rgba(103, 75, 137, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.76);
+  }
+
+  42% {
+    background-position: 1.1rem 0, 100% 0;
+    box-shadow:
+      0 2.1rem 4rem rgba(255, 105, 184, 0.28),
+      0 0 0 0.42rem rgba(255, 255, 255, 0.24),
+      inset 0 1px 0 rgba(255, 255, 255, 0.86);
+  }
+
+  100% {
+    background-position: 1.1rem 0, 100% 0;
+    box-shadow:
+      0 1.2rem 2.6rem rgba(103, 75, 137, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.76);
+  }
+}
+
+@keyframes prizeTicketWords {
+  0% {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.92);
+    letter-spacing: 0;
+  }
+
+  58% {
+    opacity: 1;
+    transform: translateY(-0.1rem) scale(1.035);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    letter-spacing: 0;
   }
 }
 
@@ -7654,15 +7704,283 @@ body.is-transitioning-to-claw .story-controls {
   }
 }
 
+.ticket-reveal-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 62;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  background:
+    radial-gradient(circle at 50% 44%, rgba(255, 115, 190, 0.54), transparent 16rem),
+    radial-gradient(circle at 50% 58%, rgba(121, 204, 255, 0.38), transparent 22rem),
+    linear-gradient(135deg, rgba(255, 206, 232, 0.8), rgba(210, 226, 255, 0.72)),
+    rgba(30, 20, 45, 0.62);
+  backdrop-filter: blur(16px);
+  transition: opacity 180ms ease, visibility 180ms ease;
+}
+
+.ticket-reveal-transition.is-playing {
+  opacity: 1;
+  visibility: visible;
+}
+
+body.is-ticket-revealing .story-header,
+body.is-ticket-revealing .story-controls {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ticket-reveal-stage {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  width: min(680px, 90vw);
+  min-height: 24rem;
+  perspective: 1100px;
+}
+
+.ticket-spotlight {
+  position: absolute;
+  top: -16vh;
+  width: 22rem;
+  height: 70vh;
+  opacity: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.48), transparent 72%);
+  filter: blur(1px);
+  transform-origin: top center;
+  clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
+}
+
+.spotlight-left {
+  left: 6%;
+  transform: rotate(18deg);
+}
+
+.spotlight-right {
+  right: 6%;
+  transform: rotate(-18deg);
+}
+
+.ticket-reveal-transition.is-playing .ticket-spotlight {
+  animation: ticketSpotlightSweep 3150ms ease both;
+}
+
+.ticket-burst {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 1px;
+  height: 1px;
+  transform: translate(-50%, -50%);
+}
+
+.ticket-burst span {
+  --angle: 0deg;
+  --distance: 11rem;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0.7rem;
+  height: 2.2rem;
+  border-radius: 999px;
+  opacity: 0;
+  background: linear-gradient(180deg, #fff8fd, #ff69b8 48%, #82d4ff);
+  box-shadow: 0 0.45rem 1rem rgba(88, 62, 122, 0.16);
+  transform: rotate(var(--angle)) translateY(0) scale(0.5);
+}
+
+.ticket-burst span:nth-child(1) { --angle: 0deg; }
+.ticket-burst span:nth-child(2) { --angle: 45deg; }
+.ticket-burst span:nth-child(3) { --angle: 90deg; }
+.ticket-burst span:nth-child(4) { --angle: 135deg; }
+.ticket-burst span:nth-child(5) { --angle: 180deg; }
+.ticket-burst span:nth-child(6) { --angle: 225deg; }
+.ticket-burst span:nth-child(7) { --angle: 270deg; }
+.ticket-burst span:nth-child(8) { --angle: 315deg; }
+
+.ticket-reveal-transition.is-playing .ticket-burst span {
+  animation: ticketBurst 1000ms cubic-bezier(0.16, 0.82, 0.2, 1) 320ms both;
+}
+
+.ticket-reveal-pass {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: 0.28rem;
+  width: min(34rem, 84vw);
+  min-height: 11.5rem;
+  padding: clamp(1.15rem, 4vw, 1.75rem) clamp(1.35rem, 5vw, 2.2rem);
+  overflow: hidden;
+  color: #26304e;
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  border-radius: 26px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.26) 0 0.22rem, transparent 0.22rem 1.35rem),
+    linear-gradient(135deg, rgba(255, 105, 184, 0.96), rgba(186, 169, 246, 0.94) 52%, rgba(121, 204, 255, 0.96));
+  box-shadow:
+    0 2rem 4.5rem rgba(61, 39, 86, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.78);
+  transform: translateY(4rem) rotateX(62deg) rotateZ(-8deg) scale(0.72);
+}
+
+.ticket-reveal-pass::before,
+.ticket-reveal-pass::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  z-index: 0;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 50%;
+  background: rgba(255, 226, 240, 0.98);
+  box-shadow: inset 0 0.25rem 0.8rem rgba(93, 64, 126, 0.12);
+  transform: translateY(-50%);
+}
+
+.ticket-reveal-pass::before {
+  left: -1.2rem;
+}
+
+.ticket-reveal-pass::after {
+  right: -1.2rem;
+}
+
+.ticket-reveal-pass span,
+.ticket-reveal-pass strong,
+.ticket-reveal-pass em {
+  position: relative;
+  z-index: 1;
+}
+
+.ticket-reveal-pass span {
+  font-size: 0.84rem;
+  font-weight: 1000;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.ticket-reveal-pass strong {
+  max-width: 12ch;
+  color: #fff8fd;
+  font-family: var(--font-bubbly);
+  font-size: clamp(2.4rem, 8vw, 4.6rem);
+  line-height: 0.9;
+  text-shadow: 0 0.09em 0 rgba(38, 48, 78, 0.18);
+}
+
+.ticket-reveal-pass em {
+  font-style: normal;
+  font-weight: 950;
+}
+
+.ticket-reveal-transition.is-playing .ticket-reveal-pass {
+  animation: ticketRevealPass 3150ms cubic-bezier(0.16, 0.82, 0.2, 1) both;
+}
+
+.ticket-reveal-stage p {
+  margin: 0;
+  color: rgba(38, 48, 78, 0.74);
+  font-weight: 950;
+  opacity: 0;
+}
+
+.ticket-reveal-transition.is-playing .ticket-reveal-stage p {
+  animation: ticketRevealCaption 3150ms ease both;
+}
+
+@keyframes ticketSpotlightSweep {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  18%,
+  78% {
+    opacity: 0.92;
+  }
+
+  55% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes ticketBurst {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--angle)) translateY(0) scale(0.35);
+  }
+
+  18% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: rotate(var(--angle)) translateY(calc(var(--distance) * -1)) scale(1);
+  }
+}
+
+@keyframes ticketRevealPass {
+  0% {
+    opacity: 0;
+    transform: translateY(4rem) rotateX(62deg) rotateZ(-8deg) scale(0.72);
+  }
+
+  28% {
+    opacity: 1;
+    transform: translateY(-0.8rem) rotateX(0deg) rotateZ(3deg) scale(1.06);
+  }
+
+  58% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg) rotateZ(-1deg) scale(1);
+  }
+
+  86% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg) rotateZ(0deg) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-1rem) rotateX(0deg) rotateZ(0deg) scale(0.96);
+  }
+}
+
+@keyframes ticketRevealCaption {
+  0%,
+  24%,
+  100% {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+
+  40%,
+  82% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .claw-transition,
   .claw-transition-card,
+  .ticket-reveal-transition,
+  .ticket-reveal-pass,
+  .ticket-burst span,
+  .ticket-spotlight,
+  .ticket-reveal-stage p,
   .claw-carriage,
   .claw-cable,
   .claw-head,
   .capsule,
   .prize-confetti span,
   .trip-prize-result,
+  .trip-prize-result strong,
   .mystery-capsule {
     animation: none;
     transition: none;
