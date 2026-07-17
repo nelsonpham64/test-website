@@ -35,6 +35,13 @@ const glassJar = document.querySelector("#glass-jar");
 const jarShakeButton = document.querySelector("#jar-shake-button");
 const jarNotes = Array.from(document.querySelectorAll(".paper-note"));
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const INTRO_LOADING_MS = 3650;
+const INTRO_ANNOUNCEMENT_MS = 5600;
+const INTRO_LETTER_SETTLE_MS = 6750;
+const WRAPPED_TRANSITION_READY_MS = 9200;
+const CLAW_TRANSITION_MS = 4300;
+const TICKET_REVEAL_TRANSITION_MS = 5000;
+const PS_LOVE_TRANSITION_MS = 4500;
 
 const storyState = {
   current: 0,
@@ -224,18 +231,18 @@ function unlockSite() {
     loadingScreen.setAttribute("aria-hidden", "true");
     letterAnnouncement.classList.add("is-visible");
     letterAnnouncement.setAttribute("aria-hidden", "false");
-  }, 2350);
+  }, INTRO_LOADING_MS);
 
   window.setTimeout(() => {
     document.body.classList.remove("is-locked");
     document.body.classList.add("is-letter-scene", "is-letter-arriving");
     letterAnnouncement.classList.remove("is-visible");
     letterAnnouncement.setAttribute("aria-hidden", "true");
-  }, 3500);
+  }, INTRO_ANNOUNCEMENT_MS);
 
   window.setTimeout(() => {
     document.body.classList.remove("is-letter-arriving");
-  }, 4450);
+  }, INTRO_LETTER_SETTLE_MS);
 }
 
 function animateWrappedCounters() {
@@ -529,7 +536,7 @@ function playWrappedTransition() {
       wrappedTransitionNext.disabled = false;
     }
     window.requestAnimationFrame(() => wrappedTransition.classList.add("is-ready"));
-  }, 7000);
+  }, WRAPPED_TRANSITION_READY_MS);
 }
 
 function closeClawTransition() {
@@ -573,7 +580,7 @@ function playClawTransition() {
     storyState.transitioningToClaw = false;
     clawTransitionTimer = null;
     setChapter(clawIndex);
-  }, 2600);
+  }, CLAW_TRANSITION_MS);
 }
 
 function closeTicketRevealTransition() {
@@ -619,7 +626,7 @@ function playTicketRevealTransition() {
     ticketRevealTimer = null;
     document.querySelector("#result")?.classList.add("is-prize-revealed");
     setChapter(resultIndex);
-  }, 3150);
+  }, TICKET_REVEAL_TRANSITION_MS);
 }
 
 function openPsLoveNotes() {
@@ -666,7 +673,7 @@ function playPsLoveTransition() {
     document.body.classList.remove("is-finding-ps");
     storyState.revealingPsNotes = false;
     openPsLoveNotes();
-  }, 2700);
+  }, PS_LOVE_TRANSITION_MS);
 }
 
 function setQuizNote(message) {

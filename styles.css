@@ -2530,7 +2530,7 @@ body::after {
   background: linear-gradient(90deg, var(--pink), var(--blue));
   border-radius: inherit;
   transform-origin: left;
-  animation: loadingFill 1.5s ease forwards;
+  animation: loadingFill 2.8s ease forwards;
 }
 
 .scrapbook {
@@ -7020,7 +7020,7 @@ body.is-transitioning-to-wrapped .story-controls {
 }
 
 .wrapped-transition.is-playing .wrapped-transition-book {
-  animation: wrappedBookClose 8200ms cubic-bezier(0.16, 0.82, 0.2, 1) both;
+  animation: wrappedBookClose 9800ms cubic-bezier(0.16, 0.82, 0.2, 1) both;
 }
 
 .wrapped-transition-cover,
@@ -7065,7 +7065,7 @@ body.is-transitioning-to-wrapped .story-controls {
 }
 
 .wrapped-transition.is-playing .wrapped-transition-right {
-  animation: wrappedRightPageClose 8200ms cubic-bezier(0.16, 0.72, 0.18, 1) both;
+  animation: wrappedRightPageClose 9800ms cubic-bezier(0.16, 0.72, 0.18, 1) both;
 }
 
 .wrapped-transition-book::after {
@@ -7129,7 +7129,7 @@ body.is-transitioning-to-wrapped .story-controls {
 }
 
 .wrapped-transition.is-playing .music-letter {
-  animation: musicLetterArrive 8200ms cubic-bezier(0.18, 0.82, 0.2, 1) both;
+  animation: musicLetterArrive 9800ms cubic-bezier(0.18, 0.82, 0.2, 1) both;
 }
 
 .music-letter > * {
@@ -7170,19 +7170,19 @@ body.is-transitioning-to-wrapped .story-controls {
 }
 
 .wrapped-transition.is-playing .line-one {
-  animation: musicLineOne 8200ms ease both;
+  animation: musicLineOne 9800ms ease both;
 }
 
 .wrapped-transition.is-playing .line-two {
-  animation: musicLineTwo 8200ms ease both;
+  animation: musicLineTwo 9800ms ease both;
 }
 
 .wrapped-transition.is-playing .line-three {
-  animation: musicLineThree 8200ms ease both;
+  animation: musicLineThree 9800ms ease both;
 }
 
 .wrapped-transition.is-playing .line-four {
-  animation: musicLineFour 8200ms ease both;
+  animation: musicLineFour 9800ms ease both;
 }
 
 .music-wave {
@@ -7205,7 +7205,7 @@ body.is-transitioning-to-wrapped .story-controls {
 }
 
 .wrapped-transition.is-playing .music-wave {
-  animation: musicWaveIn 8200ms ease both;
+  animation: musicWaveIn 9800ms ease both;
 }
 
 .wrapped-transition.is-playing .music-wave span {
@@ -7647,7 +7647,7 @@ body.is-transitioning-to-claw .story-controls {
 }
 
 .claw-transition.is-playing .claw-transition-card {
-  animation: clawTransitionCardIn 2600ms cubic-bezier(0.16, 0.82, 0.2, 1) both;
+  animation: clawTransitionCardIn 4300ms cubic-bezier(0.16, 0.82, 0.2, 1) both;
 }
 
 .claw-transition-token {
@@ -7767,7 +7767,7 @@ body.is-ticket-revealing .story-controls {
 }
 
 .ticket-reveal-transition.is-playing .ticket-spotlight {
-  animation: ticketSpotlightSweep 3150ms ease both;
+  animation: ticketSpotlightSweep 5000ms ease both;
 }
 
 .ticket-burst {
@@ -7878,7 +7878,7 @@ body.is-ticket-revealing .story-controls {
 }
 
 .ticket-reveal-transition.is-playing .ticket-reveal-pass {
-  animation: ticketRevealPass 3150ms cubic-bezier(0.16, 0.82, 0.2, 1) both;
+  animation: ticketRevealPass 5000ms cubic-bezier(0.16, 0.82, 0.2, 1) both;
 }
 
 .ticket-reveal-stage p {
@@ -7889,7 +7889,7 @@ body.is-ticket-revealing .story-controls {
 }
 
 .ticket-reveal-transition.is-playing .ticket-reveal-stage p {
-  animation: ticketRevealCaption 3150ms ease both;
+  animation: ticketRevealCaption 5000ms ease both;
 }
 
 @keyframes ticketSpotlightSweep {
@@ -9293,7 +9293,7 @@ body.is-finding-ps .story-controls {
 }
 
 .ps-love-transition.is-playing .ps-love-transition-card {
-  animation: psDiscoveryCard 2700ms cubic-bezier(0.16, 0.82, 0.2, 1) both;
+  animation: psDiscoveryCard 4500ms cubic-bezier(0.16, 0.82, 0.2, 1) both;
 }
 
 .ps-love-badge {
