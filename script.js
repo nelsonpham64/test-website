@@ -72,6 +72,13 @@ let wrappedTransitionTimer = null;
 let clawTransitionTimer = null;
 let ticketRevealTimer = null;
 
+const wrappedDeckState = {
+  current: 0,
+  startX: 0,
+  startY: 0,
+  isPointerDown: false
+};
+
 const clawState = {
   position: 50,
   isDropping: false,
@@ -277,6 +284,140 @@ function animateWrappedCounters() {
   });
 }
 
+function getWrappedDeckParts() {
+  const deck = document.querySelector("[data-wrapped-deck]");
+
+  if (!deck) {
+    return null;
+  }
+
+  return {
+    deck,
+    slides: Array.from(deck.querySelectorAll("[data-wrapped-slide]")),
+    dots: Array.from(deck.querySelectorAll("[data-wrapped-dot]")),
+    previousButton: deck.querySelector("[data-wrapped-prev]"),
+    nextButton: deck.querySelector("[data-wrapped-next]")
+  };
+}
+
+function setWrappedSlide(index) {
+  const parts = getWrappedDeckParts();
+
+  if (!parts || !parts.slides.length) {
+    return;
+  }
+
+  const lastSlideIndex = parts.slides.length - 1;
+  const boundedIndex =
+    ((index % parts.slides.length) + parts.slides.length) % parts.slides.length;
+
+  wrappedDeckState.current = boundedIndex;
+
+  parts.slides.forEach((slide, slideIndex) => {
+    const isCurrent = slideIndex === boundedIndex;
+    const isBefore =
+      slideIndex === boundedIndex - 1 ||
+      (boundedIndex === 0 && slideIndex === lastSlideIndex);
+    const isAfter =
+      slideIndex === boundedIndex + 1 ||
+      (boundedIndex === lastSlideIndex && slideIndex === 0);
+
+    slide.classList.toggle("is-current", isCurrent);
+    slide.classList.toggle("is-before", !isCurrent && isBefore);
+    slide.classList.toggle("is-after", !isCurrent && isAfter);
+    slide.setAttribute("aria-hidden", isCurrent ? "false" : "true");
+  });
+
+  parts.dots.forEach((dot, dotIndex) => {
+    const isCurrent = dotIndex === boundedIndex;
+    dot.classList.toggle("is-current", isCurrent);
+    dot.setAttribute("aria-current", isCurrent ? "step" : "false");
+  });
+
+  if (parts.previousButton) {
+    parts.previousButton.textContent = boundedIndex === 0 ? "Last" : "Previous";
+  }
+
+  if (parts.nextButton) {
+    parts.nextButton.textContent = boundedIndex === lastSlideIndex ? "Replay" : "Next";
+  }
+}
+
+function moveWrappedSlide(direction) {
+  setWrappedSlide(wrappedDeckState.current + direction);
+}
+
+function setupWrappedDeck() {
+  const parts = getWrappedDeckParts();
+
+  if (!parts || !parts.slides.length) {
+    return;
+  }
+
+  const dotsContainer = parts.deck.querySelector("[data-wrapped-dots]");
+
+  if (dotsContainer && !dotsContainer.children.length) {
+    parts.slides.forEach((slide, slideIndex) => {
+      const dot = document.createElement("button");
+      dot.type = "button";
+      dot.dataset.wrappedDot = String(slideIndex);
+      dot.setAttribute("aria-label", `Go to Wrapped card ${slideIndex + 1}`);
+      dot.addEventListener("click", () => setWrappedSlide(slideIndex));
+      dotsContainer.append(dot);
+    });
+  }
+
+  parts.previousButton?.addEventListener("click", () => moveWrappedSlide(-1));
+  parts.nextButton?.addEventListener("click", () => moveWrappedSlide(1));
+
+  parts.deck.tabIndex = 0;
+  parts.deck.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      moveWrappedSlide(-1);
+    }
+
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      moveWrappedSlide(1);
+    }
+  });
+
+  parts.deck.addEventListener(
+    "pointerdown",
+    (event) => {
+      wrappedDeckState.isPointerDown = true;
+      wrappedDeckState.startX = event.clientX;
+      wrappedDeckState.startY = event.clientY;
+    },
+    { passive: true }
+  );
+
+  parts.deck.addEventListener(
+    "pointerup",
+    (event) => {
+      if (!wrappedDeckState.isPointerDown) {
+        return;
+      }
+
+      const deltaX = event.clientX - wrappedDeckState.startX;
+      const deltaY = event.clientY - wrappedDeckState.startY;
+      wrappedDeckState.isPointerDown = false;
+
+      if (Math.abs(deltaX) > 48 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4) {
+        moveWrappedSlide(deltaX < 0 ? 1 : -1);
+      }
+    },
+    { passive: true }
+  );
+
+  parts.deck.addEventListener("pointercancel", () => {
+    wrappedDeckState.isPointerDown = false;
+  });
+
+  setWrappedSlide(0);
+}
+
 function triggerWrappedReveal() {
   const wrappedSection = document.querySelector("#wrapped");
 
@@ -287,6 +428,7 @@ function triggerWrappedReveal() {
   wrappedSection.classList.remove("is-wrapped-playing");
   void wrappedSection.offsetWidth;
   wrappedSection.classList.add("is-wrapped-playing");
+  setWrappedSlide(wrappedDeckState.current);
   animateWrappedCounters();
 }
 
@@ -1889,5 +2031,6 @@ clawRightButton?.addEventListener("click", () => moveClaw(1));
 mysteryCapsule?.addEventListener("click", openCapsulePrize);
 
 renderClawMachine();
+setupWrappedDeck();
 setScrapbookPage(0);
 setChapter(0);
