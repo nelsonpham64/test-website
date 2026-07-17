@@ -307,7 +307,6 @@ function setWrappedSlide(index) {
     return;
   }
 
-  const lastSlideIndex = parts.slides.length - 1;
   const boundedIndex =
     ((index % parts.slides.length) + parts.slides.length) % parts.slides.length;
 
@@ -315,16 +314,11 @@ function setWrappedSlide(index) {
 
   parts.slides.forEach((slide, slideIndex) => {
     const isCurrent = slideIndex === boundedIndex;
-    const isBefore =
-      slideIndex === boundedIndex - 1 ||
-      (boundedIndex === 0 && slideIndex === lastSlideIndex);
-    const isAfter =
-      slideIndex === boundedIndex + 1 ||
-      (boundedIndex === lastSlideIndex && slideIndex === 0);
 
     slide.classList.toggle("is-current", isCurrent);
-    slide.classList.toggle("is-before", !isCurrent && isBefore);
-    slide.classList.toggle("is-after", !isCurrent && isAfter);
+    slide.classList.toggle("is-before", false);
+    slide.classList.toggle("is-after", false);
+    slide.hidden = !isCurrent;
     slide.setAttribute("aria-hidden", isCurrent ? "false" : "true");
   });
 
@@ -339,6 +333,7 @@ function setWrappedSlide(index) {
   }
 
   if (parts.nextButton) {
+    const lastSlideIndex = parts.slides.length - 1;
     parts.nextButton.textContent = boundedIndex === lastSlideIndex ? "Replay" : "Next";
   }
 }

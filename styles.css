@@ -10317,3 +10317,11 @@ body.is-finding-ps .story-controls {
     font-size: clamp(2.1rem, 11vw, 3.55rem);
   }
 }
+
+.wrapped-slide[hidden],
+.wrapped-slide:not(.is-current) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
