@@ -76,7 +76,8 @@ const wrappedDeckState = {
   current: 0,
   startX: 0,
   startY: 0,
-  isPointerDown: false
+  isPointerDown: false,
+  transitionTimer: null
 };
 
 const clawState = {
@@ -252,8 +253,8 @@ function unlockSite() {
   }, INTRO_LETTER_SETTLE_MS);
 }
 
-function animateWrappedCounters() {
-  const wrappedCounters = document.querySelectorAll("[data-wrapped-count]");
+function animateWrappedCounters(scope = document) {
+  const wrappedCounters = scope.querySelectorAll("[data-wrapped-count]");
 
   wrappedCounters.forEach((counterElement) => {
     const target = Number(counterElement.dataset.target || "0");
@@ -300,28 +301,7 @@ function getWrappedDeckParts() {
   };
 }
 
-function setWrappedSlide(index) {
-  const parts = getWrappedDeckParts();
-
-  if (!parts || !parts.slides.length) {
-    return;
-  }
-
-  const boundedIndex =
-    ((index % parts.slides.length) + parts.slides.length) % parts.slides.length;
-
-  wrappedDeckState.current = boundedIndex;
-
-  parts.slides.forEach((slide, slideIndex) => {
-    const isCurrent = slideIndex === boundedIndex;
-
-    slide.classList.toggle("is-current", isCurrent);
-    slide.classList.toggle("is-before", false);
-    slide.classList.toggle("is-after", false);
-    slide.hidden = !isCurrent;
-    slide.setAttribute("aria-hidden", isCurrent ? "false" : "true");
-  });
-
+function syncWrappedDeckChrome(parts, boundedIndex) {
   parts.dots.forEach((dot, dotIndex) => {
     const isCurrent = dotIndex === boundedIndex;
     dot.classList.toggle("is-current", isCurrent);
@@ -338,8 +318,81 @@ function setWrappedSlide(index) {
   }
 }
 
+function setWrappedSlide(index, options = {}) {
+  const parts = getWrappedDeckParts();
+
+  if (!parts || !parts.slides.length) {
+    return;
+  }
+
+  const shouldAnimate = options.animate && !prefersReducedMotion;
+  const direction = options.direction || 1;
+  const boundedIndex =
+    ((index % parts.slides.length) + parts.slides.length) % parts.slides.length;
+  const previousIndex = wrappedDeckState.current;
+
+  window.clearTimeout(wrappedDeckState.transitionTimer);
+  wrappedDeckState.transitionTimer = null;
+
+  if (shouldAnimate && boundedIndex !== previousIndex) {
+    const previousSlide = parts.slides[previousIndex];
+    const nextSlide = parts.slides[boundedIndex];
+
+    parts.deck.dataset.wrappedDirection = direction < 0 ? "back" : "forward";
+    wrappedDeckState.current = boundedIndex;
+
+    parts.slides.forEach((slide) => {
+      if (slide !== previousSlide && slide !== nextSlide) {
+        slide.hidden = true;
+        slide.classList.remove("is-current", "is-entering", "is-exiting");
+        slide.setAttribute("aria-hidden", "true");
+      }
+    });
+
+    previousSlide.hidden = false;
+    previousSlide.classList.remove("is-current", "is-entering");
+    previousSlide.classList.add("is-exiting");
+    previousSlide.setAttribute("aria-hidden", "true");
+
+    nextSlide.hidden = false;
+    nextSlide.classList.remove("is-exiting");
+    nextSlide.classList.add("is-current", "is-entering");
+    nextSlide.setAttribute("aria-hidden", "false");
+
+    syncWrappedDeckChrome(parts, boundedIndex);
+    animateWrappedCounters(nextSlide);
+
+    wrappedDeckState.transitionTimer = window.setTimeout(() => {
+      previousSlide.hidden = true;
+      previousSlide.classList.remove("is-exiting");
+      nextSlide.classList.remove("is-entering");
+      delete parts.deck.dataset.wrappedDirection;
+      wrappedDeckState.transitionTimer = null;
+    }, 680);
+
+    return;
+  }
+
+  wrappedDeckState.current = boundedIndex;
+
+  parts.slides.forEach((slide, slideIndex) => {
+    const isCurrent = slideIndex === boundedIndex;
+
+    slide.classList.toggle("is-current", isCurrent);
+    slide.classList.toggle("is-before", false);
+    slide.classList.toggle("is-after", false);
+    slide.classList.remove("is-entering", "is-exiting");
+    slide.hidden = !isCurrent;
+    slide.setAttribute("aria-hidden", isCurrent ? "false" : "true");
+  });
+
+  delete parts.deck.dataset.wrappedDirection;
+  syncWrappedDeckChrome(parts, boundedIndex);
+  animateWrappedCounters(parts.slides[boundedIndex]);
+}
+
 function moveWrappedSlide(direction) {
-  setWrappedSlide(wrappedDeckState.current + direction);
+  setWrappedSlide(wrappedDeckState.current + direction, { animate: true, direction });
 }
 
 function setupWrappedDeck() {
@@ -357,7 +410,12 @@ function setupWrappedDeck() {
       dot.type = "button";
       dot.dataset.wrappedDot = String(slideIndex);
       dot.setAttribute("aria-label", `Go to Wrapped card ${slideIndex + 1}`);
-      dot.addEventListener("click", () => setWrappedSlide(slideIndex));
+      dot.addEventListener("click", () =>
+        setWrappedSlide(slideIndex, {
+          animate: true,
+          direction: slideIndex > wrappedDeckState.current ? 1 : -1
+        })
+      );
       dotsContainer.append(dot);
     });
   }
@@ -424,7 +482,7 @@ function triggerWrappedReveal() {
   void wrappedSection.offsetWidth;
   wrappedSection.classList.add("is-wrapped-playing");
   setWrappedSlide(wrappedDeckState.current);
-  animateWrappedCounters();
+  animateWrappedCounters(wrappedSection.querySelector(".wrapped-copy") || wrappedSection);
 }
 
 function setChapter(index) {
