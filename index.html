@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=wrapped-controls-fix-1">
+    <link rel="stylesheet" href="styles.css?v=prize-prompt-1">
   </head>
   <body class="is-locked">
     <section class="lock-screen" id="lock-screen" aria-labelledby="lock-title">
@@ -1100,6 +1100,19 @@
       </div>
     </div>
 
+    <div class="prize-open-prompt" id="prize-open-prompt" aria-hidden="true">
+      <section class="prize-open-card" role="dialog" aria-labelledby="prize-open-title" aria-describedby="prize-open-copy">
+        <span class="prize-open-capsule" aria-hidden="true"><span></span></span>
+        <p class="eyebrow">Capsule secured</p>
+        <h2 id="prize-open-title">Open the prize?</h2>
+        <p id="prize-open-copy">You caught it. The next adventure is hiding inside.</p>
+        <div class="prize-open-actions">
+          <button class="button button-primary" id="prize-open-yes" type="button">Yes, open it</button>
+          <button class="button button-secondary runaway-no" id="prize-open-no" type="button">No</button>
+        </div>
+      </section>
+    </div>
+
     <div class="ps-love-transition" id="ps-love-transition" aria-hidden="true">
       <div class="ps-love-transition-card" aria-hidden="true">
         <span class="ps-love-badge">P.S.</span>
@@ -1156,6 +1169,6 @@
       <button class="button button-primary" id="next-button" type="button">Continue</button>
     </footer>
 
-    <script src="script.js?v=wrapped-controls-fix-1"></script>
+    <script src="script.js?v=prize-prompt-1"></script>
   </body>
 </html>

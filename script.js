@@ -19,6 +19,9 @@ const wrappedTransition = document.querySelector("#wrapped-transition");
 const wrappedTransitionNext = document.querySelector("#wrapped-transition-next");
 const clawTransition = document.querySelector("#claw-transition");
 const ticketRevealTransition = document.querySelector("#ticket-reveal-transition");
+const prizeOpenPrompt = document.querySelector("#prize-open-prompt");
+const prizeOpenYes = document.querySelector("#prize-open-yes");
+const prizeOpenNo = document.querySelector("#prize-open-no");
 const psLoveNotes = document.querySelector("#ps-love-notes");
 const psLoveBackdrop = document.querySelector("#ps-love-backdrop");
 const psLoveClose = document.querySelector("#ps-love-close");
@@ -59,7 +62,8 @@ const storyState = {
   transitioningToWrapped: false,
   wrappedTransitionReady: false,
   transitioningToClaw: false,
-  revealingTicket: false
+  revealingTicket: false,
+  prizePromptOpen: false
 };
 
 const scrapbookHold = {
@@ -87,7 +91,8 @@ const clawState = {
   missCount: 0,
   lastOutcome: null,
   lastMissed: null,
-  dropToken: 0
+  dropToken: 0,
+  promptTimer: null
 };
 
 const clawCapsules = [
@@ -601,6 +606,7 @@ function nextChapter() {
     closeWrappedTransition();
     closeClawTransition();
     closeTicketRevealTransition();
+    closePrizeOpenPrompt();
     closePsLoveNotes();
     closeNote();
     storyState.psNotesFound = false;
@@ -809,6 +815,73 @@ function closeTicketRevealTransition() {
   }
 }
 
+function resetRunawayNoButton() {
+  if (!prizeOpenNo) {
+    return;
+  }
+
+  prizeOpenNo.textContent = "No";
+  prizeOpenNo.style.setProperty("--no-x", "0px");
+  prizeOpenNo.style.setProperty("--no-y", "0px");
+  prizeOpenNo.classList.remove("is-dodging");
+}
+
+function closePrizeOpenPrompt() {
+  window.clearTimeout(clawState.promptTimer);
+  clawState.promptTimer = null;
+  storyState.prizePromptOpen = false;
+  prizeOpenPrompt?.classList.remove("is-open");
+  prizeOpenPrompt?.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("is-prize-prompt-open");
+  resetRunawayNoButton();
+}
+
+function dodgeNoButton(event) {
+  if (!prizeOpenNo || !prizeOpenPrompt?.classList.contains("is-open")) {
+    return;
+  }
+
+  const angle = event?.clientX
+    ? Math.atan2(
+        prizeOpenNo.getBoundingClientRect().top + prizeOpenNo.offsetHeight / 2 - event.clientY,
+        prizeOpenNo.getBoundingClientRect().left + prizeOpenNo.offsetWidth / 2 - event.clientX
+      )
+    : Math.random() * Math.PI * 2;
+  const distance = 92 + Math.random() * 74;
+  const jitterX = (Math.random() - 0.5) * 58;
+  const jitterY = (Math.random() - 0.5) * 42;
+  const x = Math.max(-145, Math.min(165, Math.cos(angle) * distance + jitterX));
+  const y = Math.max(-82, Math.min(96, Math.sin(angle) * distance + jitterY));
+
+  prizeOpenNo.textContent = Math.random() > 0.5 ? "Nope" : "Too slow";
+  prizeOpenNo.classList.add("is-dodging");
+  prizeOpenNo.style.setProperty("--no-x", `${x}px`);
+  prizeOpenNo.style.setProperty("--no-y", `${y}px`);
+}
+
+function openPrizeOpenPrompt() {
+  if (!clawState.hasCapsule || storyState.quizComplete || !prizeOpenPrompt) {
+    return;
+  }
+
+  storyState.prizePromptOpen = true;
+  resetRunawayNoButton();
+  setQuizNote("You got the capsule. Do you want to open it?");
+  document.body.classList.add("is-prize-prompt-open");
+  prizeOpenPrompt.classList.add("is-open");
+  prizeOpenPrompt.setAttribute("aria-hidden", "false");
+  window.setTimeout(() => prizeOpenYes?.focus(), 240);
+}
+
+function confirmPrizeOpen() {
+  if (!clawState.hasCapsule || storyState.quizComplete) {
+    return;
+  }
+
+  closePrizeOpenPrompt();
+  revealCapsulePrize();
+}
+
 function playTicketRevealTransition() {
   const resultIndex = getChapterIndex("result");
 
@@ -1000,6 +1073,11 @@ function dropClaw() {
       clawState.lastOutcome = "hit";
       setQuizNote("Capsule won. Open it.");
       renderClawMachine();
+      window.clearTimeout(clawState.promptTimer);
+      clawState.promptTimer = window.setTimeout(
+        openPrizeOpenPrompt,
+        prefersReducedMotion ? 80 : 640
+      );
       return;
     }
 
@@ -1019,6 +1097,14 @@ function dropClaw() {
 }
 
 function openCapsulePrize() {
+  if (!clawState.hasCapsule || storyState.quizComplete) {
+    return;
+  }
+
+  openPrizeOpenPrompt();
+}
+
+function revealCapsulePrize() {
   if (!clawState.hasCapsule || storyState.quizComplete) {
     return;
   }
@@ -1057,6 +1143,7 @@ function restartQuiz() {
   clawState.lastOutcome = null;
   clawState.lastMissed = null;
   clawState.dropToken += 1;
+  closePrizeOpenPrompt();
   closeTicketRevealTransition();
   document.querySelector("#result")?.classList.remove("is-prize-revealed");
   setQuizNote("Move the claw and try a capsule.");
@@ -2138,6 +2225,15 @@ clawDropButton?.addEventListener("click", () => {
 clawLeftButton?.addEventListener("click", () => moveClaw(-1));
 clawRightButton?.addEventListener("click", () => moveClaw(1));
 mysteryCapsule?.addEventListener("click", openCapsulePrize);
+prizeOpenYes?.addEventListener("click", confirmPrizeOpen);
+prizeOpenNo?.addEventListener("pointerenter", dodgeNoButton);
+prizeOpenNo?.addEventListener("pointermove", dodgeNoButton);
+prizeOpenNo?.addEventListener("focus", dodgeNoButton);
+prizeOpenNo?.addEventListener("click", (event) => {
+  event.preventDefault();
+  dodgeNoButton(event);
+  setQuizNote("No is running away. I think that means yes.");
+});
 
 renderClawMachine();
 setupWrappedDeck();
