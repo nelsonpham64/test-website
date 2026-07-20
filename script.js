@@ -154,12 +154,7 @@ const tripResult = {
   restaurant: "Universal Studios Hollywood",
   theme: "Amusement park trip with rides, shows, and snacks",
   outfit: "park-fit, comfy shoes, and me",
-  dessert: "Theme park snacks and more..",
-  plan: [
-    "Bring the cute outfit, comfy shoes, and fully charged phones.",
-    "Spend the day chasing rides, shows, snacks, and photos together.",
-    "Make this the first big adventure of year two."
-  ]
+  dessert: "Theme park snacks and more.."
 };
 
 const memoryNotes = {
@@ -1124,14 +1119,6 @@ function showResult() {
   document.querySelector("#result-theme").textContent = result.theme;
   document.querySelector("#result-outfit").textContent = result.outfit;
   document.querySelector("#result-dessert").textContent = result.dessert;
-
-  const planList = document.querySelector("#result-plan");
-  planList.innerHTML = "";
-  result.plan.forEach((item) => {
-    const listItem = document.createElement("li");
-    listItem.textContent = item;
-    planList.appendChild(listItem);
-  });
 }
 
 function restartQuiz() {
