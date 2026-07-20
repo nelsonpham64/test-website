@@ -311,12 +311,12 @@ function syncWrappedDeckChrome(parts, boundedIndex) {
   });
 
   if (parts.previousButton) {
-    parts.previousButton.textContent = boundedIndex === 0 ? "Last" : "Previous";
+    parts.previousButton.textContent = "Previous";
   }
 
   if (parts.nextButton) {
     const lastSlideIndex = parts.slides.length - 1;
-    parts.nextButton.textContent = boundedIndex === lastSlideIndex ? "Replay" : "Next";
+    parts.nextButton.textContent = boundedIndex === lastSlideIndex ? "Play machine" : "Next";
   }
 }
 
@@ -396,6 +396,19 @@ function setWrappedSlide(index, options = {}) {
 }
 
 function moveWrappedSlide(direction) {
+  const parts = getWrappedDeckParts();
+  const onWrappedChapter = chapters[storyState.current]?.dataset.chapter === "wrapped";
+
+  if (
+    parts &&
+    onWrappedChapter &&
+    direction > 0 &&
+    wrappedDeckState.current >= parts.slides.length - 1
+  ) {
+    playClawTransition();
+    return;
+  }
+
   setWrappedSlide(wrappedDeckState.current + direction, { animate: true, direction });
 }
 
@@ -555,12 +568,13 @@ function updateStoryControls() {
   Array.from(dotsWrap.children).forEach((dot, index) => {
     dot.classList.toggle("is-active", index === storyState.current);
   });
-  dotsWrap.classList.toggle("is-hidden", chapterKey === "ending");
+  dotsWrap.classList.toggle("is-hidden", chapterKey === "ending" || chapterKey === "wrapped");
 
   backButton.classList.toggle("is-hidden", !storyState.hasReachedEnd);
   nextButton.classList.toggle(
     "is-hidden",
     chapterKey === "intro" ||
+      chapterKey === "wrapped" ||
       chapterKey === "quiz" ||
       chapterKey === "finale" ||
       shouldHideScrapbookNext

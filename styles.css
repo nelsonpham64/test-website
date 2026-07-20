@@ -12122,16 +12122,25 @@ body.is-finding-ps .story-controls {
 
 /* Full-screen immersive Spotify Wrapped */
 #wrapped {
+  --wrapped-scene-min-height: max(100svh, 900px);
   padding: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   background:
     linear-gradient(115deg, rgba(255, 91, 174, 0.58), rgba(126, 215, 255, 0.42)),
     var(--page-bg);
 }
 
+body[data-active-chapter="wrapped"] .story-header,
+body[data-active-chapter="wrapped"] .story-controls {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
 #wrapped .wrapped-experience {
   width: 100vw;
-  min-height: 100svh;
+  min-height: var(--wrapped-scene-min-height);
   display: grid;
   place-items: stretch;
 }
@@ -12145,7 +12154,7 @@ body.is-finding-ps .story-controls {
 
 #wrapped .wrapped-stage {
   width: 100vw;
-  min-height: 100svh;
+  min-height: var(--wrapped-scene-min-height);
   display: grid;
   grid-template-rows: minmax(0, 1fr);
   perspective: none;
@@ -12157,7 +12166,7 @@ body.is-finding-ps .story-controls {
 
 #wrapped .wrapped-slides {
   width: 100%;
-  min-height: 100svh;
+  min-height: var(--wrapped-scene-min-height);
   border-radius: 0;
   overflow: hidden;
   background: transparent;
@@ -12167,9 +12176,9 @@ body.is-finding-ps .story-controls {
 #wrapped .wrapped-slide {
   --scene-glow: rgba(255, 255, 255, 0.24);
   --scene-deep: rgba(37, 29, 74, 0.18);
-  min-height: 100svh;
+  min-height: var(--wrapped-scene-min-height);
   grid-template-columns: minmax(0, 1fr);
-  padding: clamp(5.7rem, 9vh, 7rem) clamp(1.2rem, 7vw, 7rem) clamp(7.3rem, 12vh, 8.8rem);
+  padding: clamp(5.4rem, 8vh, 6.6rem) clamp(1.2rem, 7vw, 7rem) clamp(9.2rem, 14vh, 10.8rem);
   align-content: center;
   justify-items: center;
   gap: clamp(0.75rem, 1.6vh, 1.15rem);
@@ -12317,17 +12326,17 @@ body.is-finding-ps .story-controls {
 }
 
 #wrapped .wrapped-pill {
-  position: fixed;
-  top: clamp(1.1rem, 2.8vh, 2rem);
+  position: absolute;
+  top: clamp(1.2rem, 3.2vh, 2rem);
   left: 50%;
   transform: translateX(-50%);
   background: rgba(255, 255, 255, 0.16);
 }
 
 #wrapped .wrapped-slide h3 {
-  max-width: min(92vw, 11.5ch);
-  font-size: clamp(3.35rem, 7.6vw, 8.8rem);
-  line-height: 0.82;
+  max-width: min(92vw, 12.5ch);
+  font-size: clamp(3rem, 6.4vw, 7rem);
+  line-height: 0.88;
   text-align: center;
 }
 
@@ -12363,8 +12372,8 @@ body.is-finding-ps .story-controls {
 }
 
 #wrapped .wrapped-song-card strong {
-  font-size: clamp(3.4rem, 9.2vw, 9rem);
-  line-height: 0.72;
+  font-size: clamp(3rem, 6.7vw, 6.8rem);
+  line-height: 0.82;
 }
 
 #wrapped .wrapped-controls {
@@ -12374,6 +12383,7 @@ body.is-finding-ps .story-controls {
   bottom: clamp(1.2rem, 4vh, 2.3rem);
   transform: translateX(-50%);
   width: min(760px, 88vw);
+  pointer-events: auto;
 }
 
 #wrapped .wrapped-nav {
@@ -12487,16 +12497,16 @@ body.is-finding-ps .story-controls {
   --scene-bg:
     radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.18), transparent 18rem),
     linear-gradient(145deg, #ff4ead, #8f63ff 48%, #5fd3ff);
-  grid-template-columns: minmax(0, 0.82fr) minmax(16rem, 0.68fr);
+  grid-template-columns: minmax(0, 0.74fr) minmax(17rem, 0.76fr);
   column-gap: clamp(1rem, 5vw, 5rem);
   justify-items: stretch;
 }
 
 #wrapped .wrapped-slide[data-scene="anthem"] .frame-center {
-  opacity: 0.72;
+  opacity: 0.64;
   left: 72%;
   top: 50%;
-  width: clamp(14rem, 28vw, 25rem);
+  width: clamp(13rem, 25vw, 22rem);
 }
 
 #wrapped .wrapped-slide[data-scene="anthem"] .wrapped-pill,
@@ -12514,13 +12524,17 @@ body.is-finding-ps .story-controls {
 
 #wrapped .wrapped-slide[data-scene="anthem"] .wrapped-song-card {
   justify-self: start;
-  width: min(30rem, 100%);
+  width: min(27rem, 100%);
   border-radius: 28px;
   transform: rotate(-2deg);
 }
 
 #wrapped .wrapped-slide[data-scene="anthem"] .wrapped-stat-grid {
-  width: min(35rem, 100%);
+  width: min(34rem, 100%);
+}
+
+#wrapped .wrapped-slide[data-scene="anthem"] .wrapped-stat-grid span {
+  min-height: 6.5rem;
 }
 
 #wrapped .wrapped-slide[data-scene="handoff"]::before {
@@ -12596,6 +12610,123 @@ body.is-finding-ps .story-controls {
   grid-row: 2 / span 3;
   align-self: center;
   width: min(34rem, 100%);
+}
+
+#wrapped .wrapped-slide[data-scene="compare"] {
+  --scene-bg:
+    radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.18), transparent 14rem),
+    radial-gradient(circle at 80% 68%, rgba(255, 255, 255, 0.2), transparent 16rem),
+    linear-gradient(118deg, #ff69b5 0 43%, #75cff5 43.5% 100%);
+  align-content: center;
+}
+
+#wrapped .wrapped-slide[data-scene="compare"]::before {
+  background:
+    linear-gradient(118deg, transparent 0 41.8%, rgba(255, 255, 255, 0.34) 42.2% 43%, transparent 43.4%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.12) 0 0.12rem, transparent 0.16rem 4.8rem);
+  opacity: 0.5;
+  animation: wrappedLightSweep 9s ease-in-out infinite;
+}
+
+#wrapped .wrapped-slide[data-scene="compare"] h3 {
+  max-width: min(40rem, 92vw);
+  font-size: clamp(3.1rem, 5.6vw, 6.1rem);
+}
+
+#wrapped .wrapped-slide[data-scene="compare"] .wrapped-compare {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  padding: 0.25rem;
+}
+
+#wrapped .wrapped-slide[data-scene="compare"] .wrapped-compare span {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.7fr) minmax(0, 1fr);
+  gap: 0.65rem 1rem;
+  align-items: center;
+  min-height: 7.2rem;
+  padding: 1rem 1rem 1rem 1.2rem;
+  overflow: hidden;
+  border-radius: 22px;
+  transform: rotate(var(--compare-tilt, 0deg));
+}
+
+#wrapped .wrapped-slide[data-scene="compare"] .wrapped-compare span::before {
+  content: "";
+  position: absolute;
+  left: -2.6rem;
+  top: 50%;
+  width: 5.6rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(35, 39, 72, 0.7) 0 16%, transparent 17%),
+    repeating-radial-gradient(circle, rgba(255, 255, 255, 0.55) 0 2px, transparent 3px 10px),
+    linear-gradient(135deg, rgba(255, 123, 199, 0.7), rgba(121, 207, 255, 0.75));
+  transform: translateY(-50%);
+  opacity: 0.6;
+}
+
+#wrapped .wrapped-slide[data-scene="compare"] .wrapped-compare span:nth-child(1) {
+  --compare-tilt: -1.5deg;
+}
+
+#wrapped .wrapped-slide[data-scene="compare"] .wrapped-compare span:nth-child(2) {
+  --compare-tilt: 1deg;
+}
+
+#wrapped .wrapped-slide[data-scene="compare"] .wrapped-compare span:nth-child(3) {
+  --compare-tilt: -0.6deg;
+}
+
+#wrapped .wrapped-slide[data-scene="compare"] .wrapped-compare strong {
+  position: relative;
+  z-index: 1;
+  align-self: center;
+  font-size: clamp(1.25rem, 2.2vw, 1.8rem);
+}
+
+#wrapped .wrapped-slide[data-scene="compare"] .wrapped-compare em {
+  position: relative;
+  z-index: 1;
+  display: block;
+  padding: 0.48rem 0.62rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+#wrapped .wrapped-slide[data-scene="aux"] {
+  --scene-bg:
+    radial-gradient(circle at 15% 32%, rgba(255, 255, 255, 0.2), transparent 13rem),
+    radial-gradient(circle at 80% 72%, rgba(255, 255, 255, 0.14), transparent 16rem),
+    linear-gradient(126deg, #f454ad, #9b62ef 45%, #63c8ff);
+}
+
+#wrapped .wrapped-slide[data-scene="aux"] h3 {
+  font-size: clamp(3rem, 6vw, 6.6rem);
+}
+
+#wrapped .wrapped-slide[data-scene="aux"] .wrapped-split-card {
+  display: grid;
+  gap: 1rem;
+}
+
+#wrapped .wrapped-slide[data-scene="aux"] .wrapped-split-card span {
+  min-height: 7.8rem;
+  padding: 1.15rem;
+  border-radius: 24px;
+  transform: rotate(var(--aux-tilt, 0deg));
+}
+
+#wrapped .wrapped-slide[data-scene="aux"] .wrapped-split-card span:first-child {
+  --aux-tilt: -1.4deg;
+}
+
+#wrapped .wrapped-slide[data-scene="aux"] .wrapped-split-card span:last-child {
+  --aux-tilt: 1.2deg;
+  margin-left: clamp(0.6rem, 4vw, 2rem);
 }
 
 @keyframes wrappedFullSceneIn {
