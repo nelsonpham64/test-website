@@ -117,10 +117,12 @@ const SCRAPBOOK_FLIP_MS = 1120;
 const SCRAPBOOK_PAGE_SWAP_MS = 640;
 const SCRAPBOOK_PHOTO_PATH = "assets/photos/scrapbook";
 const SCRAPBOOK_OPTIMIZED_PHOTO_PATH = "assets/photos/scrapbook-optimized";
+const WRAPPED_PHOTO_PATH = "assets/photos/wrapped";
 const SCRAPBOOK_OPTIMIZED_IMAGE_EXTENSIONS = ["webp"];
 const SCRAPBOOK_IMAGE_EXTENSIONS = ["jpg", "JPG", "jpeg", "JPEG", "png", "PNG", "webp", "WEBP"];
 const SCRAPBOOK_VIDEO_EXTENSIONS = ["mp4", "MP4", "webm", "WEBM", "mov", "MOV"];
 const scrapbookMediaCache = new Map();
+const wrappedPhotoCache = new Map();
 const canUsePointerEffects =
   window.matchMedia("(pointer: fine)").matches &&
   !prefersReducedMotion;
@@ -361,6 +363,7 @@ function setWrappedSlide(index, options = {}) {
 
     syncWrappedDeckChrome(parts, boundedIndex);
     animateWrappedCounters(nextSlide);
+    loadWrappedPhotos(nextSlide);
 
     wrappedDeckState.transitionTimer = window.setTimeout(() => {
       previousSlide.hidden = true;
@@ -368,7 +371,7 @@ function setWrappedSlide(index, options = {}) {
       nextSlide.classList.remove("is-entering");
       delete parts.deck.dataset.wrappedDirection;
       wrappedDeckState.transitionTimer = null;
-    }, 980);
+    }, 1280);
 
     return;
   }
@@ -389,6 +392,7 @@ function setWrappedSlide(index, options = {}) {
   delete parts.deck.dataset.wrappedDirection;
   syncWrappedDeckChrome(parts, boundedIndex);
   animateWrappedCounters(parts.slides[boundedIndex]);
+  loadWrappedPhotos(parts.slides[boundedIndex]);
 }
 
 function moveWrappedSlide(direction) {
@@ -1189,6 +1193,44 @@ function findScrapbookMedia(number) {
 
   scrapbookMediaCache.set(number, mediaPromise);
   return mediaPromise;
+}
+
+function findWrappedPhoto(letter) {
+  if (wrappedPhotoCache.has(letter)) {
+    return wrappedPhotoCache.get(letter);
+  }
+
+  const urls = buildMediaUrls(letter, WRAPPED_PHOTO_PATH, SCRAPBOOK_IMAGE_EXTENSIONS);
+  const photoPromise = findFirstMediaUrl(urls, probeImage);
+  wrappedPhotoCache.set(letter, photoPromise);
+  return photoPromise;
+}
+
+function loadWrappedPhotos(scope = document) {
+  const frames = Array.from(scope.querySelectorAll("[data-wrapped-photo]"));
+
+  frames.forEach(async (frame) => {
+    if (frame.dataset.photoLoaded === "true" || frame.dataset.photoLoading === "true") {
+      return;
+    }
+
+    const letter = frame.dataset.wrappedPhoto;
+
+    if (!letter) {
+      return;
+    }
+
+    frame.dataset.photoLoading = "true";
+    const photoUrl = await findWrappedPhoto(letter);
+    frame.dataset.photoLoading = "false";
+
+    if (!photoUrl) {
+      return;
+    }
+
+    frame.dataset.photoLoaded = "true";
+    frame.style.backgroundImage = `url("${photoUrl}")`;
+  });
 }
 
 function buildScrapbookVideo(media, number) {
