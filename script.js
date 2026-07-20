@@ -368,7 +368,7 @@ function setWrappedSlide(index, options = {}) {
       nextSlide.classList.remove("is-entering");
       delete parts.deck.dataset.wrappedDirection;
       wrappedDeckState.transitionTimer = null;
-    }, 680);
+    }, 980);
 
     return;
   }
