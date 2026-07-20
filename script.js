@@ -149,12 +149,12 @@ chapters.forEach((_, index) => {
 });
 
 const tripResult = {
-  title: "Surprise, we're going to Universal Studios Hollywood!",
-  tagline: "I wanted our next chapter to be bigger than a dinner plan, so I made this our anniversary adventure.",
+  title: "SURPRISEEE!!! we're going to Universal Studios Hollywood!",
+  tagline: "I know I said we weren't going, but I lied lol.",
   restaurant: "Universal Studios Hollywood",
-  theme: "Amusement park trip with rides, shows, snacks, and cute pictures",
-  outfit: "Cute park-fit, comfy shoes, and main character energy",
-  dessert: "Theme park snacks, shared treats, and whatever looks too good to skip",
+  theme: "Amusement park trip with rides, shows, and snacks",
+  outfit: "park-fit, comfy shoes, and me",
+  dessert: "Theme park snacks and more..",
   plan: [
     "Bring the cute outfit, comfy shoes, and fully charged phones.",
     "Spend the day chasing rides, shows, snacks, and photos together.",
