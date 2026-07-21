@@ -12801,6 +12801,12 @@ body[data-active-chapter="wrapped"] .story-controls {
 
 #wrapped .wrapped-slide[data-scene="timeline"] .wrapped-timeline {
   width: min(980px, 90vw);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+#wrapped .wrapped-slide[data-scene="timeline"] .wrapped-timeline span {
+  min-height: 3.1rem;
+  padding-block: 0.52rem;
 }
 
 #wrapped .wrapped-slide[data-scene="streak"] .frame-center,
