@@ -138,7 +138,7 @@ const chapterLabels = {
   wrapped: "Play machine",
   quiz: "Win prize",
   result: "Next",
-  finale: "Reveal ending",
+  finale: "Next",
   ending: "Start over"
 };
 
