@@ -137,7 +137,7 @@ const chapterLabels = {
   scrapbook: "Year wrapped",
   wrapped: "Play machine",
   quiz: "Win prize",
-  result: "Final reveal",
+  result: "Next",
   finale: "Reveal ending",
   ending: "Start over"
 };
