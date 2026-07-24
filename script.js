@@ -160,7 +160,6 @@ const tripResult = {
 const memoryNotes = {
   first: {
     kicker: "i knew i liked you when...",
-    title: "You made normal moments feel different",
     messages: [
       "I knew I liked you when being around you started feeling easy in a way I did not want to end.",
       "It was not one giant movie moment. It was all the little moments adding up.",
@@ -169,7 +168,6 @@ const memoryNotes = {
   },
   laugh: {
     kicker: "one thing i love about you is...",
-    title: "Your soft, funny little way",
     messages: [
       "One thing I love about you is how you can make the smallest moment feel lighter.",
       "You have this way of making me laugh and calm down at the same time.",
@@ -178,7 +176,6 @@ const memoryNotes = {
   },
   dinner: {
     kicker: "you make me feel...",
-    title: "Chosen, lucky, and understood",
     messages: [
       "You make me feel wanted in the little everyday ways that matter most.",
       "You make me feel lucky, not just because you are beautiful, but because your heart is genuinely rare.",
@@ -187,7 +184,6 @@ const memoryNotes = {
   },
   drive: {
     kicker: "something you do that melts me is...",
-    title: "The tiny things",
     messages: [
       "Something you do that melts me is how you care without always making a big thing out of it.",
       "The way you look at me, laugh with me, or check on me stays with me more than you know.",
@@ -196,7 +192,6 @@ const memoryNotes = {
   },
   future: {
     kicker: "one thing i hope you remember is...",
-    title: "You are so loved",
     messages: [
       "One thing I hope you always remember is that you are deeply loved by me.",
       "Not just on anniversaries, not just when everything is perfect, but in the ordinary days too.",
@@ -2041,7 +2036,6 @@ function openNote(key, sourceEl) {
   const noteColor = sourceEl ? getComputedStyle(sourceEl).getPropertyValue("--note-color").trim() : "";
   openNoteEl?.style.setProperty("--open-note-color", noteColor || "#ffe97b");
   document.querySelector("#note-modal-kicker").textContent = note.kicker || "Love note";
-  document.querySelector("#note-modal-title").textContent = note.title;
   const thread = document.querySelector("#note-modal-thread");
   thread.textContent = "";
   (note.messages || [note.body]).forEach((message, index) => {
@@ -2051,7 +2045,7 @@ function openNote(key, sourceEl) {
     bubble.style.setProperty("--bubble-delay", `${index * 130}ms`);
     thread.appendChild(bubble);
   });
-  document.querySelector("#jar-message").textContent = `Opened: ${note.title}`;
+  document.querySelector("#jar-message").textContent = "Opened a P.S. note.";
   document.querySelector("#note-modal").classList.add("is-open");
   document.querySelector("#note-modal").setAttribute("aria-hidden", "false");
 }

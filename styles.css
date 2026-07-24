@@ -9637,18 +9637,10 @@ body.is-letter-arriving #intro .letter-card {
 .sticky-memory #note-modal-kicker {
   position: relative;
   z-index: 1;
+  display: block;
   color: #e24e9d;
   font-size: 0.76rem;
   letter-spacing: 0.08em;
-}
-
-.sticky-memory h3 {
-  position: relative;
-  z-index: 1;
-  margin: 0.55rem 0 1rem;
-  color: #1d263f;
-  font-size: clamp(1.7rem, 5vw, 2.6rem);
-  line-height: 1.02;
 }
 
 .sticky-note-lines {
@@ -9656,6 +9648,7 @@ body.is-letter-arriving #intro .letter-card {
   z-index: 1;
   display: grid;
   gap: 0.7rem;
+  margin-top: 1.35rem;
 }
 
 .sticky-line {
