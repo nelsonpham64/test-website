@@ -163,7 +163,7 @@ const memoryNotes = {
     messages: [
       "I knew I liked you when we started getting closer and I looked forward to seeing you more..",
       "At the end of the day, when I finished all my classes, my day wouldn't feel complete enough to go home until I was able to see you. ",
-      "That's why I would always ask if you were coming to the library. Sometimes I would even pretend to have work so I could be in your presence."
+      "That's why I would always ask if you were coming to the library. Sometimes I would even pretend to have work so I could be in your presence. >:)"
     ]
   },
   laugh: {
