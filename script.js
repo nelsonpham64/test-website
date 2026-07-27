@@ -161,41 +161,41 @@ const memoryNotes = {
   first: {
     kicker: "i knew i liked you when...",
     messages: [
-      "I knew I liked you when being around you started feeling easy in a way I did not want to end.",
-      "It was not one giant movie moment. It was all the little moments adding up.",
-      "Somewhere in the middle of laughing with you, I realized I wanted a lot more of you in my life."
+      "I knew I liked you when we started getting closer and I kept looking forward to seeing you more.",
+      "At the end of the day, after all my classes, my day never felt complete enough to go home until I got to see you.",
+      "That's why I would always ask if you were coming to the library. Sometimes I would even pretend to have work just so I could be in your presence."
     ]
   },
   laugh: {
     kicker: "one thing i love about you is...",
     messages: [
-      "One thing I love about you is how you can make the smallest moment feel lighter.",
-      "You have this way of making me laugh and calm down at the same time.",
-      "Being loved by you feels like having a favorite place to come back to."
+      "One thing I love about you is how supportive you are.",
+      "I have a lot of dreams and career ambitions, and I know they can sometimes interfere with our relationship, like my internship, for example.",
+      "I know it's not easy for you, so the fact that you tough it out for me makes me appreciate and love you so much. I hope you know you're investing in greatness."
     ]
   },
   dinner: {
     kicker: "you make me feel...",
     messages: [
-      "You make me feel wanted in the little everyday ways that matter most.",
-      "You make me feel lucky, not just because you are beautiful, but because your heart is genuinely rare.",
-      "I hope I make you feel even a little bit of how special you make me feel."
+      "You make me feel comfortable.",
+      "LOL HEAR ME OUT. You've created such a comfortable environment for me to just be myself without worrying about icking you out.",
+      "Crying is a very uncomfortable reaction, and I never really want anyone looking at me when I do it. But you always encourage me without making me feel embarrassed. It hurts my male ego, but it's nice letting it out every once in a while."
     ]
   },
   drive: {
     kicker: "something you do that melts me is...",
     messages: [
-      "Something you do that melts me is how you care without always making a big thing out of it.",
-      "The way you look at me, laugh with me, or check on me stays with me more than you know.",
-      "I notice those little things. I keep them."
+      "Something you do that melts me is sending your emojis and texts.",
+      "Sometimes you randomly text me that you miss me, and it makes me feel so loved while also making me miss you even more. I just want to be there to comfort you and hug you.",
+      "The little emojis you send me are so cute. All the Nailong stickers are such accurate representations of how I imagine you look over text."
     ]
   },
   future: {
     kicker: "one thing i hope you remember is...",
     messages: [
-      "One thing I hope you always remember is that you are deeply loved by me.",
-      "Not just on anniversaries, not just when everything is perfect, but in the ordinary days too.",
-      "I love you so much, and I am so happy I get to keep choosing you."
+      "One thing I hope you always remember is that I LOVE YOU.",
+      "Not just on anniversaries, not just on special occasions, but always. Sometimes you may feel like I'm nonchalant and don't show much emotion, but deep down, I love spending every moment with you.",
+      "I may not have the money to spoil you the way you want right now, but I'll always try my best. :)"
     ]
   }
 };
