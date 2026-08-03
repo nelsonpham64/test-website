@@ -1,4 +1,7 @@
-const chapters = Array.from(document.querySelectorAll(".chapter"));
+const chapterOrder = ["intro", "scrapbook", "wrapped", "finale", "ending", "quiz", "result"];
+const chapters = chapterOrder
+  .map((key) => document.querySelector(`.chapter[data-chapter="${key}"]`))
+  .filter(Boolean);
 const nextButton = document.querySelector("#next-button");
 const backButton = document.querySelector("#back-button");
 const counter = document.querySelector("#chapter-counter");
@@ -135,11 +138,11 @@ const canUsePointerEffects =
 const chapterLabels = {
   intro: "Continue",
   scrapbook: "Year wrapped",
-  wrapped: "Play machine",
+  wrapped: "Almost done",
   quiz: "Win prize",
-  result: "Next",
+  result: "Start over",
   finale: "Next",
-  ending: "Start over"
+  ending: "One last surprise"
 };
 
 chapters.forEach((_, index) => {
@@ -400,7 +403,7 @@ function moveWrappedSlide(direction) {
     direction > 0 &&
     wrappedDeckState.current >= parts.slides.length - 1
   ) {
-    playClawTransition();
+    setChapter(getChapterIndex("finale"));
     return;
   }
 
@@ -563,7 +566,10 @@ function updateStoryControls() {
   Array.from(dotsWrap.children).forEach((dot, index) => {
     dot.classList.toggle("is-active", index === storyState.current);
   });
-  dotsWrap.classList.toggle("is-hidden", chapterKey === "ending" || chapterKey === "wrapped");
+  dotsWrap.classList.toggle(
+    "is-hidden",
+    chapterKey === "ending" || chapterKey === "wrapped" || chapterKey === "result"
+  );
 
   backButton.classList.toggle("is-hidden", !storyState.hasReachedEnd);
   nextButton.classList.toggle(
@@ -583,16 +589,16 @@ function updateStoryControls() {
     storyState.revealingTicket ||
     (onQuiz && !storyState.quizComplete);
 
-  if (chapterKey === "ending") {
+  if (chapterKey === "ending" || chapterKey === "result") {
     nextButton.classList.remove("is-hidden");
-    nextButton.textContent = "Start over";
+    nextButton.textContent = chapterLabels[chapterKey] || "Next";
   }
 }
 
 function nextChapter() {
   const chapterKey = chapters[storyState.current].dataset.chapter;
 
-  if (chapterKey === "ending") {
+  if (chapterKey === "result") {
     closeWrappedTransition();
     closeClawTransition();
     closeTicketRevealTransition();
@@ -603,6 +609,11 @@ function nextChapter() {
     restartQuiz();
     resetScrapbookIntro();
     setChapter(0);
+    return;
+  }
+
+  if (chapterKey === "ending") {
+    playClawTransition();
     return;
   }
 
@@ -620,7 +631,7 @@ function nextChapter() {
   }
 
   if (chapterKey === "wrapped") {
-    playClawTransition();
+    setChapter(getChapterIndex("finale"));
     return;
   }
 
