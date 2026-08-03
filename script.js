@@ -28,6 +28,12 @@ const prizeOpenNo = document.querySelector("#prize-open-no");
 const psLoveNotes = document.querySelector("#ps-love-notes");
 const psLoveBackdrop = document.querySelector("#ps-love-backdrop");
 const psLoveClose = document.querySelector("#ps-love-close");
+const soundtrackDock = document.querySelector("#soundtrack-dock");
+const soundtrackTab = document.querySelector("#soundtrack-tab");
+const soundtrackAudio = document.querySelector("#site-soundtrack");
+const soundtrackNow = document.querySelector("#soundtrack-now");
+const soundtrackPause = document.querySelector("#soundtrack-pause");
+const recordOptions = Array.from(document.querySelectorAll(".record-option"));
 const lockScreen = document.querySelector("#lock-screen");
 const heartLock = document.querySelector("#heart-lock");
 const loadingScreen = document.querySelector("#loading-screen");
@@ -66,7 +72,9 @@ const storyState = {
   wrappedTransitionReady: false,
   transitioningToClaw: false,
   revealingTicket: false,
-  prizePromptOpen: false
+  prizePromptOpen: false,
+  soundtrackUnlocked: false,
+  soundtrackCurrentLabel: ""
 };
 
 const scrapbookHold = {
@@ -637,6 +645,94 @@ function nextChapter() {
   setChapter(storyState.current + 1);
 }
 
+function unlockSoundtrackDock() {
+  if (!soundtrackDock || storyState.soundtrackUnlocked) {
+    return;
+  }
+
+  storyState.soundtrackUnlocked = true;
+  document.body.classList.add("is-soundtrack-unlocked");
+  soundtrackDock.setAttribute("aria-hidden", "false");
+}
+
+function setSoundtrackStatus(message) {
+  if (soundtrackNow) {
+    soundtrackNow.textContent = message;
+  }
+}
+
+function syncRecordButtons(activeButton) {
+  recordOptions.forEach((option) => {
+    const isActive = option === activeButton;
+    option.classList.toggle("is-active", isActive);
+    option.setAttribute("aria-pressed", isActive ? "true" : "false");
+  });
+}
+
+function selectSoundtrack(option) {
+  if (!soundtrackAudio || !option) {
+    return;
+  }
+
+  const src = option.dataset.trackSrc;
+  const label = option.dataset.trackLabel || option.textContent.trim() || "Selected record";
+
+  if (!src) {
+    return;
+  }
+
+  unlockSoundtrackDock();
+  syncRecordButtons(option);
+  storyState.soundtrackCurrentLabel = label;
+
+  if (!soundtrackAudio.src.endsWith(src)) {
+    soundtrackAudio.src = src;
+    soundtrackAudio.load();
+  }
+
+  soundtrackAudio.loop = true;
+  setSoundtrackStatus(`Playing ${label}`);
+
+  soundtrackAudio
+    .play()
+    .then(() => {
+      if (soundtrackPause) {
+        soundtrackPause.disabled = false;
+        soundtrackPause.textContent = "Pause";
+      }
+    })
+    .catch(() => {
+      const fileName = src.split("/").pop();
+      setSoundtrackStatus(`Add ${fileName} to assets/music`);
+      if (soundtrackPause) {
+        soundtrackPause.disabled = true;
+        soundtrackPause.textContent = "Pause";
+      }
+    });
+}
+
+function toggleSoundtrackPause() {
+  if (!soundtrackAudio || !storyState.soundtrackCurrentLabel) {
+    return;
+  }
+
+  if (soundtrackAudio.paused) {
+    soundtrackAudio.play().then(() => {
+      setSoundtrackStatus(`Playing ${storyState.soundtrackCurrentLabel}`);
+      if (soundtrackPause) {
+        soundtrackPause.textContent = "Pause";
+      }
+    });
+    return;
+  }
+
+  soundtrackAudio.pause();
+  setSoundtrackStatus(`Paused ${storyState.soundtrackCurrentLabel}`);
+  if (soundtrackPause) {
+    soundtrackPause.textContent = "Play";
+  }
+}
+
 function openLetter(event) {
   if (event) {
     event.preventDefault();
@@ -652,6 +748,7 @@ function openLetter(event) {
   document.querySelector("#intro").classList.add("is-entering");
 
   window.setTimeout(() => {
+    unlockSoundtrackDock();
     setChapter(getChapterIndex("scrapbook"));
 
     window.setTimeout(() => {
@@ -2224,6 +2321,33 @@ prizeOpenNo?.addEventListener("click", (event) => {
   event.preventDefault();
   dodgeNoButton(event);
   setQuizNote("No is running away. I think that means yes.");
+});
+
+soundtrackTab?.addEventListener("click", () => {
+  if (!storyState.soundtrackUnlocked) {
+    return;
+  }
+
+  document.body.classList.toggle("is-soundtrack-open");
+});
+
+recordOptions.forEach((option) => {
+  option.setAttribute("aria-pressed", "false");
+  option.addEventListener("click", () => selectSoundtrack(option));
+});
+
+soundtrackPause?.addEventListener("click", toggleSoundtrackPause);
+
+soundtrackAudio?.addEventListener("pause", () => {
+  if (soundtrackPause && storyState.soundtrackCurrentLabel) {
+    soundtrackPause.textContent = "Play";
+  }
+});
+
+soundtrackAudio?.addEventListener("play", () => {
+  if (soundtrackPause) {
+    soundtrackPause.textContent = "Pause";
+  }
 });
 
 renderClawMachine();

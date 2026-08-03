@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=finale-polish-2">
+    <link rel="stylesheet" href="styles.css?v=soundtrack-1">
   </head>
   <body class="is-locked">
     <section class="lock-screen" id="lock-screen" aria-labelledby="lock-title">
@@ -1183,12 +1183,39 @@
       </article>
     </div>
 
+    <aside class="soundtrack-dock" id="soundtrack-dock" aria-label="Soundtrack record shelf" aria-hidden="true">
+      <audio id="site-soundtrack" preload="none" loop></audio>
+      <button class="soundtrack-tab" id="soundtrack-tab" type="button" aria-label="Open soundtrack records">
+        <span class="soundtrack-tab-record" aria-hidden="true"></span>
+        <span>Soundtrack</span>
+      </button>
+      <div class="soundtrack-panel">
+        <p class="eyebrow">soundtrack shelf</p>
+        <strong id="soundtrack-now">Pick a record</strong>
+        <div class="record-list" aria-label="Choose a soundtrack">
+          <button class="record-option" type="button" data-track-src="assets/music/record-a.mp3" data-track-label="Record A">
+            <span class="record-vinyl" aria-hidden="true"></span>
+            <span>Record A</span>
+          </button>
+          <button class="record-option" type="button" data-track-src="assets/music/record-b.mp3" data-track-label="Record B">
+            <span class="record-vinyl" aria-hidden="true"></span>
+            <span>Record B</span>
+          </button>
+          <button class="record-option" type="button" data-track-src="assets/music/record-c.mp3" data-track-label="Record C">
+            <span class="record-vinyl" aria-hidden="true"></span>
+            <span>Record C</span>
+          </button>
+        </div>
+        <button class="soundtrack-pause" id="soundtrack-pause" type="button" disabled>Pause</button>
+      </div>
+    </aside>
+
     <footer class="story-controls" aria-label="Story controls">
       <button class="button button-secondary is-hidden" id="back-button" type="button">Back</button>
       <div class="chapter-dots" id="chapter-dots" aria-hidden="true"></div>
       <button class="button button-primary" id="next-button" type="button">Continue</button>
     </footer>
 
-    <script src="script.js?v=story-order-2"></script>
+    <script src="script.js?v=soundtrack-1"></script>
   </body>
 </html>
