@@ -142,7 +142,7 @@ const chapterLabels = {
   quiz: "Win prize",
   result: "Start over",
   finale: "Next",
-  ending: "One last surprise"
+  ending: "Win our next date!!"
 };
 
 chapters.forEach((_, index) => {
@@ -313,8 +313,7 @@ function syncWrappedDeckChrome(parts, boundedIndex) {
   }
 
   if (parts.nextButton) {
-    const lastSlideIndex = parts.slides.length - 1;
-    parts.nextButton.textContent = boundedIndex === lastSlideIndex ? "Play machine" : "Next";
+    parts.nextButton.textContent = "Next";
   }
 }
 
